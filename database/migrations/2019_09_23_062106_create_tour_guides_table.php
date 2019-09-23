@@ -15,6 +15,10 @@ class CreateTourGuidesTable extends Migration
     {
         Schema::create('tour_guides', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('name');
+            $table->string('email')->nullable(true);
+            $table->string('phone')->nullable(true);
+            $table->unsignedInteger('tour_agent_id');
             $table->timestamps();
         });
     }
