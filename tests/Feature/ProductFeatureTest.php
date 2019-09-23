@@ -16,11 +16,28 @@ class ProductFeatureTest extends TestCase
     {
         $this->withExceptionHandling();
         
-        $products = factory(Product::class, 5)->create();
+        $products = factory(Product::class)->create();
 
-        $this->get('/api/products',  [['Accept' => 'application/json', 'Content-Type' => 'application/json']])
-            ->assertJsonCount(5);
+         $this->get('/products')
+            ->assertOk()
+            ->assertViewHas('products');
+            
+    }
 
+
+    /** @test */
+    public function product_can_be_fetched()
+    {
+        $this->withExceptionHandling();
+
+        $product = factory(Product::class)->create();
+
+        
+        $this->get('/products/' . $product->id)
+            ->assertOk()
+            ->assertViewHas('product')
+            ->assertSee($product->name);
 
     }
+
 }
