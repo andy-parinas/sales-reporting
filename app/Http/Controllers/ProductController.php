@@ -21,4 +21,45 @@ class ProductController extends Controller
         return view('products.show', compact('product'));
     }
 
+
+    public function store()
+    {
+        $data = $this->validateData();
+
+        $product = Product::create($data);
+
+        return redirect('/products/' . $product->id);
+
+    }
+
+
+    public function update(Product $product)
+    {
+        
+        $product->update($this->validateData());
+
+        return redirect('/products/' . $product->id);
+
+    }
+
+
+    public function destroy(Product $product)
+    {
+        $product->delete();
+
+
+        return redirect('/products');
+    }
+
+
+    private function validateData()
+    {
+        return request()->validate([
+            'name' => 'required',
+            'description' => 'required',
+            'product_type_id' => 'required',
+            'price' => 'required'
+        ]);
+    }
+
 }
