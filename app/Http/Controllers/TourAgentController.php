@@ -14,7 +14,9 @@ class TourAgentController extends Controller
      */
     public function index()
     {
-        //
+        $agents = TourAgent::all();
+
+        return view('agents.index', compact('agents'));
     }
 
     /**
@@ -35,7 +37,11 @@ class TourAgentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = request()->all();
+
+        $agent = TourAgent::create($data);
+
+        return redirect('/agents/' . $agent->id);
     }
 
     /**
@@ -44,9 +50,9 @@ class TourAgentController extends Controller
      * @param  \App\TourAgent  $tourAgent
      * @return \Illuminate\Http\Response
      */
-    public function show(TourAgent $tourAgent)
+    public function show(TourAgent $agent)
     {
-        //
+        return view('agents.show', compact('agent'));
     }
 
     /**
@@ -67,9 +73,15 @@ class TourAgentController extends Controller
      * @param  \App\TourAgent  $tourAgent
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TourAgent $tourAgent)
+    public function update(Request $request, TourAgent $agent)
     {
-        //
+        $data = request()->all();
+
+        $agent->update($data);
+
+        return redirect('/agents/' . $agent->id);
+
+
     }
 
     /**
@@ -78,8 +90,10 @@ class TourAgentController extends Controller
      * @param  \App\TourAgent  $tourAgent
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TourAgent $tourAgent)
+    public function destroy(TourAgent $agent)
     {
-        //
+        $agent->delete();
+
+        return redirect('/agents');
     }
 }
