@@ -1862,6 +1862,79 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SalesReportForm.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SalesReportForm.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({});
+
+/***/ }),
+
 /***/ "./node_modules/bootstrap/dist/js/bootstrap.js":
 /*!*****************************************************!*\
   !*** ./node_modules/bootstrap/dist/js/bootstrap.js ***!
@@ -37188,6 +37261,222 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SalesReportForm.vue?vue&type=template&id=6976aca9&":
+/*!******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SalesReportForm.vue?vue&type=template&id=6976aca9& ***!
+  \******************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [
+      _c("div", { staticClass: "px-4 flex justify-between mt-5" }, [
+        _c("div", { staticClass: "border border-gray-700 flex-1 mr-4" }, [
+          _c("div", { staticClass: "flex" }, [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "border-b border-r border-gray-700 p-1 w-32 text-center"
+              },
+              [
+                _c(
+                  "label",
+                  {
+                    staticClass:
+                      "text-sm font-semibold text-gray-800 uppercase",
+                    attrs: { for: "agent" }
+                  },
+                  [_vm._v("Tour Agent")]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex-1 p-1 border-b border-gray-700" }, [
+              _c("input", {
+                staticClass: "w-full text-center focus:outline-none",
+                attrs: {
+                  type: "text",
+                  id: "agent",
+                  placeholder: "Tour Agent Name"
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex" }, [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "border-b border-r border-gray-700 p-1 w-32 text-center"
+              },
+              [
+                _c(
+                  "label",
+                  {
+                    staticClass:
+                      "text-sm font-semibold text-gray-800 uppercase",
+                    attrs: { for: "pax" }
+                  },
+                  [_vm._v("PAX")]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass:
+                  "flex-1 p-1 border-b border-gray-700 flex items-center"
+              },
+              [
+                _c("input", {
+                  staticClass:
+                    " flex-1 text-center border-r border-gray-700 focus:outline-none",
+                  attrs: { type: "text", id: "pax", placeholder: "Adult" }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  staticClass: " flex-1 text-center focus:outline-none",
+                  attrs: { type: "text", id: "pax", placeholder: "Children" }
+                })
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex" }, [
+            _c(
+              "div",
+              { staticClass: "border-r border-gray-700 p-1 w-32 text-center" },
+              [
+                _c(
+                  "label",
+                  {
+                    staticClass:
+                      "text-sm font-semibold text-gray-800 uppercase",
+                    attrs: { for: "guide" }
+                  },
+                  [_vm._v("Guide Name")]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex-1 p-1 border-gray-700" }, [
+              _c("input", {
+                staticClass: "w-full text-center focus:outline-none",
+                attrs: { type: "text", id: "guide", placeholder: "Guide Name" }
+              })
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "border border-gray-700 flex-1" }, [
+          _c("div", { staticClass: "flex" }, [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "border-b border-r border-gray-700 p-1 w-32 text-center"
+              },
+              [
+                _c(
+                  "label",
+                  {
+                    staticClass:
+                      "text-sm font-semibold text-gray-800 uppercase",
+                    attrs: { for: "date" }
+                  },
+                  [_vm._v("Date")]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex-1 p-1 border-b border-gray-700" }, [
+              _c("input", {
+                staticClass: "w-full text-center focus:outline-none",
+                attrs: { type: "text", id: "date", placeholder: "Tour Date" }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex" }, [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "border-b border-r border-gray-700 p-1 w-32 text-center"
+              },
+              [
+                _c(
+                  "label",
+                  {
+                    staticClass:
+                      "text-sm font-semibold text-gray-800 uppercase",
+                    attrs: { for: "grp" }
+                  },
+                  [_vm._v("GRP Code")]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex-1 p-1 border-b border-gray-700" }, [
+              _c("input", {
+                staticClass: "w-full text-center focus:outline-none",
+                attrs: { type: "numner", id: "grp", placeholder: "GRP Code" }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex" }, [
+            _c(
+              "div",
+              { staticClass: "border-r border-gray-700 p-1 w-32 text-center" },
+              [
+                _c(
+                  "label",
+                  {
+                    staticClass:
+                      "text-sm font-semibold text-gray-800 uppercase",
+                    attrs: { for: "tc" }
+                  },
+                  [_vm._v("T/C Name")]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex-1 p-1 border-gray-700" }, [
+              _c("input", {
+                staticClass: "w-full text-center focus:outline-none",
+                attrs: { type: "text", id: "tc", placeholder: "T/C Name" }
+              })
+            ])
+          ])
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js":
 /*!********************************************************************!*\
   !*** ./node_modules/vue-loader/lib/runtime/componentNormalizer.js ***!
@@ -49350,6 +49639,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
+Vue.component('sales-report-form', __webpack_require__(/*! ./components/SalesReportForm.vue */ "./resources/js/components/SalesReportForm.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -49484,6 +49774,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/SalesReportForm.vue":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/SalesReportForm.vue ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _SalesReportForm_vue_vue_type_template_id_6976aca9___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SalesReportForm.vue?vue&type=template&id=6976aca9& */ "./resources/js/components/SalesReportForm.vue?vue&type=template&id=6976aca9&");
+/* harmony import */ var _SalesReportForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SalesReportForm.vue?vue&type=script&lang=js& */ "./resources/js/components/SalesReportForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _SalesReportForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SalesReportForm_vue_vue_type_template_id_6976aca9___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _SalesReportForm_vue_vue_type_template_id_6976aca9___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/SalesReportForm.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/SalesReportForm.vue?vue&type=script&lang=js&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/SalesReportForm.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SalesReportForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./SalesReportForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SalesReportForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SalesReportForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/SalesReportForm.vue?vue&type=template&id=6976aca9&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/SalesReportForm.vue?vue&type=template&id=6976aca9& ***!
+  \************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SalesReportForm_vue_vue_type_template_id_6976aca9___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./SalesReportForm.vue?vue&type=template&id=6976aca9& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SalesReportForm.vue?vue&type=template&id=6976aca9&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SalesReportForm_vue_vue_type_template_id_6976aca9___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SalesReportForm_vue_vue_type_template_id_6976aca9___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

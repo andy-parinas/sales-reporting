@@ -4,7 +4,7 @@
         <h2 class="text-normal">REPORTING DASHBOARD</h2>
     </div>
     <div class="mt-5 text-gray-500 px-4 ">
-        <a href="/" class="block py-3 flex items-center text-white hover:text-white">
+        <a href="/" class="block py-3 flex items-center hover:text-white {{ (strpos(Route::currentRouteName(), 'home') === 0) ? 'active' : '' }}">
             <svg aria-hidden="true" focusable="false"
                 data-prefix="fas" data-icon="home" class="w-5 h-5"
                 role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
@@ -15,9 +15,9 @@
                                     16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0
                                     16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"></path>
             </svg>
-            <span class="ml-2">Home</span>
+            <span class="ml-2">Home </span>
         </a>
-        <a href="/sales" class="block py-3 flex items-center hover:text-white">
+        <a href="/sales" class="block py-3 flex items-center hover:text-white {{ (strpos(Route::currentRouteName(), 'sales') === 0) ? 'active' : '' }}">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="shopping-cart" 
                 class="w-5 h-5" role="img" xmlns="http://www.w3.org/2000/svg" 
                 viewBox="0 0 576 512">

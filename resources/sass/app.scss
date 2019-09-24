@@ -9,3 +9,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.active {
+    @apply text-white;
+}

@@ -12145,6 +12145,10 @@ video {
   z-index: auto;
 }
 
+.active {
+  color: #fff;
+}
+
 @media (min-width: 640px) {
   .sm\:sr-only {
     position: absolute;
