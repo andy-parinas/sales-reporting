@@ -55,12 +55,29 @@
                     </div>
                 </div>
         </div>
+        <div class="px-4 flex justify-between mt-5 items-start mb-20">
+            <product-selection></product-selection>
+            <div class="flex-1">
+                <div class="mb-4">
+                    <h2>Shopping Details</h2>
+                </div>
+                <selected-product></selected-product>
+                <deductions></deductions>
+                <total-sales></total-sales>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-export default {
+import ProductSelection from './ProductSelection';
+import SelectedProduct from './SelectedProduct';
+import Deductions from './Deductions';
+import TotalSales from './TotalSales';
 
+export default {
+    name: 'SalesReportForm',
+    components: {ProductSelection, SelectedProduct, Deductions, TotalSales}
 }
 </script>
 

@@ -8,5 +8,4 @@
         </div>
     </div>
    <sales-report-form></sales-report-form>
-   
 @endsection
