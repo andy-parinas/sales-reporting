@@ -1,4 +1,4 @@
-<div class="mr-2 w-64 bg-gray-800 h-screen">
+<div class="w-64 bg-gray-800 h-screen">
     <div class="text-center text-white font-bold border-b border-gray-600 pb-4">
         <h1 class="text-xl text-center  mt-3">WoolHouse</h1>
         <h2 class="text-normal">REPORTING DASHBOARD</h2>
@@ -28,7 +28,7 @@
                 56-56c0-22.172-12.888-41.332-31.579-50.405l5.517-24.276c3.413-15.018-8.002-29.319-23.403-29.319H218.117l-6.545-32h293.145c11.206 0 
                 20.92-7.754 23.403-18.681z"></path>
             </svg>
-            <span class="ml-2">Daily Sales Order</span>
+            <span class="ml-2">Daily Sales Report</span>
         </a>
         <a href="#" class="block py-3 flex items-center hover:text-white">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="calendar-week" 

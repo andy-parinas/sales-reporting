@@ -23,7 +23,7 @@
     <div id="app" class="flex">
         @include('layouts.side-navigation')
         
-        <main class="py-4">
+        <main class="w-full">
             @yield('content')
         </main>
     </div>
