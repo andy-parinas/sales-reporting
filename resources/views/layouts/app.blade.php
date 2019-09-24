@@ -23,8 +23,10 @@
     <div id="app" class="flex">
         @include('layouts.side-navigation')
         
-        <main class="w-full">
-            @yield('content')
+        <main class="flex flex-col w-full h-screen overflow-y-hidden">
+            <div class="overflow-x-hidden">
+                @yield('content')
+            </div>
         </main>
     </div>
 </body>
