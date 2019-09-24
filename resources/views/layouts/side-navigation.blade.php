@@ -4,7 +4,7 @@
         <h2 class="text-normal">REPORTING DASHBOARD</h2>
     </div>
     <div class="mt-5 text-gray-500 px-4 ">
-        <a href="#" class="block py-3 flex items-center text-white hover:text-white">
+        <a href="/" class="block py-3 flex items-center text-white hover:text-white">
             <svg aria-hidden="true" focusable="false"
                 data-prefix="fas" data-icon="home" class="w-5 h-5"
                 role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
@@ -17,7 +17,7 @@
             </svg>
             <span class="ml-2">Home</span>
         </a>
-        <a href="#" class="block py-3 flex items-center hover:text-white">
+        <a href="/sales" class="block py-3 flex items-center hover:text-white">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="shopping-cart" 
                 class="w-5 h-5" role="img" xmlns="http://www.w3.org/2000/svg" 
                 viewBox="0 0 576 512">
@@ -28,7 +28,7 @@
                 56-56c0-22.172-12.888-41.332-31.579-50.405l5.517-24.276c3.413-15.018-8.002-29.319-23.403-29.319H218.117l-6.545-32h293.145c11.206 0 
                 20.92-7.754 23.403-18.681z"></path>
             </svg>
-            <span class="ml-2">Daily Sales Report</span>
+            <span class="ml-2">Sales Report</span>
         </a>
         <a href="#" class="block py-3 flex items-center hover:text-white">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="calendar-week" 
