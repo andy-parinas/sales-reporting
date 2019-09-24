@@ -56,7 +56,7 @@
                 </div>
         </div>
         <div class="px-4 flex justify-between mt-5 items-start mb-20">
-            <product-selection></product-selection>
+            <product-selection :user="user" ></product-selection>
             <div class="flex-1">
                 <div class="mb-4">
                     <h2>Shopping Details</h2>
@@ -77,7 +77,8 @@ import TotalSales from './TotalSales';
 
 export default {
     name: 'SalesReportForm',
-    components: {ProductSelection, SelectedProduct, Deductions, TotalSales}
+    components: {ProductSelection, SelectedProduct, Deductions, TotalSales},
+    props: ['user']
 }
 </script>
 

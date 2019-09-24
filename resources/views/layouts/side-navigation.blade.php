@@ -91,7 +91,12 @@
             </svg>
             <span class="ml-2">Users</span>
         </a>
-        <a href="#" class="block py-3 flex items-center hover:text-white">
+        <a  class="block py-3 flex items-center hover:text-white"
+            href="{{ route('logout') }}"
+            onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sign-out-alt" 
                 class="w-5 h-5" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                 <path fill="currentColor" d="M497 273L329 441c-15 15-41 4.5-41-17v-96H152c-13.3 0-24-10.7-24-24v-96c0-13.3 

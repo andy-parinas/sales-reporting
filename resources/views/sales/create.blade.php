@@ -7,5 +7,5 @@
             <h1 class="text-4xl font-bold uppercase text-gray-800" >Create Sales Report</h1>
         </div>
     </div>
-   <sales-report-form></sales-report-form>
+    <sales-report-form :user="{{ auth()->user() }}"></sales-report-form>
 @endsection

@@ -7,11 +7,18 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
         $products = Product::all();
+
+        if(request()->isJson()){
+            return $products;
+        }
 
         return view('products.index', compact('products'));
     }

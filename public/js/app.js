@@ -1939,7 +1939,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'ProductSelection',
+  props: ['user'],
+  mounted: function mounted() {
+    var appHeaders = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    console.log(this.user);
+    axios.get('http://localhost:8000/api/products?api_token=' + this.user.api_token).then(function (response) {
+      console.log(response);
+    })["catch"](function (err) {
+      console.log(err);
+    });
+  }
+});
 
 /***/ }),
 
@@ -2038,7 +2054,8 @@ __webpack_require__.r(__webpack_exports__);
     SelectedProduct: _SelectedProduct__WEBPACK_IMPORTED_MODULE_1__["default"],
     Deductions: _Deductions__WEBPACK_IMPORTED_MODULE_2__["default"],
     TotalSales: _TotalSales__WEBPACK_IMPORTED_MODULE_3__["default"]
-  }
+  },
+  props: ['user']
 });
 
 /***/ }),
@@ -37709,7 +37726,7 @@ var render = function() {
       "div",
       { staticClass: "px-4 flex justify-between mt-5 items-start mb-20" },
       [
-        _c("product-selection"),
+        _c("product-selection", { attrs: { user: _vm.user } }),
         _vm._v(" "),
         _c(
           "div",

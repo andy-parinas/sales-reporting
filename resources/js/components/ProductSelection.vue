@@ -29,7 +29,21 @@
 
 <script>
 export default {
-
+    name: 'ProductSelection',
+    props: ['user'],
+    mounted(){
+        const appHeaders = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+        console.log(this.user)
+        axios.get('http://localhost:8000/api/products?api_token=' + this.user.api_token).then(response => {
+            console.log(response);
+        }).catch(err =>{
+            console.log(err);
+        })
+    }
 }
 </script>
 
