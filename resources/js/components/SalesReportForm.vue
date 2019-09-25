@@ -56,7 +56,9 @@
                 </div>
         </div>
         <div class="px-4 flex justify-between mt-5 items-start mb-20">
-            <product-selection :user="user" ></product-selection>
+            <div  class="flex-1 mr-4">
+                <product-selection :user="user" ></product-selection>
+            </div>
             <div class="flex-1">
                 <div class="mb-4">
                     <h2>Shopping Details</h2>
@@ -80,6 +82,11 @@ export default {
     name: 'SalesReportForm',
     components: {ProductSelection, SelectedProduct, Deductions, TotalSales},
     props: ['user'],
+    data: function(){
+        return {
+            products: null
+        }
+    },
     methods: {
         submit: function(){
             console.log('submit');
@@ -89,7 +96,8 @@ export default {
                 console.log(err);
             })
         }
-    }
+    },
+   
 }
 </script>
 
