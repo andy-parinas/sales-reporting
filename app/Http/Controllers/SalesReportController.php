@@ -42,7 +42,7 @@ class SalesReportController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return redirect('/sales');
     }
 
     /**

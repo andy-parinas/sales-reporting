@@ -64,6 +64,7 @@
                 <selected-product></selected-product>
                 <deductions></deductions>
                 <total-sales></total-sales>
+                <button @click="submit">Submit</button>
             </div>
         </div>
     </div>
@@ -78,7 +79,17 @@ import TotalSales from './TotalSales';
 export default {
     name: 'SalesReportForm',
     components: {ProductSelection, SelectedProduct, Deductions, TotalSales},
-    props: ['user']
+    props: ['user'],
+    methods: {
+        submit: function(){
+            console.log('submit');
+            window.axios.post('/sales', {}).then(res =>{
+                window.location.href = '/sales';
+            }).catch(err => {
+                console.log(err);
+            })
+        }
+    }
 }
 </script>
 
