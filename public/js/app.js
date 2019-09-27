@@ -1881,10 +1881,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Deductions',
-  props: ['incentive', 'delivery'],
+  props: ['incentive', 'delivery', 'service', 'subtotal'],
   components: {
     CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
@@ -2089,6 +2093,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         id: product.id,
         name: product.name,
         price: product.price,
+        cost: product.cost,
         qty: this.productInput[index].qty,
         total: this.productInput[index].total,
         type: product.product_type,
@@ -2249,6 +2254,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2273,31 +2287,62 @@ __webpack_require__.r(__webpack_exports__);
       code1Count: 0,
       guideIncentive: 0,
       delivery: 0,
-      service: 0
+      service: 0,
+      deductionSubTotal: 0,
+      code1Total: 0,
+      code2Total: 0
     };
   },
   methods: {
     selectProduct: function selectProduct(product) {
-      this.selectedProducts.push(product);
-      this.subTotal = this.subTotal + product.total;
+      this.selectedProducts.push(product); //conver quantity to integer
+
+      var qty = parseInt(product.qty);
+      var total = parseInt(product.total);
+      this.subTotal = this.subTotal + total;
 
       if (product.code === 1) {
-        this.code1Count = this.code1Count + parseInt(product.qty);
+        this.code1Count = this.code1Count + qty;
+        this.code1Total = this.code1Total + total;
+      }
+
+      if (product.code === 2) {
+        this.code2Total = this.code2Total + total;
+      }
+
+      if (qty >= 1 && total === 0) {
+        this.service = this.service + qty * product.cost;
       }
 
       this.guideIncentive = this.code1Count * 50;
       this.delivery = this.code1Count * 200;
+      this.deductionSubTotal = this.guideIncentive + this.delivery + this.service;
     },
     removeSelection: function removeSelection(index) {
       var removedProduct = this.selectedProducts.splice(index, 1);
+      var qty = parseInt(removedProduct[0].qty);
+      var total = parseInt(removedProduct[0].total);
 
       if (removedProduct[0].code === 1) {
-        this.code1Count = this.code1Count - parseInt(removedProduct[0].qty);
+        this.code1Count = this.code1Count - qty;
+        this.code1Total = this.code1Total - total;
       }
 
-      this.subTotal = this.subTotal - removedProduct[0].total;
+      if (removedProduct[0].code === 2) {
+        this.code2Total = this.code2Total - total;
+      }
+
+      console.log('qty', qty);
+      console.log('total', total);
+
+      if (qty >= 1 && total === 0) {
+        this.service = this.service - qty * removedProduct[0].cost;
+      }
+
+      this.subTotal = this.subTotal - total;
       this.guideIncentive = this.code1Count * 50;
       this.delivery = this.code1Count * 200;
+      this.deductionSubTotal = this.guideIncentive + this.delivery + this.service;
     },
     submit: function submit() {
       // console.log('submit');
@@ -20951,9 +20996,43 @@ var render = function() {
           ]
         ),
         _vm._v(" "),
-        _vm._m(1),
+        _c(
+          "div",
+          { staticClass: "flex justify-between border-b border-gray-700" },
+          [
+            _c(
+              "div",
+              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+              [_vm._v("Service")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "w-32  px-2 py-1" },
+              [_c("currency-format", { attrs: { value: _vm.service } })],
+              1
+            )
+          ]
+        ),
         _vm._v(" "),
-        _vm._m(2)
+        _c(
+          "div",
+          { staticClass: "flex justify-between font-semibold bg-red-400" },
+          [
+            _c(
+              "div",
+              { staticClass: "flex-1 border-gray-700 border-r  px-2 py-1" },
+              [_vm._v("Sub Total")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "w-32  px-2 py-1" },
+              [_c("currency-format", { attrs: { value: _vm.subtotal } })],
+              1
+            )
+          ]
+        )
       ])
     ]
   )
@@ -20973,42 +21052,6 @@ var staticRenderFns = [
         [_vm._v("Deductions")]
       )
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "flex justify-between border-b border-gray-700" },
-      [
-        _c(
-          "div",
-          { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-          [_vm._v("Service")]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "w-32  px-2 py-1" }, [_vm._v(" 85.00 ")])
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "flex justify-between font-semibold bg-red-400" },
-      [
-        _c(
-          "div",
-          { staticClass: "flex-1 border-gray-700 border-r  px-2 py-1" },
-          [_vm._v("Sub Total")]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "w-32  px-2 py-1" }, [_vm._v(" 335.00 ")])
-      ]
-    )
   }
 ]
 render._withStripped = true
@@ -21392,7 +21435,12 @@ var render = function() {
             }),
             _vm._v(" "),
             _c("deductions", {
-              attrs: { incentive: _vm.guideIncentive, delivery: _vm.delivery }
+              attrs: {
+                incentive: _vm.guideIncentive,
+                delivery: _vm.delivery,
+                service: _vm.service,
+                subtotal: _vm.deductionSubTotal
+              }
             }),
             _vm._v(" "),
             _c("total-sales"),

@@ -18,11 +18,15 @@
             </div>
             <div class="flex justify-between border-b border-gray-700" >
                 <div class="flex-1 border-gray-700 border-r px-2 py-1">Service</div>
-                <div class="w-32  px-2 py-1"> 85.00 </div>
+                <div class="w-32  px-2 py-1"> 
+                    <currency-format :value="service"></currency-format>
+                </div>
             </div>
             <div class="flex justify-between font-semibold bg-red-400">
                 <div class="flex-1 border-gray-700 border-r  px-2 py-1">Sub Total</div>
-                <div class="w-32  px-2 py-1"> 335.00 </div>
+                <div class="w-32  px-2 py-1"> 
+                    <currency-format :value="subtotal"></currency-format>
+                </div>
             </div>
         </div>
     </div>
@@ -34,7 +38,7 @@ import CurrencyFormat from './ui/formated/CurrencyFormat';
 
 export default {
     name: 'Deductions',
-    props: ['incentive', 'delivery'],
+    props: ['incentive', 'delivery', 'service', 'subtotal'],
     components: {CurrencyFormat}
 }
 </script>

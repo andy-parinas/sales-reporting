@@ -117,6 +117,7 @@ export default {
                 id: product.id,
                 name: product.name,
                 price: product.price,
+                cost: product.cost,
                 qty: this.productInput[index].qty,
                 total: this.productInput[index].total,
                 type: product.product_type,
