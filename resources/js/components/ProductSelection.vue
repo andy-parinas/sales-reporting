@@ -20,16 +20,21 @@
                 </thead>
                 <tbody>
                     <tr v-for="(product, index) in products" :key="product.id"
-                        class="text-xs">
-                        <td class="py-2 px-4 border border-gray-800"> {{ product.name }} </td>
-                        <td class="py-2 px-4 border border-gray-800 w-24"> {{ product.price }} </td>
+                        class="">
+                        <td class="py-2 px-4 border border-gray-800 text-sm"> 
+                            {{ product.name }} 
+                            <span class="text-xs text-gray-500 rounded-full"> {{ product.product_type }} </span>
+                        </td>
+                        <td class="py-2 px-4 border border-gray-800 w-24 text-xs"> 
+                            <currency-format :value="product.price"></currency-format>
+                        </td>
                         <td class="py-2 px-4 border border-gray-800 w-12"> 
                             <input v-model="productInput[index].qty" @change="onQtyChange(index, product.price)"
-                            class="w-8 focus:outline-none" type="text" placeholder="0">
+                            class="w-8 focus:outline-none text-xs" type="text" placeholder="0">
                         </td>
                         <td class="py-2 px-4 border border-gray-800 w-12"> 
                             <input v-model="productInput[index].total"
-                            class="w-12 focus:outline-none" type="text" placeholder="0">
+                            class="w-12 focus:outline-none text-xs" type="text" placeholder="0">
                         </td>
                         <td class="py-2 px-4 border border-gray-800 w-12 bg-indigo-500 text-white hover:bg-indigo-600"> 
                             <button class="py-1 px-1 rounded-sm text-xs" 
@@ -68,11 +73,12 @@
 <script>
 
 import BarLoader from './ui/loader/BarLoader';
+import CurrencyFormat from './ui/formated/CurrencyFormat';
 
 export default {
     name: 'ProductSelection',
     props: ['user'],
-    components: {BarLoader},
+    components: {BarLoader, CurrencyFormat},
     data: function(){
 
    
@@ -113,7 +119,8 @@ export default {
                 price: product.price,
                 qty: this.productInput[index].qty,
                 total: this.productInput[index].total,
-                type: product.product_type
+                type: product.product_type,
+                code: product.product_type_code
             }
 
             this.$emit('select', selectedProduct);

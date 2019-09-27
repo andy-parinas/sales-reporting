@@ -6,11 +6,15 @@
         <div class="flex-1 border-l border-gray-700 ">
             <div class="flex justify-between border-b border-gray-700">
                 <div class="flex-1 border-gray-700 border-r px-2 py-1">Guide Incentive</div>
-                <div class="w-32  px-2 py-1"> 50.00 </div>
+                <div class="w-32  px-2 py-1"> 
+                    <currency-format :value="incentive"></currency-format>    
+                </div>
             </div>
             <div class="flex justify-between border-b border-gray-700">
                 <div class="flex-1 border-gray-700 border-r px-2 py-1">Delivery</div>
-                <div class="w-32  px-2 py-1"> 200.00 </div>
+                <div class="w-32  px-2 py-1"> 
+                    <currency-format :value="delivery"></currency-format>
+                </div>
             </div>
             <div class="flex justify-between border-b border-gray-700" >
                 <div class="flex-1 border-gray-700 border-r px-2 py-1">Service</div>
@@ -25,8 +29,13 @@
 </template>
 
 <script>
-export default {
 
+import CurrencyFormat from './ui/formated/CurrencyFormat';
+
+export default {
+    name: 'Deductions',
+    props: ['incentive', 'delivery'],
+    components: {CurrencyFormat}
 }
 </script>
 

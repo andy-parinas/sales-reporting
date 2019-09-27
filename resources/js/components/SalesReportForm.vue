@@ -63,8 +63,8 @@
                 <div class="mb-4">
                     <h2>Shopping Details</h2>
                 </div>
-                <selected-product :products="selectedProducts" :subtotal="subTotal" ></selected-product>
-                <deductions></deductions>
+                <selected-product :products="selectedProducts" :subtotal="subTotal" @remove="removeSelection" ></selected-product>
+                <deductions :incentive="guideIncentive" :delivery="delivery" ></deductions>
                 <total-sales></total-sales>
                 <button class="flex items-center w-full mt-5 py-2 px-4 bg-indigo-600 text-white rounded-full justify-center focus:outline-none" @click="submit">
                     <div class="text-white w-5 h-5" title="2">
@@ -97,20 +97,40 @@ export default {
             products: null,
             creating: false,
             selectedProducts: [],
-            subTotal: 0
+            subTotal: 0,
+            code1Count: 0,
+            guideIncentive: 0,
+            delivery: 0,
+            service: 0
         }
     },
     methods: {
         selectProduct: function(product){
             this.selectedProducts.push(product);
 
-            let subTotal = 0;
+            this.subTotal = this.subTotal + product.total;
 
-            this.selectedProducts.forEach(product => {
-                subTotal = subTotal + product.total;
-            });
+            if(product.code === 1){
+                this.code1Count = this.code1Count + parseInt(product.qty);
+            }
 
-            this.subTotal = subTotal;
+            this.guideIncentive = this.code1Count * 50;
+            this.delivery = this.code1Count * 200;
+
+        },
+        removeSelection: function(index){
+
+            const removedProduct = this.selectedProducts.splice(index, 1);
+
+            if(removedProduct[0].code === 1){
+                this.code1Count = this.code1Count - parseInt(removedProduct[0].qty);
+            }
+
+            this.subTotal = this.subTotal - removedProduct[0].total;
+
+            this.guideIncentive = this.code1Count * 50;
+            this.delivery = this.code1Count * 200;
+
         },
         submit: function(){
             // console.log('submit');
