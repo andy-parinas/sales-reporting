@@ -14,3 +14,7 @@
 .active {
     @apply text-white;
 }
+
+.disabled {
+    @apply text-gray-500;
+}

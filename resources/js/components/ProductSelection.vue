@@ -1,6 +1,8 @@
 <template>
     <div>
-        <div v-if="loading">Loading ... </div>
+        <div v-if="loading" class="w-full h-96 flex items-center justify-center" >
+            <bar-loader color="#a0aec0"></bar-loader>
+        </div>
         <div v-else>
             <div class="mb-4">
                 <label for="filter">Filter</label>
@@ -21,24 +23,32 @@
                         class="text-xs">
                         <td class="py-2 px-4 border border-gray-800"> {{ product.name }} </td>
                         <td class="py-2 px-4 border border-gray-800 w-24"> {{ product.price }} </td>
-                        <td class="py-2 px-4 border border-gray-800 w-12"> <input class="w-8 focus:outline-none" type="text" placeholder="0"></td>
-                        <td class="py-2 px-4 border border-gray-800 w-12"> <input class="w-12 focus:outline-none" type="text" placeholder="0"></td>
+                        <td class="py-2 px-4 border border-gray-800 w-12"> 
+                            <input class="w-8 focus:outline-none" type="text" placeholder="0">
+                        </td>
+                        <td class="py-2 px-4 border border-gray-800 w-12"> 
+                            <input class="w-12 focus:outline-none" type="text" placeholder="0">
+                        </td>
                         <td class="py-2 px-4 border border-gray-800 w-12"> <button>Select</button> </td>
                     </tr>
                 </tbody>
             </table>
             <div class="mt-2">
-                <button class="py-1 px-2 mr-1 text-sm font-semibold rounded-sm boder border-gray-500 bg-gray-400"
+                <button class="py-1 px-2 mr-1 text-sm font-semibold rounded-sm boder border-gray-500 bg-gray-400 focus:outline-none"
+                    :class="meta.current_page === 1 ? 'disabled' : ''"
                     :disabled="meta.current_page === 1 ? true : false"
                     @click="changePage(1)">
                     First
                 </button>
-                <button class="py-1 px-2 mr-1 text-sm font-semibold rounded-sm boder border-gray-500 bg-gray-400" 
+                <button class="py-1 px-2 mr-1 text-sm font-semibold rounded-sm boder border-gray-500 bg-gray-400 focus:outline-none" 
                     v-for="n in meta.last_page" :key="n"
+                    :disabled="meta.current_page === n ? true : false"
+                    :class="meta.current_page === n ? 'disabled' : ''"
                     @click="changePage(n)">
                     {{n}}
                 </button>
-                <button class="py-1 px-2 mr-1 text-sm font-semibold rounded-sm boder border-gray-500 bg-gray-400"
+                <button class="py-1 px-2 mr-1 text-sm font-semibold rounded-sm boder border-gray-500 bg-gray-400 focus:outline-none"
+                    :class="meta.current_page === meta.last_page ? 'disabled' : ''"
                     :disabled="meta.current_page === meta.last_page ? true : false"
                     @click="changePage(meta.last_page)">
                     Last
@@ -49,9 +59,13 @@
 </template>
 
 <script>
+
+import BarLoader from './ui/loader/BarLoader';
+
 export default {
     name: 'ProductSelection',
     props: ['user'],
+    components: {BarLoader},
     data: function(){
         return {
             products: null,

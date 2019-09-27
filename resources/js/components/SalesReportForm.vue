@@ -66,7 +66,16 @@
                 <selected-product></selected-product>
                 <deductions></deductions>
                 <total-sales></total-sales>
-                <button @click="submit">Submit</button>
+                <button class="flex items-center w-full mt-5 py-2 px-4 bg-indigo-600 text-white rounded-full justify-center focus:outline-none" @click="submit">
+                    <div class="text-white w-5 h-5" title="2">
+                       <div v-if="creating" >
+                           <circle-loader></circle-loader>
+                       </div>
+                    </div>
+                    <div v-if="creating" >Creating Report</div>
+                    <div v-else >Create Report</div>
+                </button>
+                
             </div>
         </div>
     </div>
@@ -77,24 +86,27 @@ import ProductSelection from './ProductSelection';
 import SelectedProduct from './SelectedProduct';
 import Deductions from './Deductions';
 import TotalSales from './TotalSales';
+import CircleLoader from './ui/loader/CircleLoader';
 
 export default {
     name: 'SalesReportForm',
-    components: {ProductSelection, SelectedProduct, Deductions, TotalSales},
+    components: {ProductSelection, SelectedProduct, Deductions, TotalSales, CircleLoader},
     props: ['user'],
     data: function(){
         return {
-            products: null
+            products: null,
+            creating: false
         }
     },
     methods: {
         submit: function(){
-            console.log('submit');
-            window.axios.post('/sales', {}).then(res =>{
-                window.location.href = '/sales';
-            }).catch(err => {
-                console.log(err);
-            })
+            // console.log('submit');
+            // window.axios.post('/sales', {}).then(res =>{
+            //     window.location.href = '/sales';
+            // }).catch(err => {
+            //     console.log(err);
+            // })
+            this.creating = true;
         }
     },
    
