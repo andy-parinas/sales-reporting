@@ -1991,6 +1991,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'ProductSelection',
@@ -2003,15 +2010,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       products: null,
       meta: null,
       links: null,
-      loading: true
+      loading: true,
+      productInput: []
     };
   },
   methods: {
+    onQtyChange: function onQtyChange(index, price) {
+      this.productInput[index].total = this.productInput[index].qty * price;
+    },
     changePage: function () {
       var _changePage = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(page) {
-        var url, response;
+        var url, response, index;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -2024,21 +2035,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 4:
                 response = _context.sent;
                 this.products = response.data.data;
-                this.meta = response.data.meta;
-                _context.next = 12;
+                this.meta = response.data.meta; //Refresh the Quantity and Total
+
+                for (index = 0; index <= 10; index++) {
+                  this.productInput[index].qty = 0;
+                  this.productInput[index].total = 0;
+                }
+
+                _context.next = 13;
                 break;
 
-              case 9:
-                _context.prev = 9;
+              case 10:
+                _context.prev = 10;
                 _context.t0 = _context["catch"](0);
                 console.log(_context.t0);
 
-              case 12:
+              case 13:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 9]]);
+        }, _callee, this, [[0, 10]]);
       }));
 
       function changePage(_x) {
@@ -2046,13 +2063,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return changePage;
-    }()
+    }(),
+    selectProduct: function selectProduct(product, index) {
+      var selectedProduct = {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        qty: this.productInput[index].qty,
+        total: this.productInput[index].total,
+        type: product.product_type
+      };
+      this.$emit('select', selectedProduct);
+    }
   },
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-      var url, response;
+      var url, response, index;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -2067,22 +2095,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               this.products = response.data.data;
               this.meta = response.data.meta;
               this.links = response.data.links;
+
+              for (index = 0; index <= 10; index++) {
+                this.productInput.push({
+                  qty: 0,
+                  total: 0
+                });
+              }
+
               this.loading = false;
               console.log(response);
-              _context2.next = 15;
+              _context2.next = 16;
               break;
 
-            case 12:
-              _context2.prev = 12;
+            case 13:
+              _context2.prev = 13;
               _context2.t0 = _context2["catch"](0);
               console.log(err);
 
-            case 15:
+            case 16:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, this, [[0, 12]]);
+      }, _callee2, this, [[0, 13]]);
     }));
 
     function mounted() {
@@ -2210,10 +2246,20 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       products: null,
-      creating: false
+      creating: false,
+      selectedProducts: [],
+      subTotal: 0
     };
   },
   methods: {
+    selectProduct: function selectProduct(product) {
+      this.selectedProducts.push(product);
+      var subTotal = 0;
+      this.selectedProducts.forEach(function (product) {
+        subTotal = subTotal + product.total;
+      });
+      this.subTotal = subTotal;
+    },
     submit: function submit() {
       // console.log('submit');
       // window.axios.post('/sales', {}).then(res =>{
@@ -2268,7 +2314,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'SelectedProduct'
+  name: 'SelectedProduct',
+  props: ['products', 'subtotal']
 });
 
 /***/ }),
@@ -20934,7 +20981,7 @@ var render = function() {
             _vm._v(" "),
             _c(
               "tbody",
-              _vm._l(_vm.products, function(product) {
+              _vm._l(_vm.products, function(product, index) {
                 return _c("tr", { key: product.id, staticClass: "text-xs" }, [
                   _c(
                     "td",
@@ -20948,11 +20995,98 @@ var render = function() {
                     [_vm._v(" " + _vm._s(product.price) + " ")]
                   ),
                   _vm._v(" "),
-                  _vm._m(2, true),
+                  _c(
+                    "td",
+                    { staticClass: "py-2 px-4 border border-gray-800 w-12" },
+                    [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.productInput[index].qty,
+                            expression: "productInput[index].qty"
+                          }
+                        ],
+                        staticClass: "w-8 focus:outline-none",
+                        attrs: { type: "text", placeholder: "0" },
+                        domProps: { value: _vm.productInput[index].qty },
+                        on: {
+                          change: function($event) {
+                            return _vm.onQtyChange(index, product.price)
+                          },
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.productInput[index],
+                              "qty",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]
+                  ),
                   _vm._v(" "),
-                  _vm._m(3, true),
+                  _c(
+                    "td",
+                    { staticClass: "py-2 px-4 border border-gray-800 w-12" },
+                    [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.productInput[index].total,
+                            expression: "productInput[index].total"
+                          }
+                        ],
+                        staticClass: "w-12 focus:outline-none",
+                        attrs: { type: "text", placeholder: "0" },
+                        domProps: { value: _vm.productInput[index].total },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.productInput[index],
+                              "total",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]
+                  ),
                   _vm._v(" "),
-                  _vm._m(4, true)
+                  _c(
+                    "td",
+                    {
+                      staticClass:
+                        "py-2 px-4 border border-gray-800 w-12 bg-indigo-500 text-white hover:bg-indigo-600"
+                    },
+                    [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "py-1 px-1 rounded-sm text-xs",
+                          on: {
+                            click: function($event) {
+                              return _vm.selectProduct(product, index)
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            Select\n                        "
+                          )
+                        ]
+                      )
+                    ]
+                  )
                 ])
               }),
               0
@@ -21073,36 +21207,6 @@ var staticRenderFns = [
         ]
       )
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "py-2 px-4 border border-gray-800 w-12" }, [
-      _c("input", {
-        staticClass: "w-8 focus:outline-none",
-        attrs: { type: "text", placeholder: "0" }
-      })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "py-2 px-4 border border-gray-800 w-12" }, [
-      _c("input", {
-        staticClass: "w-12 focus:outline-none",
-        attrs: { type: "text", placeholder: "0" }
-      })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "py-2 px-4 border border-gray-800 w-12" }, [
-      _c("button", [_vm._v("Select")])
-    ])
   }
 ]
 render._withStripped = true
@@ -21136,7 +21240,12 @@ var render = function() {
         _c(
           "div",
           { staticClass: "flex-1 mr-4" },
-          [_c("product-selection", { attrs: { user: _vm.user } })],
+          [
+            _c("product-selection", {
+              attrs: { user: _vm.user },
+              on: { select: _vm.selectProduct }
+            })
+          ],
           1
         ),
         _vm._v(" "),
@@ -21146,7 +21255,9 @@ var render = function() {
           [
             _vm._m(1),
             _vm._v(" "),
-            _c("selected-product"),
+            _c("selected-product", {
+              attrs: { products: _vm.selectedProducts, subtotal: _vm.subTotal }
+            }),
             _vm._v(" "),
             _c("deductions"),
             _vm._v(" "),
@@ -21396,66 +21507,35 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("table", { staticClass: "w-full" }, [
-      _c("thead", [
-        _c(
-          "tr",
-          {
-            staticClass: "text-left bg-gray-300 border border-gray-800 text-sm"
-          },
-          [
-            _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
-              _vm._v("Selected Product")
+  return _c("table", { staticClass: "w-full" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c(
+      "tbody",
+      [
+        _vm._l(_vm.products, function(product) {
+          return _c("tr", { key: product.id, staticClass: "text-xs" }, [
+            _c("td", { staticClass: "py-2 px-4 border border-gray-800" }, [
+              _vm._v(_vm._s(product.name))
             ]),
             _vm._v(" "),
-            _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
-              _vm._v("Price")
+            _c("td", { staticClass: "py-2 px-4 border border-gray-800 w-24" }, [
+              _vm._v(" " + _vm._s(product.price) + " ")
             ]),
             _vm._v(" "),
-            _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
-              _vm._v("QTY")
+            _c("td", { staticClass: "py-2 px-4 border border-gray-800 w-12" }, [
+              _vm._v(" " + _vm._s(product.qty))
             ]),
             _vm._v(" "),
-            _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
-              _vm._v("Total")
+            _c("td", { staticClass: "py-2 px-4 border border-gray-800 w-12" }, [
+              _vm._v(" " + _vm._s(product.total))
             ]),
             _vm._v(" "),
-            _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
-              _vm._v("Type")
+            _c("td", { staticClass: "py-2 px-4 border border-gray-800 w-12" }, [
+              _vm._v(" " + _vm._s(product.type) + " ")
             ])
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _c("tbody", [
-        _c("tr", { staticClass: "text-xs" }, [
-          _c("td", { staticClass: "py-2 px-4 border border-gray-800" }, [
-            _vm._v("Carpet KK A30")
-          ]),
-          _vm._v(" "),
-          _c("td", { staticClass: "py-2 px-4 border border-gray-800 w-24" }, [
-            _vm._v(" 4950.00 ")
-          ]),
-          _vm._v(" "),
-          _c("td", { staticClass: "py-2 px-4 border border-gray-800 w-12" }, [
-            _vm._v(" 1")
-          ]),
-          _vm._v(" "),
-          _c("td", { staticClass: "py-2 px-4 border border-gray-800 w-12" }, [
-            _vm._v(" 4950.00 ")
-          ]),
-          _vm._v(" "),
-          _c("td", { staticClass: "py-2 px-4 border border-gray-800 w-12" }, [
-            _vm._v(" Carpet ")
           ])
-        ]),
+        }),
         _vm._v(" "),
         _c("tr", { staticClass: "text-xs bg-yellow-300" }, [
           _c("td", { staticClass: "py-2 px-4 border border-gray-800" }, [
@@ -21467,12 +21547,47 @@ var staticRenderFns = [
           _c("td", { staticClass: "py-2 px-4 border border-gray-800 w-12" }),
           _vm._v(" "),
           _c("td", { staticClass: "py-2 px-4 border border-gray-800 w-12" }, [
-            _vm._v(" 4950.00 ")
+            _vm._v(" " + _vm._s(_vm.subtotal) + " ")
           ]),
           _vm._v(" "),
           _c("td", { staticClass: "py-2 px-4 border border-gray-800 w-12" })
         ])
-      ])
+      ],
+      2
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c(
+        "tr",
+        { staticClass: "text-left bg-gray-300 border border-gray-800 text-sm" },
+        [
+          _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+            _vm._v("Selected Product")
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+            _vm._v("Price")
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+            _vm._v("QTY")
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+            _vm._v("Total")
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+            _vm._v("Type")
+          ])
+        ]
+      )
     ])
   }
 ]

@@ -10,18 +10,18 @@
             </tr>
         </thead>
         <tbody>
-                <tr class="text-xs">
-                    <td class="py-2 px-4 border border-gray-800">Carpet KK A30</td>
-                    <td class="py-2 px-4 border border-gray-800 w-24"> 4950.00 </td>
-                    <td class="py-2 px-4 border border-gray-800 w-12"> 1</td>
-                    <td class="py-2 px-4 border border-gray-800 w-12"> 4950.00 </td>
-                    <td class="py-2 px-4 border border-gray-800 w-12"> Carpet </td>
+                <tr v-for="product in products" :key="product.id" class="text-xs">
+                    <td class="py-2 px-4 border border-gray-800">{{ product.name }}</td>
+                    <td class="py-2 px-4 border border-gray-800 w-24"> {{ product.price }} </td>
+                    <td class="py-2 px-4 border border-gray-800 w-12"> {{ product.qty }}</td>
+                    <td class="py-2 px-4 border border-gray-800 w-12"> {{ product.total }}</td>
+                    <td class="py-2 px-4 border border-gray-800 w-12"> {{ product.type }} </td>
                 </tr>
             <tr class="text-xs bg-yellow-300">
                 <td class="py-2 px-4 border border-gray-800">Sub Total</td>
                 <td class="py-2 px-4 border border-gray-800 w-24"> </td>
                 <td class="py-2 px-4 border border-gray-800 w-12"> </td>
-                <td class="py-2 px-4 border border-gray-800 w-12"> 4950.00 </td>
+                <td class="py-2 px-4 border border-gray-800 w-12"> {{ subtotal }} </td>
                 <td class="py-2 px-4 border border-gray-800 w-12"> </td>
             </tr>
         </tbody>
@@ -30,7 +30,8 @@
 
 <script>
 export default {
-    name: 'SelectedProduct'
+    name: 'SelectedProduct',
+    props: ['products', 'subtotal']
 }
 </script>
 

@@ -19,17 +19,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="product in products" :key="product.id"
+                    <tr v-for="(product, index) in products" :key="product.id"
                         class="text-xs">
                         <td class="py-2 px-4 border border-gray-800"> {{ product.name }} </td>
                         <td class="py-2 px-4 border border-gray-800 w-24"> {{ product.price }} </td>
                         <td class="py-2 px-4 border border-gray-800 w-12"> 
-                            <input class="w-8 focus:outline-none" type="text" placeholder="0">
+                            <input v-model="productInput[index].qty" @change="onQtyChange(index, product.price)"
+                            class="w-8 focus:outline-none" type="text" placeholder="0">
                         </td>
                         <td class="py-2 px-4 border border-gray-800 w-12"> 
-                            <input class="w-12 focus:outline-none" type="text" placeholder="0">
+                            <input v-model="productInput[index].total"
+                            class="w-12 focus:outline-none" type="text" placeholder="0">
                         </td>
-                        <td class="py-2 px-4 border border-gray-800 w-12"> <button>Select</button> </td>
+                        <td class="py-2 px-4 border border-gray-800 w-12 bg-indigo-500 text-white hover:bg-indigo-600"> 
+                            <button class="py-1 px-1 rounded-sm text-xs" 
+                                    @click="selectProduct(product, index)" >
+                                Select
+                            </button> 
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -67,23 +74,49 @@ export default {
     props: ['user'],
     components: {BarLoader},
     data: function(){
+
+   
         return {
             products: null,
             meta: null,
             links: null,
-            loading: true
+            loading: true,
+            productInput: []
         }
     },
     methods: {
+        onQtyChange: function(index, price){
+            this.productInput[index].total = this.productInput[index].qty * price;
+        },
         changePage: async function(page){
            try {
                 const url = backendUrl + '/api/products?api_token=' + this.user.api_token + '&page=' + page;
                 const response = await axios.get(url);
                 this.products = response.data.data;
                 this.meta = response.data.meta;
+
+                //Refresh the Quantity and Total
+                for (let index = 0; index <= 10; index++) {
+                    this.productInput[index].qty = 0;
+                    this.productInput[index].total = 0;
+                }
+
            } catch (error) {
                console.log(error);
            }
+        },
+        selectProduct: function(product, index){
+
+            const selectedProduct = {
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                qty: this.productInput[index].qty,
+                total: this.productInput[index].total,
+                type: product.product_type
+            }
+
+            this.$emit('select', selectedProduct);
         }
     },
     async mounted(){
@@ -95,6 +128,14 @@ export default {
             this.products = response.data.data;
             this.meta = response.data.meta;
             this.links = response.data.links;
+
+            for (let index = 0; index <= 10; index++) {
+                this.productInput.push({
+                    qty: 0,
+                    total: 0
+                });
+            }
+
 
             this.loading = false;
 

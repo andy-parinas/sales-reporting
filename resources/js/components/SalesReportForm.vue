@@ -57,13 +57,13 @@
         </div>
         <div class="px-4 flex justify-between mt-5 items-start mb-20">
             <div  class="flex-1 mr-4">
-                <product-selection :user="user" ></product-selection>
+                <product-selection :user="user" @select="selectProduct" ></product-selection>
             </div>
             <div class="flex-1">
                 <div class="mb-4">
                     <h2>Shopping Details</h2>
                 </div>
-                <selected-product></selected-product>
+                <selected-product :products="selectedProducts" :subtotal="subTotal" ></selected-product>
                 <deductions></deductions>
                 <total-sales></total-sales>
                 <button class="flex items-center w-full mt-5 py-2 px-4 bg-indigo-600 text-white rounded-full justify-center focus:outline-none" @click="submit">
@@ -95,10 +95,23 @@ export default {
     data: function(){
         return {
             products: null,
-            creating: false
+            creating: false,
+            selectedProducts: [],
+            subTotal: 0
         }
     },
     methods: {
+        selectProduct: function(product){
+            this.selectedProducts.push(product);
+
+            let subTotal = 0;
+
+            this.selectedProducts.forEach(product => {
+                subTotal = subTotal + product.total;
+            });
+
+            this.subTotal = subTotal;
+        },
         submit: function(){
             // console.log('submit');
             // window.axios.post('/sales', {}).then(res =>{
