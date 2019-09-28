@@ -7,7 +7,15 @@
                         <label  class="text-sm font-semibold text-gray-800 uppercase" for="agent">Tour Agent</label>
                     </div>
                     <div  class="flex-1 p-1 border-b border-gray-700">
-                        <input class="w-full text-center focus:outline-none"  type="text" id="agent" placeholder="Tour Agent Name">
+                        <input class="w-full pl-10 focus:outline-none"  type="text" id="agent" 
+                            placeholder="Tour Agent Name" list="agents">
+                            <datalist id="agents">
+                                <option value="Internet Explorer"></option>
+                                <option value="Firefox"></option>
+                                <option value="Chrome"></option>
+                                <option value="Opera"></option>
+                                <option value="Safari"></option>
+                            </datalist>
                     </div>
                 </div>
                 <div class="flex">
@@ -15,8 +23,10 @@
                         <label  class="text-sm font-semibold text-gray-800 uppercase" for="pax">PAX</label>
                     </div>
                     <div  class="flex-1 p-1 border-b border-gray-700 flex items-center">
-                        <input class=" flex-1 text-center border-r border-gray-700 focus:outline-none"  type="text" id="pax" placeholder="Adult">
-                        <input class=" flex-1 text-center focus:outline-none"  type="text" id="pax" placeholder="Children">
+                        <input class=" flex-1 pl-10 border-r border-gray-700 focus:outline-none"  
+                            type="text" id="pax" placeholder="Adult">
+                        <input class=" flex-1 pl-10 focus:outline-none"  type="text" id="pax" 
+                            placeholder="Children">
                     </div>
                 </div>
                 <div class="flex">
@@ -24,7 +34,7 @@
                         <label  class="text-sm font-semibold text-gray-800 uppercase" for="guide">Guide Name</label>
                     </div>
                     <div class="flex-1 p-1 border-gray-700">
-                        <input class="w-full text-center focus:outline-none"  type="text" id="guide" placeholder="Guide Name">
+                        <input class="w-full pl-10 focus:outline-none"  type="text" id="guide" placeholder="Guide Name">
                     </div>
                 </div>
             </div>
@@ -34,7 +44,8 @@
                             <label class="text-sm font-semibold text-gray-800 uppercase" for="date">Date</label>
                         </div>
                         <div class="flex-1 p-1 border-b border-gray-700">
-                            <input class="w-full text-center focus:outline-none" type="text" id="date" placeholder="Tour Date">
+                            <input class="w-full focus:outline-none pl-10" type="date" id="date" 
+                                placeholder="Tour Date"  value="2018-07-22" >
                         </div>
                     </div>
                     <div class="flex">
@@ -42,7 +53,7 @@
                             <label class="text-sm font-semibold text-gray-800 uppercase" for="grp">GRP Code</label>
                         </div>
                         <div class="flex-1 p-1 border-b border-gray-700">
-                            <input class="w-full text-center focus:outline-none" type="numner" id="grp" placeholder="GRP Code">
+                            <input class="w-full pl-10 focus:outline-none" type="numner" id="grp" placeholder="GRP Code">
                         </div>
                     </div>
                     <div class="flex">
@@ -50,7 +61,7 @@
                             <label class="text-sm font-semibold text-gray-800 uppercase" for="tc">T/C Name</label>
                         </div>
                         <div class="flex-1 p-1 border-gray-700">
-                            <input class="w-full text-center focus:outline-none" type="text" id="tc" placeholder="T/C Name">
+                            <input class="w-full pl-10 focus:outline-none" type="text" id="tc" placeholder="T/C Name">
                         </div>
                     </div>
                 </div>
@@ -74,7 +85,11 @@
                     :service="service" 
                     :subtotal="deductionSubTotal"></deductions>
 
-                <total-sales></total-sales>
+                <total-sales :commissions="commissions" 
+                            :totalSales="subTotal"
+                            :deductions="deductionSubTotal"
+                            :totalAgentSales="totalAgentSales"></total-sales>
+
                 <button class="flex items-center w-full mt-5 py-2 px-4 bg-indigo-600 text-white rounded-full justify-center focus:outline-none" @click="submit">
                     <div class="text-white w-5 h-5" title="2">
                        <div v-if="creating" >
@@ -104,6 +119,16 @@ export default {
     data: function(){
         return {
             products: null,
+            commissionReference: null,
+            commissions: {
+                code1: 0,
+                code2: 0,
+                guide: 0,
+                manager: 0,
+                total: 0,
+                gst: 0,
+                grandTotal: 0
+            },
             creating: false,
             selectedProducts: [],
             subTotal: 0,
@@ -113,19 +138,21 @@ export default {
             service: 0,
             deductionSubTotal: 0,
             code1Total: 0,
-            code2Total: 0
+            code2Total: 0,
+            totalAgentSales: 0
         }
     },
     methods: {
         selectProduct: function(product){
             this.selectedProducts.push(product);
 
-            //conver quantity to integer
+            //convert to integer
             const qty = parseInt(product.qty)
             const total = parseInt(product.total);
 
             this.subTotal = this.subTotal + total
 
+            //Compute Deductions Based on Product Codes
             if(product.code === 1){
                 this.code1Count = this.code1Count + qty;
                 this.code1Total = this.code1Total + total;
@@ -139,10 +166,30 @@ export default {
                 this.service = this.service + (qty * product.cost);
             }
 
+            // Compute for the Deductions
             this.guideIncentive = this.code1Count * 50;
             this.delivery = this.code1Count * 200;
-
             this.deductionSubTotal = this.guideIncentive + this.delivery + this.service;
+
+            //Compute for Commisions:
+
+            this.commissionReference.forEach(ref => {
+                
+                if(ref.commission_type === 1) this.commissions.code1 = this.code1Total * ref.amount;
+                if(ref.commission_type === 2) this.commissions.code2 =this. code2Total * ref.amount;
+                if(ref.commission_type === 3) this.commissions.guide = this.subTotal * ref.amount;
+                if(ref.commission_type === 4) this.commissions.manager = this.subTotal * ref.amount;
+
+            });
+
+            this.commissions.total = this.commissions.code1 + this.commissions.code2 
+                + this.commissions.guide + this.commissions.manager;
+
+            this.totalAgentSales = this.subTotal - this.deductionSubTotal;
+            this.commissions.gst = this.commissions.total * 0.10;
+            this.commissions.grandTotal = this.commissions.gst + this.commissions.total;
+
+            console.log(this.commissions);
 
         },
         removeSelection: function(index){
@@ -161,9 +208,6 @@ export default {
                 this.code2Total = this.code2Total - total;
             }
 
-            console.log('qty', qty);
-            console.log('total', total);
-
             if(qty >= 1 && total === 0){
                 this.service = this.service - (qty * removedProduct[0].cost);
             }
@@ -173,7 +217,24 @@ export default {
             this.guideIncentive = this.code1Count * 50;
             this.delivery = this.code1Count * 200;
 
-             this.deductionSubTotal = this.guideIncentive + this.delivery + this.service;
+            this.deductionSubTotal = this.guideIncentive + this.delivery + this.service;
+
+            this.commissionReference.forEach(ref => {
+                
+                if(ref.commission_type === 1) this.commissions.code1 = this.code1Total * ref.amount;
+                if(ref.commission_type === 2) this.commissions.code2 =this. code2Total * ref.amount;
+                if(ref.commission_type === 3) this.commissions.guide = this.subTotal * ref.amount;
+                if(ref.commission_type === 4) this.commissions.manager = this.subTotal * ref.amount;
+
+            });
+
+            this.commissions.total = this.commissions.code1 + this.commissions.code2 
+                + this.commissions.guide + this.commissions.manager;
+
+            this.totalAgentSales = this.subTotal - this.deductionSubTotal;
+            this.commissions.gst = this.commissions.total * 0.10;
+            this.commissions.grandTotal = this.commissions.gst + this.commissions.total;
+
 
         },
         submit: function(){
@@ -186,6 +247,20 @@ export default {
             this.creating = true;
         }
     },
+    async mounted(){
+        try {
+            
+            const url =  backendUrl + '/api/commissions?api_token=' + this.user.api_token;
+            const response = await axios.get(url);
+
+            this.commissionReference = response.data;
+
+            console.log(this.commissionReference);
+
+        } catch (error) {
+            console.log('Error Loading Commissions', error);
+        }
+    }
    
 }
 </script>

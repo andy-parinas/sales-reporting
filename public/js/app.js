@@ -2166,11 +2166,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ProductSelection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ProductSelection */ "./resources/js/components/ProductSelection.vue");
-/* harmony import */ var _SelectedProduct__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SelectedProduct */ "./resources/js/components/SelectedProduct.vue");
-/* harmony import */ var _Deductions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Deductions */ "./resources/js/components/Deductions.vue");
-/* harmony import */ var _TotalSales__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./TotalSales */ "./resources/js/components/TotalSales.vue");
-/* harmony import */ var _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ui/loader/CircleLoader */ "./resources/js/components/ui/loader/CircleLoader.vue");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ProductSelection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ProductSelection */ "./resources/js/components/ProductSelection.vue");
+/* harmony import */ var _SelectedProduct__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SelectedProduct */ "./resources/js/components/SelectedProduct.vue");
+/* harmony import */ var _Deductions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Deductions */ "./resources/js/components/Deductions.vue");
+/* harmony import */ var _TotalSales__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TotalSales */ "./resources/js/components/TotalSales.vue");
+/* harmony import */ var _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ui/loader/CircleLoader */ "./resources/js/components/ui/loader/CircleLoader.vue");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2271,16 +2294,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'SalesReportForm',
   components: {
-    ProductSelection: _ProductSelection__WEBPACK_IMPORTED_MODULE_0__["default"],
-    SelectedProduct: _SelectedProduct__WEBPACK_IMPORTED_MODULE_1__["default"],
-    Deductions: _Deductions__WEBPACK_IMPORTED_MODULE_2__["default"],
-    TotalSales: _TotalSales__WEBPACK_IMPORTED_MODULE_3__["default"],
-    CircleLoader: _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_4__["default"]
+    ProductSelection: _ProductSelection__WEBPACK_IMPORTED_MODULE_1__["default"],
+    SelectedProduct: _SelectedProduct__WEBPACK_IMPORTED_MODULE_2__["default"],
+    Deductions: _Deductions__WEBPACK_IMPORTED_MODULE_3__["default"],
+    TotalSales: _TotalSales__WEBPACK_IMPORTED_MODULE_4__["default"],
+    CircleLoader: _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   props: ['user'],
   data: function data() {
     return {
       products: null,
+      commissionReference: null,
+      commissions: {
+        code1: 0,
+        code2: 0,
+        guide: 0,
+        manager: 0,
+        total: 0,
+        gst: 0,
+        grandTotal: 0
+      },
       creating: false,
       selectedProducts: [],
       subTotal: 0,
@@ -2290,16 +2323,19 @@ __webpack_require__.r(__webpack_exports__);
       service: 0,
       deductionSubTotal: 0,
       code1Total: 0,
-      code2Total: 0
+      code2Total: 0,
+      totalAgentSales: 0
     };
   },
   methods: {
     selectProduct: function selectProduct(product) {
-      this.selectedProducts.push(product); //conver quantity to integer
+      var _this = this;
+
+      this.selectedProducts.push(product); //convert to integer
 
       var qty = parseInt(product.qty);
       var total = parseInt(product.total);
-      this.subTotal = this.subTotal + total;
+      this.subTotal = this.subTotal + total; //Compute Deductions Based on Product Codes
 
       if (product.code === 1) {
         this.code1Count = this.code1Count + qty;
@@ -2312,13 +2348,28 @@ __webpack_require__.r(__webpack_exports__);
 
       if (qty >= 1 && total === 0) {
         this.service = this.service + qty * product.cost;
-      }
+      } // Compute for the Deductions
+
 
       this.guideIncentive = this.code1Count * 50;
       this.delivery = this.code1Count * 200;
-      this.deductionSubTotal = this.guideIncentive + this.delivery + this.service;
+      this.deductionSubTotal = this.guideIncentive + this.delivery + this.service; //Compute for Commisions:
+
+      this.commissionReference.forEach(function (ref) {
+        if (ref.commission_type === 1) _this.commissions.code1 = _this.code1Total * ref.amount;
+        if (ref.commission_type === 2) _this.commissions.code2 = _this.code2Total * ref.amount;
+        if (ref.commission_type === 3) _this.commissions.guide = _this.subTotal * ref.amount;
+        if (ref.commission_type === 4) _this.commissions.manager = _this.subTotal * ref.amount;
+      });
+      this.commissions.total = this.commissions.code1 + this.commissions.code2 + this.commissions.guide + this.commissions.manager;
+      this.totalAgentSales = this.subTotal - this.deductionSubTotal;
+      this.commissions.gst = this.commissions.total * 0.10;
+      this.commissions.grandTotal = this.commissions.gst + this.commissions.total;
+      console.log(this.commissions);
     },
     removeSelection: function removeSelection(index) {
+      var _this2 = this;
+
       var removedProduct = this.selectedProducts.splice(index, 1);
       var qty = parseInt(removedProduct[0].qty);
       var total = parseInt(removedProduct[0].total);
@@ -2332,9 +2383,6 @@ __webpack_require__.r(__webpack_exports__);
         this.code2Total = this.code2Total - total;
       }
 
-      console.log('qty', qty);
-      console.log('total', total);
-
       if (qty >= 1 && total === 0) {
         this.service = this.service - qty * removedProduct[0].cost;
       }
@@ -2343,6 +2391,16 @@ __webpack_require__.r(__webpack_exports__);
       this.guideIncentive = this.code1Count * 50;
       this.delivery = this.code1Count * 200;
       this.deductionSubTotal = this.guideIncentive + this.delivery + this.service;
+      this.commissionReference.forEach(function (ref) {
+        if (ref.commission_type === 1) _this2.commissions.code1 = _this2.code1Total * ref.amount;
+        if (ref.commission_type === 2) _this2.commissions.code2 = _this2.code2Total * ref.amount;
+        if (ref.commission_type === 3) _this2.commissions.guide = _this2.subTotal * ref.amount;
+        if (ref.commission_type === 4) _this2.commissions.manager = _this2.subTotal * ref.amount;
+      });
+      this.commissions.total = this.commissions.code1 + this.commissions.code2 + this.commissions.guide + this.commissions.manager;
+      this.totalAgentSales = this.subTotal - this.deductionSubTotal;
+      this.commissions.gst = this.commissions.total * 0.10;
+      this.commissions.grandTotal = this.commissions.gst + this.commissions.total;
     },
     submit: function submit() {
       // console.log('submit');
@@ -2353,7 +2411,47 @@ __webpack_require__.r(__webpack_exports__);
       // })
       this.creating = true;
     }
-  }
+  },
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      var url, response;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              url = backendUrl + '/api/commissions?api_token=' + this.user.api_token;
+              _context.next = 4;
+              return axios.get(url);
+
+            case 4:
+              response = _context.sent;
+              this.commissionReference = response.data;
+              console.log(this.commissionReference);
+              _context.next = 12;
+              break;
+
+            case 9:
+              _context.prev = 9;
+              _context.t0 = _context["catch"](0);
+              console.log('Error Loading Commissions', _context.t0);
+
+            case 12:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this, [[0, 9]]);
+    }));
+
+    function mounted() {
+      return _mounted.apply(this, arguments);
+    }
+
+    return mounted;
+  }()
 });
 
 /***/ }),
@@ -2439,6 +2537,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
 //
 //
 //
@@ -2490,7 +2589,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'TotalSales',
+  props: ['commissions', 'totalSales', 'deductions', 'totalAgentSales'],
+  components: {
+    CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_0__["default"]
+  }
+});
 
 /***/ }),
 
@@ -21443,7 +21569,14 @@ var render = function() {
               }
             }),
             _vm._v(" "),
-            _c("total-sales"),
+            _c("total-sales", {
+              attrs: {
+                commissions: _vm.commissions,
+                totalSales: _vm.subTotal,
+                deductions: _vm.deductionSubTotal,
+                totalAgentSales: _vm.totalAgentSales
+              }
+            }),
             _vm._v(" "),
             _c(
               "button",
@@ -21503,13 +21636,26 @@ var staticRenderFns = [
           _vm._v(" "),
           _c("div", { staticClass: "flex-1 p-1 border-b border-gray-700" }, [
             _c("input", {
-              staticClass: "w-full text-center focus:outline-none",
+              staticClass: "w-full pl-10 focus:outline-none",
               attrs: {
                 type: "text",
                 id: "agent",
-                placeholder: "Tour Agent Name"
+                placeholder: "Tour Agent Name",
+                list: "agents"
               }
-            })
+            }),
+            _vm._v(" "),
+            _c("datalist", { attrs: { id: "agents" } }, [
+              _c("option", { attrs: { value: "Internet Explorer" } }),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "Firefox" } }),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "Chrome" } }),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "Opera" } }),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "Safari" } })
+            ])
           ])
         ]),
         _vm._v(" "),
@@ -21541,12 +21687,12 @@ var staticRenderFns = [
             [
               _c("input", {
                 staticClass:
-                  " flex-1 text-center border-r border-gray-700 focus:outline-none",
+                  " flex-1 pl-10 border-r border-gray-700 focus:outline-none",
                 attrs: { type: "text", id: "pax", placeholder: "Adult" }
               }),
               _vm._v(" "),
               _c("input", {
-                staticClass: " flex-1 text-center focus:outline-none",
+                staticClass: " flex-1 pl-10 focus:outline-none",
                 attrs: { type: "text", id: "pax", placeholder: "Children" }
               })
             ]
@@ -21571,7 +21717,7 @@ var staticRenderFns = [
           _vm._v(" "),
           _c("div", { staticClass: "flex-1 p-1 border-gray-700" }, [
             _c("input", {
-              staticClass: "w-full text-center focus:outline-none",
+              staticClass: "w-full pl-10 focus:outline-none",
               attrs: { type: "text", id: "guide", placeholder: "Guide Name" }
             })
           ])
@@ -21600,8 +21746,13 @@ var staticRenderFns = [
           _vm._v(" "),
           _c("div", { staticClass: "flex-1 p-1 border-b border-gray-700" }, [
             _c("input", {
-              staticClass: "w-full text-center focus:outline-none",
-              attrs: { type: "text", id: "date", placeholder: "Tour Date" }
+              staticClass: "w-full focus:outline-none pl-10",
+              attrs: {
+                type: "date",
+                id: "date",
+                placeholder: "Tour Date",
+                value: "2018-07-22"
+              }
             })
           ])
         ]),
@@ -21627,7 +21778,7 @@ var staticRenderFns = [
           _vm._v(" "),
           _c("div", { staticClass: "flex-1 p-1 border-b border-gray-700" }, [
             _c("input", {
-              staticClass: "w-full text-center focus:outline-none",
+              staticClass: "w-full pl-10 focus:outline-none",
               attrs: { type: "numner", id: "grp", placeholder: "GRP Code" }
             })
           ])
@@ -21651,7 +21802,7 @@ var staticRenderFns = [
           _vm._v(" "),
           _c("div", { staticClass: "flex-1 p-1 border-gray-700" }, [
             _c("input", {
-              staticClass: "w-full text-center focus:outline-none",
+              staticClass: "w-full pl-10 focus:outline-none",
               attrs: { type: "text", id: "tc", placeholder: "T/C Name" }
             })
           ])
@@ -21841,7 +21992,236 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    {
+      staticClass:
+        "flex border border-gray-700 mt-5 items-start text-sm bg-green-200"
+    },
+    [
+      _c("div", { staticClass: "flex-1" }, [
+        _c(
+          "div",
+          { staticClass: "flex justify-between border-b border-gray-700" },
+          [
+            _c(
+              "div",
+              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+              [_vm._v("Total Sales")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "w-32  px-2 py-1" },
+              [_c("currency-format", { attrs: { value: _vm.totalSales } })],
+              1
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "flex justify-between border-b-2 border-gray-700" },
+          [
+            _c(
+              "div",
+              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+              [_vm._v("Deductions")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "w-32  px-2 py-1" },
+              [_c("currency-format", { attrs: { value: _vm.deductions } })],
+              1
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "flex justify-between border-b border-gray-700" },
+          [
+            _c(
+              "div",
+              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+              [_vm._v("Total Agent Sales")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "w-32  px-2 py-1" },
+              [
+                _c("currency-format", { attrs: { value: _vm.totalAgentSales } })
+              ],
+              1
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "flex justify-between border-b border-gray-700" },
+          [
+            _c(
+              "div",
+              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+              [_vm._v("Item Agent Commision")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "w-32  px-2 py-1" },
+              [
+                _c("currency-format", {
+                  attrs: { value: _vm.commissions.code2 }
+                })
+              ],
+              1
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "flex justify-between border-b border-gray-700" },
+          [
+            _c(
+              "div",
+              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+              [_vm._v("Carpet Agent Commision")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "w-32  px-2 py-1" },
+              [
+                _c("currency-format", {
+                  attrs: { value: _vm.commissions.code1 }
+                })
+              ],
+              1
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "flex justify-between border-b border-gray-700" },
+          [
+            _c(
+              "div",
+              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+              [_vm._v("Guide Commission")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "w-32  px-2 py-1" },
+              [
+                _c("currency-format", {
+                  attrs: { value: _vm.commissions.guide }
+                })
+              ],
+              1
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "flex justify-between border-b border-gray-700" },
+          [
+            _c(
+              "div",
+              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+              [_vm._v("Manager Commission")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "w-32  px-2 py-1" },
+              [
+                _c("currency-format", {
+                  attrs: { value: _vm.commissions.manager }
+                })
+              ],
+              1
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "flex justify-between border-b border-gray-700" },
+          [
+            _c(
+              "div",
+              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+              [_vm._v("Total Agent Commission")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "w-32  px-2 py-1" },
+              [
+                _c("currency-format", {
+                  attrs: { value: _vm.commissions.total }
+                })
+              ],
+              1
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "flex justify-between border-b border-gray-700" },
+          [
+            _c(
+              "div",
+              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+              [_vm._v("GST")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "w-32  px-2 py-1" },
+              [
+                _c("currency-format", { attrs: { value: _vm.commissions.gst } })
+              ],
+              1
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "flex justify-between font-semibold bg-green-400" },
+          [
+            _c(
+              "div",
+              { staticClass: "flex-1 border-gray-700 border-r  px-2 py-1" },
+              [_vm._v("Grand Total Agent Commission")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "w-32  px-2 py-1" },
+              [
+                _c("currency-format", {
+                  attrs: { value: _vm.commissions.grandTotal }
+                })
+              ],
+              1
+            )
+          ]
+        )
+      ])
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
@@ -21850,170 +22230,11 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c(
       "div",
-      {
-        staticClass:
-          "flex border border-gray-700 mt-5 items-start text-sm bg-green-200"
-      },
+      { staticClass: "flex justify-between border-b border-gray-700 h-8" },
       [
-        _c("div", { staticClass: "flex-1" }, [
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("Total Sales")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "w-32  px-2 py-1" }, [_vm._v(" 50.00 ")])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b-2 border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("Deductions")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "w-32  px-2 py-1" }, [
-                _vm._v(" 200.00 ")
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("Total Agent Sales")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "w-32  px-2 py-1" }, [_vm._v(" 85.00 ")])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("Item Agent Commision")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "w-32  px-2 py-1" }, [_vm._v(" 85.00 ")])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("Carpet Agent Commision")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "w-32  px-2 py-1" }, [_vm._v(" 85.00 ")])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("Guide Commission")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "w-32  px-2 py-1" }, [_vm._v(" 85.00 ")])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("Manager Commission")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "w-32  px-2 py-1" }, [_vm._v(" 85.00 ")])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "flex justify-between border-b border-gray-700 h-8"
-            },
-            [
-              _c("div", {
-                staticClass: "flex-1 border-gray-700 border-r px-2 py-1"
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "w-32  px-2 py-1" })
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("Total Agent Commission")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "w-32  px-2 py-1" }, [_vm._v(" 85.00 ")])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("GST")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "w-32  px-2 py-1" }, [_vm._v(" 85.00 ")])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between font-semibold bg-green-400" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r  px-2 py-1" },
-                [_vm._v("Grand Total Agent Commission")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "w-32  px-2 py-1" }, [
-                _vm._v(" 335.00 ")
-              ])
-            ]
-          )
-        ])
+        _c("div", { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" }),
+        _vm._v(" "),
+        _c("div", { staticClass: "w-32  px-2 py-1" })
       ]
     )
   }
