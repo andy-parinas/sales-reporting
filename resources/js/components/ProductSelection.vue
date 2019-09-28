@@ -29,11 +29,11 @@
                             <currency-format :value="product.price"></currency-format>
                         </td>
                         <td class="py-2 px-4 border border-gray-800 w-12"> 
-                            <input v-model="productInput[index].qty" @change="onQtyChange(index, product.price)"
+                            <input v-model.number="productInput[index].qty" @change="onQtyChange(index, product.price)"
                             class="w-8 focus:outline-none text-xs" type="text" placeholder="0">
                         </td>
                         <td class="py-2 px-4 border border-gray-800 w-12"> 
-                            <input v-model="productInput[index].total"
+                            <input v-model.number="productInput[index].total"
                             class="w-12 focus:outline-none text-xs" type="text" placeholder="0">
                         </td>
                         <td class="py-2 px-4 border border-gray-800 w-12 bg-indigo-500 text-white hover:bg-indigo-600"> 

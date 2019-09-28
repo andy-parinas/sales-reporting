@@ -21303,9 +21303,10 @@ var render = function() {
                         directives: [
                           {
                             name: "model",
-                            rawName: "v-model",
+                            rawName: "v-model.number",
                             value: _vm.productInput[index].qty,
-                            expression: "productInput[index].qty"
+                            expression: "productInput[index].qty",
+                            modifiers: { number: true }
                           }
                         ],
                         staticClass: "w-8 focus:outline-none text-xs",
@@ -21322,8 +21323,11 @@ var render = function() {
                             _vm.$set(
                               _vm.productInput[index],
                               "qty",
-                              $event.target.value
+                              _vm._n($event.target.value)
                             )
+                          },
+                          blur: function($event) {
+                            return _vm.$forceUpdate()
                           }
                         }
                       })
@@ -21338,9 +21342,10 @@ var render = function() {
                         directives: [
                           {
                             name: "model",
-                            rawName: "v-model",
+                            rawName: "v-model.number",
                             value: _vm.productInput[index].total,
-                            expression: "productInput[index].total"
+                            expression: "productInput[index].total",
+                            modifiers: { number: true }
                           }
                         ],
                         staticClass: "w-12 focus:outline-none text-xs",
@@ -21354,8 +21359,11 @@ var render = function() {
                             _vm.$set(
                               _vm.productInput[index],
                               "total",
-                              $event.target.value
+                              _vm._n($event.target.value)
                             )
+                          },
+                          blur: function($event) {
+                            return _vm.$forceUpdate()
                           }
                         }
                       })
