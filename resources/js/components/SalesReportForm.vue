@@ -129,6 +129,11 @@ export default {
                 gst: 0,
                 grandTotal: 0
             },
+            resportInfo: {
+                agentId: null,
+                guideId: null,
+                
+            },
             creating: false,
             selectedProducts: [],
             subTotal: 0,
@@ -237,6 +242,7 @@ export default {
 
 
         },
+
         submit: function(){
             // console.log('submit');
             // window.axios.post('/sales', {}).then(res =>{

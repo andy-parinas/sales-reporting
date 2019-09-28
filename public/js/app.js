@@ -2314,6 +2314,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         gst: 0,
         grandTotal: 0
       },
+      resportInfo: {
+        agentId: null,
+        guideId: null
+      },
       creating: false,
       selectedProducts: [],
       subTotal: 0,

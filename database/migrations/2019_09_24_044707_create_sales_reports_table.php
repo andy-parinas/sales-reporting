@@ -17,7 +17,11 @@ class CreateSalesReportsTable extends Migration
             $table->bigIncrements('id');
             $table->string('report_number');
             $table->string('grp_code');
-            $table->string('pax');
+            $table->integer('adult_count');
+            $table->integer('children_count');
+            $table->unsignedBigInteger('tour_agent_id');
+            $table->unsignedBigInteger('tour_guide_id');
+            $table->string('tc_name');
             $table->timestamps();
         });
     }
