@@ -15,6 +15,10 @@ class CreateDeductionsTable extends Migration
     {
         Schema::create('deductions', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('sales_report_id');
+            $table->float('guide_incentive');
+            $table->float('delivery');
+            $table->float('service');
             $table->timestamps();
         });
     }

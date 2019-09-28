@@ -17,4 +17,9 @@ class Product extends Model
         return $this->belongsTo(ProductType::class);
     }
 
+    public function selectedProducts()
+    {
+        return $this->hasMany(SelectedProduct::class);
+    }
+
 }

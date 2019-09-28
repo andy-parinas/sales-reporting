@@ -15,6 +15,10 @@ class CreateSelectedProductsTable extends Migration
     {
         Schema::create('selected_products', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('sales_report_id');
+            $table->integer('quantity');
+            $table->integer('total');
             $table->timestamps();
         });
     }

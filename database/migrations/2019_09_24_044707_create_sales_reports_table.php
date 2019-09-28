@@ -22,6 +22,11 @@ class CreateSalesReportsTable extends Migration
             $table->unsignedBigInteger('tour_agent_id');
             $table->unsignedBigInteger('tour_guide_id');
             $table->string('tc_name');
+            $table->float('total_sales');
+            $table->float('total_agent_sales');
+            $table->float('total_commission');
+            $table->float('gst');
+            $table->float('grand_total_commission');
             $table->timestamps();
         });
     }

@@ -15,6 +15,9 @@ class CreateSalesCommissionsTable extends Migration
     {
         Schema::create('sales_commissions', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('sales_report_id');
+            $table->unsignedBigInteger('commission_id');
+            $table->float('amount');
             $table->timestamps();
         });
     }

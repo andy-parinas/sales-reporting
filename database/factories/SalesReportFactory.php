@@ -3,10 +3,23 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\SalesReport;
+use App\TourAgent;
+use App\TourGuide;
 use Faker\Generator as Faker;
 
 $factory->define(SalesReport::class, function (Faker $faker) {
     return [
-        //
+        'report_number' => $faker->randomNumber,
+        'grp_code' => $faker->numerify('GRP #######'),
+        'adult_count' => $faker->numberBetween(5,30),
+        'children_count' => $faker->numberBetween(0, 10),
+        'tour_agent_id' => factory(TourAgent::class),
+        'tour_guide_id' => factory(TourGuide::class),
+        'tc_name' => $faker->name,
+        'total_sales' => $faker->randomFloat(2),
+        'total_agent_sales' => $faker->randomFloat(2),
+        'total_commission' => $faker->randomFloat(2),
+        'gst' => $faker->randomFloat(2),
+        'grand_total_commission' => $faker->randomFloat(2)
     ];
 });

@@ -16,6 +16,7 @@ class CreateCommissionsTable extends Migration
         Schema::create('commissions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->string('description');
             $table->integer('commission_type');
             $table->float('amount');
             $table->timestamps();
