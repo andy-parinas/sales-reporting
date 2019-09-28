@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Deduction;
+use App\SalesCommission;
 use App\SalesReport;
 use App\SelectedProduct;
 use App\TourAgent;
@@ -56,5 +57,13 @@ class SalesReportTest extends TestCase
           $this->assertInstanceOf(Deduction::class, $sales->deduction);
       }
   
+      /** @test */
+      public function report_have_sales_commissions()
+      {
+          $sales = factory(SalesReport::class)->create();
 
+          factory(SalesCommission::class)->create(['sales_report_id' => $sales->id]);
+
+          $this->assertContainsOnlyInstancesOf(SalesCommission::class, $sales->salesCommissions);
+      }
 }
