@@ -19,6 +19,7 @@ class CreateDeductionsTable extends Migration
             $table->float('guide_incentive');
             $table->float('delivery');
             $table->float('service');
+            $table->float('total');
             $table->timestamps();
         });
     }
