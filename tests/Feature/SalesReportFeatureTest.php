@@ -10,6 +10,7 @@ use App\SalesReport;
 use App\SelectedProduct;
 use App\TourAgent;
 use App\TourGuide;
+use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -25,12 +26,12 @@ class SalesReportFeatureTest extends TestCase
 
         // $this->withoutExceptionHandling();
 
-       
+        $user = factory(User::class)->create();
     
         $data = $this->createSalesReportData();
 
 
-        $response = $this->post('/api/sales', $data);
+        $response = $this->post('/api/sales', array_merge($data, ['api_token' => $user->api_token]));
 
         // $this->assertCount(0, SalesReport::all());
 
@@ -44,15 +45,17 @@ class SalesReportFeatureTest extends TestCase
     /** @test */
     public function sales_report_fields_are_required()
     {
+        
         $fields = collect(['report_number','grp_code', 'adult_count', 'children_count', 'tour_agent_id', 
         'tour_guide_id', 'tc_name', 'total_sales', 'total_agent_sales', 'total_commission', 
         'gst', 'grand_total_commission','guide_incentive', 'delivery', 'service','total', ]);
 
 
         $fields->each(function($field){
+            $user = factory(User::class)->create();
             $data = array_merge($this->createSalesReportData(), [$field => '']);
 
-            $this->post('/api/sales', $data)
+            $this->post('/api/sales', array_merge($data, ['api_token' => $user->api_token]))
                 ->assertSessionHasErrors($field);
 
             $this->assertCount(0, SalesReport::all());
