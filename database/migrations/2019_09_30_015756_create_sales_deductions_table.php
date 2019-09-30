@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDeductionsTable extends Migration
+class CreateSalesDeductionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateDeductionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('deductions', function (Blueprint $table) {
+        Schema::create('sales_deductions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->integer('type');
+            $table->unsignedBigInteger('sales_report_id');
+            $table->unsignedBigInteger('deduction_id');
             $table->float('amount');
             $table->timestamps();
         });
@@ -29,6 +29,6 @@ class CreateDeductionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('deductions');
+        Schema::dropIfExists('sales_deductions');
     }
 }

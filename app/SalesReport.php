@@ -24,9 +24,9 @@ class SalesReport extends Model
         return $this->hasMany(SelectedProduct::class);
     }
 
-    public function deduction()
+    public function salesDeductions()
     {
-        return $this->hasOne(Deduction::class);
+        return $this->hasMany(SalesDeduction::class);
     }
 
     public function salesCommissions()

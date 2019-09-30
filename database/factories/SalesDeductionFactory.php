@@ -3,13 +3,14 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Deduction;
+use App\SalesDeduction;
 use App\SalesReport;
 use Faker\Generator as Faker;
 
-$factory->define(Deduction::class, function (Faker $faker) {
+$factory->define(SalesDeduction::class, function (Faker $faker) {
     return [
-        'name' => $faker->words(3, true),
-        'type' => $faker->numberBetween(1,3),
+        'sales_report_id' => factory(SalesReport::class),
+        'deduction_id' => factory(Deduction::class),
         'amount' => $faker->randomFloat(2)
     ];
 });

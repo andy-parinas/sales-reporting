@@ -75,7 +75,7 @@
                     <h2>Shopping Details</h2>
                 </div>
 
-                <selected-product :products="selectedProducts" 
+                <selected-product :products="selected_products" 
                     :subtotal="subTotal" 
                     @remove="removeSelection" ></selected-product>
 
@@ -118,49 +118,48 @@ export default {
     props: ['user'],
     data: function(){
         return {
-            products: null,
             commissionReference: null,
-            commissions: {
-                code1: 0,
-                code2: 0,
-                guide: 0,
-                manager: 0,
-                total: 0,
-                gst: 0,
-                grandTotal: 0
-            },
-            resportInfo: {
-                agentId: null,
-                guideId: null,
-                
-            },
             creating: false,
-            selectedProducts: [],
-            subTotal: 0,
             code1Count: 0,
-            guideIncentive: 0,
-            delivery: 0,
-            service: 0,
-            deductionSubTotal: 0,
             code1Total: 0,
             code2Total: 0,
-            totalAgentSales: 0
+            form: {
+                    tour_agent_id: null,
+                    tour_guide_id: null,
+                    tc_name: null,
+                    grp_code: null,
+                    adult_count: null,
+                    children_count: null,
+                    total_sales: 0,
+                    total_agent_sales: 0,
+                    total_commission: 0,
+                    gst: 0,
+                    grand_total_commission: 0,
+                    guide_incentive: 0,
+                    delivery: 0,
+                    service: 0,
+                    total: 0,
+                    selected_products: [],
+                    sales_commissions: [],
+            }
         }
     },
     methods: {
         selectProduct: function(product){
-            this.selectedProducts.push(product);
+
+
+            this.form.selected_products.push(product);
 
             //convert to integer
-            const qty = parseInt(product.qty)
-            const total = parseInt(product.total);
+            // const qty = parseInt(product.qty)
+            // const total = parseInt(product.total);
 
             this.subTotal = this.subTotal + total
 
             //Compute Deductions Based on Product Codes
             if(product.code === 1){
-                this.code1Count = this.code1Count + qty;
-                this.code1Total = this.code1Total + total;
+                this.code1Count = this.code1Count + product.qty;
+                this.code1Total = this.code1Total + product.total;
             }
 
             if(product.code === 2){
@@ -179,11 +178,24 @@ export default {
             //Compute for Commisions:
 
             this.commissionReference.forEach(ref => {
+
+                const salesCommission = {
+                    id: ref.id,
+                    name: ref.name,
+                    amount: 0
+                }
+
+                if(ref.commission_type === 1) salesCommission.amount = this.code1Total * ref.amount;
+                 if(ref.commission_type === 2) salesCommission.amount =this. code2Total * ref.amount;
+                if(ref.commission_type === 3) salesCommission.amount = this.subTotal * ref.amount;
+                if(ref.commission_type === 4) salesCommission.amount = this.subTotal * ref.amount;
                 
-                if(ref.commission_type === 1) this.commissions.code1 = this.code1Total * ref.amount;
-                if(ref.commission_type === 2) this.commissions.code2 =this. code2Total * ref.amount;
-                if(ref.commission_type === 3) this.commissions.guide = this.subTotal * ref.amount;
-                if(ref.commission_type === 4) this.commissions.manager = this.subTotal * ref.amount;
+                // if(ref.commission_type === 1) this.commissions.code1 = this.code1Total * ref.amount;
+                // if(ref.commission_type === 2) this.commissions.code2 =this. code2Total * ref.amount;
+                // if(ref.commission_type === 3) this.commissions.guide = this.subTotal * ref.amount;
+                // if(ref.commission_type === 4) this.commissions.manager = this.subTotal * ref.amount;
+
+                this.sales_commissions.push(salesCommission);
 
             });
 
