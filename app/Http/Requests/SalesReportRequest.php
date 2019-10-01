@@ -36,10 +36,8 @@ class SalesReportRequest extends FormRequest
             'total_commission' => 'required',
             'gst' => 'required',
             'grand_total_commission' => 'required',
-            'guide_incentive' => 'required',
-            'delivery' => 'required',
-            'service' => 'required',
             'total' => 'required',
+            'sales_deductions' => 'array',
             'selected_products' => 'array',
             'sales_commissions' => 'array',
         ];

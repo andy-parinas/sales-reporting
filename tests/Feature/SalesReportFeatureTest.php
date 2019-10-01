@@ -6,6 +6,7 @@ use App\Commission;
 use App\Deduction;
 use App\Product;
 use App\SalesCommission;
+use App\SalesDeduction;
 use App\SalesReport;
 use App\SelectedProduct;
 use App\TourAgent;
@@ -24,7 +25,7 @@ class SalesReportFeatureTest extends TestCase
     public function can_create_sales_report_and_related_data_via_api()
     {
 
-        // $this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
 
         $user = factory(User::class)->create();
     
@@ -35,8 +36,8 @@ class SalesReportFeatureTest extends TestCase
 
         // $this->assertCount(0, SalesReport::all());
 
-        $response->assertStatus(200);
-        $this->assertInstanceOf(Deduction::class, SalesReport::first()->deduction); // Check if Deduction was created
+        $response->assertStatus(201);
+        $this->assertContainsOnlyInstancesOf(SalesDeduction::class, SalesReport::first()->salesDeductions); 
         $this->assertContainsOnlyInstancesOf(SelectedProduct::class,SalesReport::first()->selectedProducts);
         $this->assertContainsOnlyInstancesOf(SalesCommission::class,SalesReport::first()->salesCommissions);
 
@@ -88,6 +89,10 @@ class SalesReportFeatureTest extends TestCase
         $commission3 = factory(Commission::class)->create();
         $commission4 = factory(Commission::class)->create();
 
+        $deduction1 = factory(Deduction::class)->create();
+        $deduction2 = factory(Deduction::class)->create();
+        $deduction3 = factory(Deduction::class)->create();
+
         
         return [
             'report_number' => $this->faker->randomNumber,
@@ -102,10 +107,21 @@ class SalesReportFeatureTest extends TestCase
             'total_commission' => $this->faker->randomFloat(2),
             'gst' => $this->faker->randomFloat(2),
             'grand_total_commission' => $this->faker->randomFloat(2),
-            'guide_incentive' => $this->faker->randomFloat(2),
-            'delivery' => $this->faker->randomFloat(2),
-            'service' => $this->faker->randomFloat(2),
             'total' => $this->faker->randomFloat(2),
+            'sales_deductions' => [
+                [
+                    'deduction_id' => $deduction1->id,
+                    'amount' => $this->faker->randomFloat(2)
+                ],
+                [
+                    'deduction_id' => $deduction2->id,
+                    'amount' => $this->faker->randomFloat(2)
+                ],
+                [
+                    'deduction_id' => $deduction3->id,
+                    'amount' => $this->faker->randomFloat(2)
+                ]
+            ],
             'selected_products' => [
                 [
                     'product_id' => $product1->id,

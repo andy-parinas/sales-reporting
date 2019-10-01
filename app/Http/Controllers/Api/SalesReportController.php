@@ -23,21 +23,24 @@ class SalesReportController extends Controller
     public function store(SalesReportRequest $request)
     {
         $reportData = $this->reportData($request);
-        $deduction = $this->deductionData($request);
 
 
         DB::beginTransaction();
         try {
             
             $report = SalesReport::create($reportData);
-            $report->deduction()->create($deduction);
+            $report->salesDeductions()->createMany($request->validated()['sales_deductions']);
             $report->selectedProducts()->createMany($request->validated()['selected_products']);
             $report->salesCommissions()->createMany($request->validated()['sales_commissions']);
         
             DB::commit();
 
+            return response($report, Response::HTTP_CREATED);
+
         } catch (\Exception $e) {
             DB::rollBack();
+
+            return response([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
 
@@ -64,15 +67,6 @@ class SalesReportController extends Controller
 
     }
 
-    private function deductionData(SalesReportRequest $request)
-    {
-        return [
-            'guide_incentive' => $request->validated()['guide_incentive'],
-            'delivery' => $request->validated()['delivery'],
-            'service' => $request->validated()['service'],
-            'total' => $request->validated()['total'],
-        ];
-    }
 
     
 }
