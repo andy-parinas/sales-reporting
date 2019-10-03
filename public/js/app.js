@@ -1885,10 +1885,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Deductions',
-  props: ['incentive', 'delivery', 'service', 'subtotal'],
+  props: ['deductions', 'totalDeductions'],
   components: {
     CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
@@ -2286,6 +2288,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 
@@ -2303,108 +2306,117 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   props: ['user'],
   data: function data() {
     return {
-      products: null,
-      commissionReference: null,
-      commissions: {
-        code1: 0,
-        code2: 0,
-        guide: 0,
-        manager: 0,
-        total: 0,
-        gst: 0,
-        grandTotal: 0
-      },
-      resportInfo: {
-        agentId: null,
-        guideId: null
-      },
+      commissionReference: [],
+      deductionReference: [],
       creating: false,
-      selectedProducts: [],
-      subTotal: 0,
       code1Count: 0,
-      guideIncentive: 0,
-      delivery: 0,
-      service: 0,
-      deductionSubTotal: 0,
       code1Total: 0,
       code2Total: 0,
-      totalAgentSales: 0
+      form: {
+        tour_agent_id: null,
+        tour_guide_id: null,
+        tc_name: null,
+        grp_code: null,
+        adult_count: null,
+        children_count: null,
+        total_sales: 0,
+        total_agent_sales: 0,
+        total_deductions: 0,
+        total_commission: 0,
+        gst: 0,
+        grand_total_commission: 0,
+        guide_incentive: 0,
+        delivery: 0,
+        service: 0,
+        total: 0,
+        selected_products: [],
+        sales_commissions: [],
+        sales_deductions: []
+      }
     };
   },
   methods: {
-    selectProduct: function selectProduct(product) {
+    computeCommission: function computeCommission() {
       var _this = this;
 
-      this.selectedProducts.push(product); //convert to integer
+      var totalCommissions = 0;
+      this.form.sales_commissions.forEach(function (commission, index) {
+        if (commission.type === 1) {
+          _this.form.sales_commissions[index].amount = commission.percentage * _this.code1Total;
+        } else if (commission.type === 2) {
+          _this.form.sales_commissions[index].amount = commission.percentage * _this.code2Total;
+        } else {
+          _this.form.sales_commissions[index].amount = commission.percentage * _this.form.total_agent_sales;
+        }
 
-      var qty = parseInt(product.qty);
-      var total = parseInt(product.total);
-      this.subTotal = this.subTotal + total; //Compute Deductions Based on Product Codes
-
-      if (product.code === 1) {
-        this.code1Count = this.code1Count + qty;
-        this.code1Total = this.code1Total + total;
-      }
-
-      if (product.code === 2) {
-        this.code2Total = this.code2Total + total;
-      }
-
-      if (qty >= 1 && total === 0) {
-        this.service = this.service + qty * product.cost;
-      } // Compute for the Deductions
-
-
-      this.guideIncentive = this.code1Count * 50;
-      this.delivery = this.code1Count * 200;
-      this.deductionSubTotal = this.guideIncentive + this.delivery + this.service; //Compute for Commisions:
-
-      this.commissionReference.forEach(function (ref) {
-        if (ref.commission_type === 1) _this.commissions.code1 = _this.code1Total * ref.amount;
-        if (ref.commission_type === 2) _this.commissions.code2 = _this.code2Total * ref.amount;
-        if (ref.commission_type === 3) _this.commissions.guide = _this.subTotal * ref.amount;
-        if (ref.commission_type === 4) _this.commissions.manager = _this.subTotal * ref.amount;
+        totalCommissions = totalCommissions + _this.form.sales_commissions[index].amount;
       });
-      this.commissions.total = this.commissions.code1 + this.commissions.code2 + this.commissions.guide + this.commissions.manager;
-      this.totalAgentSales = this.subTotal - this.deductionSubTotal;
-      this.commissions.gst = this.commissions.total * 0.10;
-      this.commissions.grandTotal = this.commissions.gst + this.commissions.total;
-      console.log(this.commissions);
+      this.form.total_commission = totalCommissions; // this.form.total_agent_sales = this.form.total_sales - this.this.form.total_deductions;
+
+      this.form.gst = this.form.total_commission * 0.10;
+      this.form.grand_total_commission = this.form.gst + this.form.total_commission;
     },
-    removeSelection: function removeSelection(index) {
+    computeDeduction: function computeDeduction(product, action) {
       var _this2 = this;
 
-      var removedProduct = this.selectedProducts.splice(index, 1);
-      var qty = parseInt(removedProduct[0].qty);
-      var total = parseInt(removedProduct[0].total);
+      var total = 0;
+      this.form.sales_deductions.forEach(function (deduction, index) {
+        if (deduction.type === 1) {
+          _this2.form.sales_deductions[index].amount = _this2.code1Count * _this2.form.sales_deductions[index].multiplier;
+        } else if (deduction.type === 3 && product.qty >= 1 && product.total === 0) {
+          console.log('Type3', deduction.type);
+
+          if (action === 'add') {
+            _this2.form.sales_deductions[index].amount = _this2.form.sales_deductions[index].amount + product.cost;
+          } else {
+            _this2.form.sales_deductions[index].amount = _this2.form.sales_deductions[index].amount - product.cost;
+          }
+        }
+
+        total = total + deduction.amount;
+      });
+      this.form.total_deductions = total;
+    },
+    selectProduct: function selectProduct(product) {
+      /**
+       * Type1 or Code1 products are Carpets which are high value
+       * Type2 or Code2 products are low value
+       * 
+       * For deduction Type3 this is a service product 
+       * service products are free when purchase a high value products
+       * deduction amount is the product cost.
+       */
+      this.form.selected_products.push(product);
+      this.form.total_sales = this.form.total_sales + product.total;
+
+      if (product.code === 1) {
+        this.code1Total = this.code1Total + product.total;
+        this.code1Count = this.code1Count + product.qty;
+      }
+
+      if (product.code === 2) this.code2Total = this.code2Total + product.total; //Compute for Deductions
+
+      this.computeDeduction(product, 'add');
+      this.form.total_agent_sales = this.form.total_sales - this.form.total_deductions; // //Compute for Commisions:
+
+      this.computeCommission();
+    },
+    removeSelection: function removeSelection(index) {
+      var removedProduct = this.form.selected_products.splice(index, 1);
 
       if (removedProduct[0].code === 1) {
-        this.code1Count = this.code1Count - qty;
-        this.code1Total = this.code1Total - total;
+        this.code1Count = this.code1Count - removedProduct[0].qty;
+        this.code1Total = this.code1Total - removedProduct[0].total;
       }
 
       if (removedProduct[0].code === 2) {
-        this.code2Total = this.code2Total - total;
+        this.code2Total = this.code2Total - removedProduct[0].total;
       }
 
-      if (qty >= 1 && total === 0) {
-        this.service = this.service - qty * removedProduct[0].cost;
-      }
-
-      this.subTotal = this.subTotal - total;
-      this.guideIncentive = this.code1Count * 50;
-      this.delivery = this.code1Count * 200;
-      this.deductionSubTotal = this.guideIncentive + this.delivery + this.service;
-      this.commissionReference.forEach(function (ref) {
-        if (ref.commission_type === 1) _this2.commissions.code1 = _this2.code1Total * ref.amount;
-        if (ref.commission_type === 2) _this2.commissions.code2 = _this2.code2Total * ref.amount;
-        if (ref.commission_type === 3) _this2.commissions.guide = _this2.subTotal * ref.amount;
-        if (ref.commission_type === 4) _this2.commissions.manager = _this2.subTotal * ref.amount;
-      });
-      this.commissions.total = this.commissions.code1 + this.commissions.code2 + this.commissions.guide + this.commissions.manager;
-      this.totalAgentSales = this.subTotal - this.deductionSubTotal;
-      this.commissions.gst = this.commissions.total * 0.10;
-      this.commissions.grandTotal = this.commissions.gst + this.commissions.total;
+      this.form.total_sales = this.form.total_sales - removedProduct[0].total;
+      this.computeDeduction(removedProduct[0], 'remove');
+      this.form.total_agent_sales = this.form.total_sales - this.form.total_deductions;
+      this.computeCommission();
     },
     submit: function submit() {
       // console.log('submit');
@@ -2420,34 +2432,67 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-      var url, response;
+      var _this3 = this;
+
+      var commissionsUrl, commissionResponse, deductionUrl, deductionResponse;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              url = backendUrl + '/api/commissions?api_token=' + this.user.api_token;
+              commissionsUrl = backendUrl + '/api/commissions?api_token=' + this.user.api_token;
               _context.next = 4;
-              return axios.get(url);
+              return axios.get(commissionsUrl);
 
             case 4:
-              response = _context.sent;
-              this.commissionReference = response.data;
-              console.log(this.commissionReference);
-              _context.next = 12;
+              commissionResponse = _context.sent;
+              this.commissionReference = commissionResponse.data; //initialize the sales_commission
+
+              this.commissionReference.forEach(function (ref) {
+                var salesCommission = {
+                  id: ref.id,
+                  name: ref.name,
+                  type: ref.commission_type,
+                  percentage: ref.amount,
+                  amount: 0
+                };
+
+                _this3.form.sales_commissions.push(salesCommission);
+              });
+              deductionUrl = backendUrl + '/api/deductions?api_token=' + this.user.api_token;
+              _context.next = 10;
+              return axios.get(deductionUrl);
+
+            case 10:
+              deductionResponse = _context.sent;
+              this.deductionReference = deductionResponse.data; //initialize deductions
+
+              this.deductionReference.forEach(function (ref) {
+                var deduction = {
+                  id: ref.id,
+                  name: ref.name,
+                  amount: 0,
+                  type: ref.type,
+                  multiplier: ref.amount
+                };
+
+                _this3.form.sales_deductions.push(deduction);
+              });
+              console.log(this.form.sales_deductions);
+              _context.next = 19;
               break;
 
-            case 9:
-              _context.prev = 9;
+            case 16:
+              _context.prev = 16;
               _context.t0 = _context["catch"](0);
               console.log('Error Loading Commissions', _context.t0);
 
-            case 12:
+            case 19:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, this, [[0, 9]]);
+      }, _callee, this, [[0, 16]]);
     }));
 
     function mounted() {
@@ -2598,25 +2643,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TotalSales',
-  props: ['commissions', 'totalSales', 'deductions', 'totalAgentSales'],
+  props: ['commissions', 'totalCommissions', 'gst', 'grandTotal', 'totalSales', 'totalDeduction', 'totalAgentSales'],
   components: {
     CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
@@ -21087,83 +21117,63 @@ var render = function() {
     [
       _vm._m(0),
       _vm._v(" "),
-      _c("div", { staticClass: "flex-1 border-l border-gray-700 " }, [
-        _c(
-          "div",
-          { staticClass: "flex justify-between border-b border-gray-700" },
-          [
-            _c(
+      _c(
+        "div",
+        { staticClass: "flex-1 border-l border-gray-700 " },
+        [
+          _vm._l(_vm.deductions, function(deduction) {
+            return _c(
               "div",
-              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-              [_vm._v("Guide Incentive")]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-32  px-2 py-1" },
-              [_c("currency-format", { attrs: { value: _vm.incentive } })],
-              1
+              {
+                key: deduction.id,
+                staticClass: "flex justify-between border-b border-gray-700"
+              },
+              [
+                _c(
+                  "div",
+                  { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+                  [_vm._v(_vm._s(deduction.name))]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "w-32  px-2 py-1" },
+                  [
+                    _c("currency-format", {
+                      attrs: { value: deduction.amount }
+                    })
+                  ],
+                  1
+                )
+              ]
             )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "flex justify-between border-b border-gray-700" },
-          [
-            _c(
-              "div",
-              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-              [_vm._v("Delivery")]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-32  px-2 py-1" },
-              [_c("currency-format", { attrs: { value: _vm.delivery } })],
-              1
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "flex justify-between border-b border-gray-700" },
-          [
-            _c(
-              "div",
-              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-              [_vm._v("Service")]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-32  px-2 py-1" },
-              [_c("currency-format", { attrs: { value: _vm.service } })],
-              1
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "flex justify-between font-semibold bg-red-400" },
-          [
-            _c(
-              "div",
-              { staticClass: "flex-1 border-gray-700 border-r  px-2 py-1" },
-              [_vm._v("Sub Total")]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-32  px-2 py-1" },
-              [_c("currency-format", { attrs: { value: _vm.subtotal } })],
-              1
-            )
-          ]
-        )
-      ])
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "flex justify-between font-semibold bg-red-400" },
+            [
+              _c(
+                "div",
+                { staticClass: "flex-1 border-gray-700 border-r  px-2 py-1" },
+                [_vm._v("Sub Total")]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "w-32  px-2 py-1" },
+                [
+                  _c("currency-format", {
+                    attrs: { value: _vm.totalDeductions }
+                  })
+                ],
+                1
+              )
+            ]
+          )
+        ],
+        2
+      )
     ]
   )
 }
@@ -21568,25 +21578,29 @@ var render = function() {
             _vm._m(1),
             _vm._v(" "),
             _c("selected-product", {
-              attrs: { products: _vm.selectedProducts, subtotal: _vm.subTotal },
+              attrs: {
+                products: _vm.form.selected_products,
+                subtotal: _vm.form.total_sales
+              },
               on: { remove: _vm.removeSelection }
             }),
             _vm._v(" "),
             _c("deductions", {
               attrs: {
-                incentive: _vm.guideIncentive,
-                delivery: _vm.delivery,
-                service: _vm.service,
-                subtotal: _vm.deductionSubTotal
+                deductions: _vm.form.sales_deductions,
+                totalDeductions: _vm.form.total_deductions
               }
             }),
             _vm._v(" "),
             _c("total-sales", {
               attrs: {
-                commissions: _vm.commissions,
-                totalSales: _vm.subTotal,
-                deductions: _vm.deductionSubTotal,
-                totalAgentSales: _vm.totalAgentSales
+                commissions: _vm.form.sales_commissions,
+                totalSales: _vm.form.total_sales,
+                totalDeduction: _vm.form.total_deductions,
+                totalAgentSales: _vm.form.total_agent_sales,
+                totalCommissions: _vm.form.total_commission,
+                gst: _vm.form.gst,
+                grandTotal: _vm.form.grand_total_commission
               }
             }),
             _vm._v(" "),
@@ -22011,227 +22025,168 @@ var render = function() {
         "flex border border-gray-700 mt-5 items-start text-sm bg-green-200"
     },
     [
-      _c("div", { staticClass: "flex-1" }, [
-        _c(
-          "div",
-          { staticClass: "flex justify-between border-b border-gray-700" },
-          [
-            _c(
+      _c(
+        "div",
+        { staticClass: "flex-1" },
+        [
+          _c(
+            "div",
+            { staticClass: "flex justify-between border-b border-gray-700" },
+            [
+              _c(
+                "div",
+                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+                [_vm._v("Total Sales")]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "w-32  px-2 py-1" },
+                [_c("currency-format", { attrs: { value: _vm.totalSales } })],
+                1
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "flex justify-between border-b-2 border-gray-700" },
+            [
+              _c(
+                "div",
+                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+                [_vm._v("Deductions")]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "w-32  px-2 py-1" },
+                [
+                  _c("currency-format", {
+                    attrs: { value: _vm.totalDeduction }
+                  })
+                ],
+                1
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "flex justify-between border-b border-gray-700" },
+            [
+              _c(
+                "div",
+                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+                [_vm._v("Total Agent Sales")]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "w-32  px-2 py-1" },
+                [
+                  _c("currency-format", {
+                    attrs: { value: _vm.totalAgentSales }
+                  })
+                ],
+                1
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _vm._l(_vm.commissions, function(commission) {
+            return _c(
               "div",
-              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-              [_vm._v("Total Sales")]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-32  px-2 py-1" },
-              [_c("currency-format", { attrs: { value: _vm.totalSales } })],
-              1
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "flex justify-between border-b-2 border-gray-700" },
-          [
-            _c(
-              "div",
-              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-              [_vm._v("Deductions")]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-32  px-2 py-1" },
-              [_c("currency-format", { attrs: { value: _vm.deductions } })],
-              1
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "flex justify-between border-b border-gray-700" },
-          [
-            _c(
-              "div",
-              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-              [_vm._v("Total Agent Sales")]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-32  px-2 py-1" },
+              {
+                key: commission.id,
+                staticClass: "flex justify-between border-b border-gray-700"
+              },
               [
-                _c("currency-format", { attrs: { value: _vm.totalAgentSales } })
-              ],
-              1
+                _c(
+                  "div",
+                  { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+                  [_vm._v(_vm._s(commission.name))]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "w-32  px-2 py-1" },
+                  [
+                    _c("currency-format", {
+                      attrs: { value: commission.amount }
+                    })
+                  ],
+                  1
+                )
+              ]
             )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "flex justify-between border-b border-gray-700" },
-          [
-            _c(
-              "div",
-              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-              [_vm._v("Item Agent Commision")]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-32  px-2 py-1" },
-              [
-                _c("currency-format", {
-                  attrs: { value: _vm.commissions.code2 }
-                })
-              ],
-              1
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "flex justify-between border-b border-gray-700" },
-          [
-            _c(
-              "div",
-              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-              [_vm._v("Carpet Agent Commision")]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-32  px-2 py-1" },
-              [
-                _c("currency-format", {
-                  attrs: { value: _vm.commissions.code1 }
-                })
-              ],
-              1
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "flex justify-between border-b border-gray-700" },
-          [
-            _c(
-              "div",
-              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-              [_vm._v("Guide Commission")]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-32  px-2 py-1" },
-              [
-                _c("currency-format", {
-                  attrs: { value: _vm.commissions.guide }
-                })
-              ],
-              1
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "flex justify-between border-b border-gray-700" },
-          [
-            _c(
-              "div",
-              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-              [_vm._v("Manager Commission")]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-32  px-2 py-1" },
-              [
-                _c("currency-format", {
-                  attrs: { value: _vm.commissions.manager }
-                })
-              ],
-              1
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "flex justify-between border-b border-gray-700" },
-          [
-            _c(
-              "div",
-              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-              [_vm._v("Total Agent Commission")]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-32  px-2 py-1" },
-              [
-                _c("currency-format", {
-                  attrs: { value: _vm.commissions.total }
-                })
-              ],
-              1
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "flex justify-between border-b border-gray-700" },
-          [
-            _c(
-              "div",
-              { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-              [_vm._v("GST")]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-32  px-2 py-1" },
-              [
-                _c("currency-format", { attrs: { value: _vm.commissions.gst } })
-              ],
-              1
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "flex justify-between font-semibold bg-green-400" },
-          [
-            _c(
-              "div",
-              { staticClass: "flex-1 border-gray-700 border-r  px-2 py-1" },
-              [_vm._v("Grand Total Agent Commission")]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-32  px-2 py-1" },
-              [
-                _c("currency-format", {
-                  attrs: { value: _vm.commissions.grandTotal }
-                })
-              ],
-              1
-            )
-          ]
-        )
-      ])
+          }),
+          _vm._v(" "),
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "flex justify-between border-b border-gray-700" },
+            [
+              _c(
+                "div",
+                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+                [_vm._v("Total Agent Commission")]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "w-32  px-2 py-1" },
+                [
+                  _c("currency-format", {
+                    attrs: { value: _vm.totalCommissions }
+                  })
+                ],
+                1
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "flex justify-between border-b border-gray-700" },
+            [
+              _c(
+                "div",
+                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
+                [_vm._v("GST")]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "w-32  px-2 py-1" },
+                [_c("currency-format", { attrs: { value: _vm.gst } })],
+                1
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "flex justify-between font-semibold bg-green-400" },
+            [
+              _c(
+                "div",
+                { staticClass: "flex-1 border-gray-700 border-r  px-2 py-1" },
+                [_vm._v("Grand Total Agent Commission")]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "w-32  px-2 py-1" },
+                [_c("currency-format", { attrs: { value: _vm.grandTotal } })],
+                1
+              )
+            ]
+          )
+        ],
+        2
+      )
     ]
   )
 }

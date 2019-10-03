@@ -1,6 +1,7 @@
 <?php
 
 use App\Commission;
+use App\Deduction;
 use App\Product;
 use App\ProductType;
 use App\User;
@@ -67,6 +68,21 @@ class DatabaseSeeder extends Seeder
 
         });
 
+        collect(['Guide Incentive', 'Delivery', 'Service'])->each(function($type){
+
+            if($type === 'Service'){
+                factory(Deduction::class)->create(['name' => $type, 'type' => 3]);
+            }
+            
+            if($type === 'Guide Incentive') {
+                factory(Deduction::class)->create(['name' => $type, 'type' => 1, 'amount' => 50]);
+            }
+
+            if($type === 'Delivery') {
+                factory(Deduction::class)->create(['name' => $type, 'type' => 1, 'amount' => 200]);
+            }
+
+        });
 
         factory(User::class, 5)->create();
 

@@ -75,20 +75,21 @@
                     <h2>Shopping Details</h2>
                 </div>
 
-                <selected-product :products="selected_products" 
-                    :subtotal="subTotal" 
+                <selected-product :products="form.selected_products" 
+                    :subtotal="form.total_sales" 
                     @remove="removeSelection" ></selected-product>
 
-                <deductions 
-                    :incentive="guideIncentive" 
-                    :delivery="delivery"
-                    :service="service" 
-                    :subtotal="deductionSubTotal"></deductions>
+                <deductions :deductions="form.sales_deductions" :totalDeductions="form.total_deductions">
+                </deductions>
 
-                <total-sales :commissions="commissions" 
-                            :totalSales="subTotal"
-                            :deductions="deductionSubTotal"
-                            :totalAgentSales="totalAgentSales"></total-sales>
+                <total-sales :commissions="form.sales_commissions"
+                            :totalSales="form.total_sales"
+                            :totalDeduction="form.total_deductions"
+                            :totalAgentSales='form.total_agent_sales'
+                            :totalCommissions="form.total_commission"
+                            :gst="form.gst"
+                            :grandTotal="form.grand_total_commission" >
+                </total-sales>
 
                 <button class="flex items-center w-full mt-5 py-2 px-4 bg-indigo-600 text-white rounded-full justify-center focus:outline-none" @click="submit">
                     <div class="text-white w-5 h-5" title="2">
@@ -118,7 +119,8 @@ export default {
     props: ['user'],
     data: function(){
         return {
-            commissionReference: null,
+            commissionReference: [],
+            deductionReference: [],
             creating: false,
             code1Count: 0,
             code1Total: 0,
@@ -132,6 +134,7 @@ export default {
                     children_count: null,
                     total_sales: 0,
                     total_agent_sales: 0,
+                    total_deductions: 0,
                     total_commission: 0,
                     gst: 0,
                     grand_total_commission: 0,
@@ -141,117 +144,124 @@ export default {
                     total: 0,
                     selected_products: [],
                     sales_commissions: [],
+                    sales_deductions: []
             }
         }
     },
     methods: {
-        selectProduct: function(product){
 
+        computeCommission: function(){
 
-            this.form.selected_products.push(product);
+            let totalCommissions = 0;
 
-            //convert to integer
-            // const qty = parseInt(product.qty)
-            // const total = parseInt(product.total);
+            this.form.sales_commissions.forEach((commission, index) => {
 
-            this.subTotal = this.subTotal + total
-
-            //Compute Deductions Based on Product Codes
-            if(product.code === 1){
-                this.code1Count = this.code1Count + product.qty;
-                this.code1Total = this.code1Total + product.total;
-            }
-
-            if(product.code === 2){
-                this.code2Total = this.code2Total + total;
-            }
-
-            if(qty >= 1 && total === 0){
-                this.service = this.service + (qty * product.cost);
-            }
-
-            // Compute for the Deductions
-            this.guideIncentive = this.code1Count * 50;
-            this.delivery = this.code1Count * 200;
-            this.deductionSubTotal = this.guideIncentive + this.delivery + this.service;
-
-            //Compute for Commisions:
-
-            this.commissionReference.forEach(ref => {
-
-                const salesCommission = {
-                    id: ref.id,
-                    name: ref.name,
-                    amount: 0
+                if(commission.type === 1) {
+                    this.form.sales_commissions[index].amount = commission.percentage * this.code1Total;
+                }else if(commission.type === 2){
+                    this.form.sales_commissions[index].amount = commission.percentage * this.code2Total;
+                }else {
+                    this.form.sales_commissions[index].amount = commission.percentage * this.form.total_agent_sales;
                 }
 
-                if(ref.commission_type === 1) salesCommission.amount = this.code1Total * ref.amount;
-                 if(ref.commission_type === 2) salesCommission.amount =this. code2Total * ref.amount;
-                if(ref.commission_type === 3) salesCommission.amount = this.subTotal * ref.amount;
-                if(ref.commission_type === 4) salesCommission.amount = this.subTotal * ref.amount;
-                
-                // if(ref.commission_type === 1) this.commissions.code1 = this.code1Total * ref.amount;
-                // if(ref.commission_type === 2) this.commissions.code2 =this. code2Total * ref.amount;
-                // if(ref.commission_type === 3) this.commissions.guide = this.subTotal * ref.amount;
-                // if(ref.commission_type === 4) this.commissions.manager = this.subTotal * ref.amount;
-
-                this.sales_commissions.push(salesCommission);
+                totalCommissions =  totalCommissions + this.form.sales_commissions[index].amount;
+               
 
             });
 
-            this.commissions.total = this.commissions.code1 + this.commissions.code2 
-                + this.commissions.guide + this.commissions.manager;
+            this.form.total_commission = totalCommissions;
+            // this.form.total_agent_sales = this.form.total_sales - this.this.form.total_deductions;
+            this.form.gst = this.form.total_commission * 0.10;
+            this.form.grand_total_commission = this.form.gst + this.form.total_commission;
 
-            this.totalAgentSales = this.subTotal - this.deductionSubTotal;
-            this.commissions.gst = this.commissions.total * 0.10;
-            this.commissions.grandTotal = this.commissions.gst + this.commissions.total;
 
-            console.log(this.commissions);
+        },
+
+        computeDeduction: function(product, action){
+
+            let total = 0;
+
+            this.form.sales_deductions.forEach((deduction, index) => {
+
+
+                if(deduction.type === 1){
+
+                    this.form.sales_deductions[index].amount = this.code1Count * this.form.sales_deductions[index].multiplier
+
+                }else if(deduction.type === 3 && product.qty >= 1 && product.total === 0){
+
+                    console.log('Type3', deduction.type)
+
+                    if(action === 'add'){
+                        this.form.sales_deductions[index].amount = this.form.sales_deductions[index].amount + product.cost;
+                    }else {
+                        this.form.sales_deductions[index].amount = this.form.sales_deductions[index].amount - product.cost;
+                    }
+
+                }
+
+                total = total + deduction.amount;
+
+            })
+
+            this.form.total_deductions = total;
+
+        },
+
+        selectProduct: function(product){
+
+            /**
+             * Type1 or Code1 products are Carpets which are high value
+             * Type2 or Code2 products are low value
+             * 
+             * For deduction Type3 this is a service product 
+             * service products are free when purchase a high value products
+             * deduction amount is the product cost.
+             */
+
+            this.form.selected_products.push(product);
+
+            this.form.total_sales = this.form.total_sales + product.total;
+
+            if(product.code === 1) {
+                this.code1Total = this.code1Total + product.total;
+                this.code1Count = this.code1Count + product.qty;
+            }
+
+            if(product.code === 2) this.code2Total = this.code2Total + product.total;
+
+   
+            //Compute for Deductions
+            this.computeDeduction(product, 'add');
+
+            this.form.total_agent_sales = this.form.total_sales - this.form.total_deductions
+          
+       
+            // //Compute for Commisions:
+            this.computeCommission();
 
         },
         removeSelection: function(index){
 
-            const removedProduct = this.selectedProducts.splice(index, 1);
-
-            const qty = parseInt(removedProduct[0].qty);
-            const total = parseInt(removedProduct[0].total);
+            const removedProduct = this.form.selected_products.splice(index, 1);
 
             if(removedProduct[0].code === 1){
-                this.code1Count = this.code1Count - qty;
-                this.code1Total = this.code1Total - total;
+                this.code1Count = this.code1Count - removedProduct[0].qty;
+                this.code1Total = this.code1Total - removedProduct[0].total;
             }
 
             if(removedProduct[0].code === 2){
-                this.code2Total = this.code2Total - total;
+                this.code2Total = this.code2Total - removedProduct[0].total;
             }
 
-            if(qty >= 1 && total === 0){
-                this.service = this.service - (qty * removedProduct[0].cost);
-            }
 
-            this.subTotal = this.subTotal - total;
+            this.form.total_sales  = this.form.total_sales - removedProduct[0].total;
 
-            this.guideIncentive = this.code1Count * 50;
-            this.delivery = this.code1Count * 200;
+            this.computeDeduction(removedProduct[0], 'remove');
 
-            this.deductionSubTotal = this.guideIncentive + this.delivery + this.service;
+            this.form.total_agent_sales = this.form.total_sales - this.form.total_deductions
 
-            this.commissionReference.forEach(ref => {
-                
-                if(ref.commission_type === 1) this.commissions.code1 = this.code1Total * ref.amount;
-                if(ref.commission_type === 2) this.commissions.code2 =this. code2Total * ref.amount;
-                if(ref.commission_type === 3) this.commissions.guide = this.subTotal * ref.amount;
-                if(ref.commission_type === 4) this.commissions.manager = this.subTotal * ref.amount;
-
-            });
-
-            this.commissions.total = this.commissions.code1 + this.commissions.code2 
-                + this.commissions.guide + this.commissions.manager;
-
-            this.totalAgentSales = this.subTotal - this.deductionSubTotal;
-            this.commissions.gst = this.commissions.total * 0.10;
-            this.commissions.grandTotal = this.commissions.gst + this.commissions.total;
-
+            this.computeCommission();
 
         },
 
@@ -268,12 +278,46 @@ export default {
     async mounted(){
         try {
             
-            const url =  backendUrl + '/api/commissions?api_token=' + this.user.api_token;
-            const response = await axios.get(url);
+            const commissionsUrl =  backendUrl + '/api/commissions?api_token=' + this.user.api_token;
+            const commissionResponse = await axios.get(commissionsUrl);
+            this.commissionReference = commissionResponse.data;
 
-            this.commissionReference = response.data;
+            //initialize the sales_commission
+            this.commissionReference.forEach(ref => {
 
-            console.log(this.commissionReference);
+                const salesCommission = {
+                    id: ref.id,
+                    name: ref.name,
+                    type: ref.commission_type,
+                    percentage: ref.amount,
+                    amount: 0
+                }
+
+                this.form.sales_commissions.push(salesCommission);
+
+            });
+
+
+            const deductionUrl = backendUrl + '/api/deductions?api_token=' + this.user.api_token;
+            const deductionResponse = await axios.get(deductionUrl);
+            this.deductionReference = deductionResponse.data;
+
+            //initialize deductions
+            this.deductionReference.forEach(ref => {
+                const deduction = {
+                    id: ref.id,
+                    name: ref.name,
+                    amount: 0,
+                    type: ref.type,
+                    multiplier: ref.amount
+                }
+
+                this.form.sales_deductions.push(deduction);
+            })
+
+
+
+            console.log(this.form.sales_deductions);
 
         } catch (error) {
             console.log('Error Loading Commissions', error);
