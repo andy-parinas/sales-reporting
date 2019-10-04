@@ -24,7 +24,6 @@ class SalesReportController extends Controller
     {
         $reportData = $this->reportData($request);
 
-
         DB::beginTransaction();
         try {
             
@@ -40,7 +39,7 @@ class SalesReportController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return response([], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response(["error" => $e ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
 

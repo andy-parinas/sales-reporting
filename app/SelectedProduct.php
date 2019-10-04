@@ -7,5 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class SelectedProduct extends Model
 {
     
-    protected $guarded = [];
+    protected $fillable = [
+        'product_id',
+        'quantity',
+        'total'
+    ];
+
+    
 }

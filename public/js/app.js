@@ -2092,11 +2092,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }(),
     selectProduct: function selectProduct(product, index) {
       var selectedProduct = {
-        id: product.id,
+        product_id: product.id,
         name: product.name,
         price: product.price,
         cost: product.cost,
-        qty: this.productInput[index].qty,
+        quantity: this.productInput[index].qty,
         total: this.productInput[index].total,
         type: product.product_type,
         code: product.product_type_code
@@ -2178,6 +2178,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var q__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! q */ "./node_modules/q/q.js");
 /* harmony import */ var q__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(q__WEBPACK_IMPORTED_MODULE_6__);
 
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -2323,8 +2329,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       code1Total: 0,
       code2Total: 0,
       form: {
+        report_number: this.createReportNumber(),
         tour_agent_id: '',
         tour_guide_id: '',
+        tour_date: '',
         tc_name: null,
         grp_code: null,
         adult_count: '',
@@ -2346,6 +2354,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   methods: {
+    createReportNumber: function createReportNumber() {
+      var today = new Date();
+      return "".concat(today.getFullYear()).concat(today.getMonth() + 1).concat(today.getDay(), "-").concat(today.getHours()).concat(today.getMinutes()).concat(today.getMilliseconds());
+    },
     loadSalesCommissionReference: function () {
       var _loadSalesCommissionReference = _asyncToGenerator(
       /*#__PURE__*/
@@ -2368,7 +2380,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 this.commissionReference.forEach(function (ref) {
                   var salesCommission = {
-                    id: ref.id,
+                    commission_id: ref.id,
                     name: ref.name,
                     type: ref.commission_type,
                     percentage: ref.amount,
@@ -2421,7 +2433,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 this.deductionReference.forEach(function (ref) {
                   var deduction = {
-                    id: ref.id,
+                    deduction_id: ref.id,
                     name: ref.name,
                     amount: 0,
                     type: ref.type,
@@ -2545,10 +2557,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
         totalCommissions = totalCommissions + _this3.form.sales_commissions[index].amount;
       });
-      this.form.total_commission = totalCommissions; // this.form.total_agent_sales = this.form.total_sales - this.this.form.total_deductions;
+      this.form.total_commissions = totalCommissions; // this.form.total_agent_sales = this.form.total_sales - this.this.form.total_deductions;
 
-      this.form.gst = this.form.total_commission * 0.10;
-      this.form.grand_total_commission = this.form.gst + this.form.total_commission;
+      this.form.gst = this.form.total_commissions * 0.10;
+      this.form.grand_total_commission = this.form.gst + this.form.total_commissions;
     },
     computeDeduction: function computeDeduction(product, action) {
       var _this4 = this;
@@ -2557,7 +2569,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.form.sales_deductions.forEach(function (deduction, index) {
         if (deduction.type === 1) {
           _this4.form.sales_deductions[index].amount = _this4.code1Count * _this4.form.sales_deductions[index].multiplier;
-        } else if (deduction.type === 3 && product.qty >= 1 && product.total === 0) {
+        } else if (deduction.type === 3 && product.quantity >= 1 && product.total === 0) {
           console.log('Type3', deduction.type);
 
           if (action === 'add') {
@@ -2585,7 +2597,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       if (product.code === 1) {
         this.code1Total = this.code1Total + product.total;
-        this.code1Count = this.code1Count + product.qty;
+        this.code1Count = this.code1Count + product.quantity;
       }
 
       if (product.code === 2) this.code2Total = this.code2Total + product.total; //Compute for Deductions
@@ -2599,7 +2611,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var removedProduct = this.form.selected_products.splice(index, 1);
 
       if (removedProduct[0].code === 1) {
-        this.code1Count = this.code1Count - removedProduct[0].qty;
+        this.code1Count = this.code1Count - removedProduct[0].quantity;
         this.code1Total = this.code1Total - removedProduct[0].total;
       }
 
@@ -2616,6 +2628,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _submit = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+        var data, response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
@@ -2626,25 +2639,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 // }).catch(err => {
                 //     console.log(err);
                 // })
-                this.creating = true; // try {
-                //     const data = {
-                //         ...this.form,
-                //         api_token: this.user.api_token
-                //     }
-                //     response = await axios.post(backendUrl + '/api/sales', data)
-                //     this.creating = false;
-                //     console.log(response.data);
-                // } catch (error) {
-                //     console.log(error);
-                //     this.creating = false;
-                // }
+                this.creating = true;
+                _context5.prev = 1;
+                data = _objectSpread({}, this.form, {
+                  api_token: this.user.api_token
+                });
+                _context5.next = 5;
+                return axios.post(backendUrl + '/api/sales', data);
 
-              case 1:
+              case 5:
+                response = _context5.sent;
+                this.creating = false;
+                console.log(response.data);
+                _context5.next = 14;
+                break;
+
+              case 10:
+                _context5.prev = 10;
+                _context5.t0 = _context5["catch"](1);
+                console.log(_context5.t0);
+                this.creating = false;
+
+              case 14:
               case "end":
                 return _context5.stop();
             }
           }
-        }, _callee5, this);
+        }, _callee5, this, [[1, 10]]);
       }));
 
       function submit() {
@@ -23806,7 +23827,8 @@ var render = function() {
                     expression: "form.tour_agent_id"
                   }
                 ],
-                staticClass: "w-full pl-10 focus:outline-none",
+                staticClass:
+                  "w-full pl-10 focus:outline-none text-gray-800 text-sm",
                 attrs: {
                   type: "text",
                   id: "agent",
@@ -23874,7 +23896,7 @@ var render = function() {
                   }
                 ],
                 staticClass:
-                  " flex-1 pl-10 border-r border-gray-700 focus:outline-none",
+                  "flex-1 pl-10 border-r border-gray-700 focus:outline-none  text-gray-800 text-sm",
                 attrs: { type: "text", id: "pax", placeholder: "Adult" },
                 domProps: { value: _vm.form.adult_count },
                 on: {
@@ -23904,7 +23926,8 @@ var render = function() {
                     modifiers: { number: true }
                   }
                 ],
-                staticClass: " flex-1 pl-10 focus:outline-none",
+                staticClass:
+                  "flex-1 pl-10 focus:outline-none  text-gray-800 text-sm",
                 attrs: { type: "text", id: "pax", placeholder: "Children" },
                 domProps: { value: _vm.form.children_count },
                 on: {
@@ -23942,7 +23965,8 @@ var render = function() {
                     expression: "form.tour_guide_id"
                   }
                 ],
-                staticClass: "w-full pl-10 focus:outline-none",
+                staticClass:
+                  "w-full pl-10 focus:outline-none text-gray-800 text-sm",
                 attrs: { type: "text", id: "guide", placeholder: "Guide Name" },
                 on: {
                   change: function($event) {
@@ -23982,7 +24006,34 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "border border-gray-700 flex-1" }, [
-        _vm._m(3),
+        _c("div", { staticClass: "flex" }, [
+          _vm._m(3),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex-1 p-1 border-b border-gray-700" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.form.tour_date,
+                  expression: "form.tour_date"
+                }
+              ],
+              staticClass:
+                "w-full focus:outline-none pl-10 uppercase text-gray-800 text-sm",
+              attrs: { type: "date", id: "date", placeholder: "Tour Date" },
+              domProps: { value: _vm.form.tour_date },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.form, "tour_date", $event.target.value)
+                }
+              }
+            })
+          ])
+        ]),
         _vm._v(" "),
         _c("div", { staticClass: "flex" }, [
           _vm._m(4),
@@ -23997,7 +24048,8 @@ var render = function() {
                   expression: "form.grp_code"
                 }
               ],
-              staticClass: "w-full pl-10 focus:outline-none",
+              staticClass:
+                "w-full pl-10 focus:outline-none text-gray-800 text-sm",
               attrs: { type: "numner", id: "grp", placeholder: "GRP Code" },
               domProps: { value: _vm.form.grp_code },
               on: {
@@ -24025,7 +24077,8 @@ var render = function() {
                   expression: "form.tc_name"
                 }
               ],
-              staticClass: "w-full pl-10 focus:outline-none",
+              staticClass:
+                "w-full pl-10 focus:outline-none  text-gray-800 text-sm",
               attrs: { type: "text", id: "tc", placeholder: "T/C Name" },
               domProps: { value: _vm.form.tc_name },
               on: {
@@ -24183,36 +24236,20 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "flex" }, [
-      _c(
-        "div",
-        {
-          staticClass: "border-b border-r border-gray-700 p-1 w-32 text-center"
-        },
-        [
-          _c(
-            "label",
-            {
-              staticClass: "text-sm font-semibold text-gray-800 uppercase",
-              attrs: { for: "date" }
-            },
-            [_vm._v("Date")]
-          )
-        ]
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "flex-1 p-1 border-b border-gray-700" }, [
-        _c("input", {
-          staticClass: "w-full focus:outline-none pl-10",
-          attrs: {
-            type: "date",
-            id: "date",
-            placeholder: "Tour Date",
-            value: "2018-07-22"
-          }
-        })
-      ])
-    ])
+    return _c(
+      "div",
+      { staticClass: "border-b border-r border-gray-700 p-1 w-32 text-center" },
+      [
+        _c(
+          "label",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase",
+            attrs: { for: "date" }
+          },
+          [_vm._v("Date")]
+        )
+      ]
+    )
   },
   function() {
     var _vm = this
@@ -24307,7 +24344,7 @@ var render = function() {
               _c(
                 "td",
                 { staticClass: "py-2 px-4 border border-gray-800 w-12" },
-                [_vm._v(" " + _vm._s(product.qty))]
+                [_vm._v(" " + _vm._s(product.quantity))]
               ),
               _vm._v(" "),
               _c(

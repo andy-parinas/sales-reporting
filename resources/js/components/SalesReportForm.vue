@@ -7,7 +7,7 @@
                         <label  class="text-sm font-semibold text-gray-800 uppercase" for="agent">Tour Agent</label>
                     </div>
                     <div  class="flex-1 p-1 border-b border-gray-700">
-                        <select class="w-full pl-10 focus:outline-none"  type="text" id="agent" 
+                        <select class="w-full pl-10 focus:outline-none text-gray-800 text-sm"  type="text" id="agent" 
                             placeholder="Tour Agent Name" 
                             @change="tourAgentSelect" v-model="form.tour_agent_id" >
                                 <option disabled value="" > --- Select Tour Agent ---</option>
@@ -21,9 +21,9 @@
                         <label  class="text-sm font-semibold text-gray-800 uppercase" for="pax">PAX</label>
                     </div>
                     <div  class="flex-1 p-1 border-b border-gray-700 flex items-center">
-                        <input class=" flex-1 pl-10 border-r border-gray-700 focus:outline-none"  
+                        <input class="flex-1 pl-10 border-r border-gray-700 focus:outline-none  text-gray-800 text-sm"  
                             type="text" id="pax" placeholder="Adult" v-model.number="form.adult_count" >
-                        <input class=" flex-1 pl-10 focus:outline-none"  type="text" id="pax" 
+                        <input class="flex-1 pl-10 focus:outline-none  text-gray-800 text-sm"  type="text" id="pax" 
                             placeholder="Children" v-model.number="form.children_count" >
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                         <label  class="text-sm font-semibold text-gray-800 uppercase" for="guide">Guide Name</label>
                     </div>
                     <div class="flex-1 p-1 border-gray-700">
-                        <select class="w-full pl-10 focus:outline-none"  type="text" id="guide" placeholder="Guide Name"
+                        <select class="w-full pl-10 focus:outline-none text-gray-800 text-sm"  type="text" id="guide" placeholder="Guide Name"
                                 v-model="form.tour_guide_id">
                             <option disabled value="" > --- Select Tour Guide ---</option>
                             <option v-for="guide in tourGuides" :key="guide.id"
@@ -47,8 +47,8 @@
                             <label class="text-sm font-semibold text-gray-800 uppercase" for="date">Date</label>
                         </div>
                         <div class="flex-1 p-1 border-b border-gray-700">
-                            <input class="w-full focus:outline-none pl-10" type="date" id="date" 
-                                placeholder="Tour Date"  value="2018-07-22" >
+                            <input class="w-full focus:outline-none pl-10 uppercase text-gray-800 text-sm" type="date" id="date" 
+                                placeholder="Tour Date"  v-model="form.tour_date" >
                         </div>
                     </div>
                     <div class="flex">
@@ -56,7 +56,7 @@
                             <label class="text-sm font-semibold text-gray-800 uppercase" for="grp">GRP Code</label>
                         </div>
                         <div class="flex-1 p-1 border-b border-gray-700">
-                            <input class="w-full pl-10 focus:outline-none" type="numner" id="grp" placeholder="GRP Code"
+                            <input class="w-full pl-10 focus:outline-none text-gray-800 text-sm" type="numner" id="grp" placeholder="GRP Code"
                                     v-model="form.grp_code">
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                             <label class="text-sm font-semibold text-gray-800 uppercase" for="tc">T/C Name</label>
                         </div>
                         <div class="flex-1 p-1 border-gray-700">
-                            <input class="w-full pl-10 focus:outline-none" type="text" id="tc" placeholder="T/C Name"
+                            <input class="w-full pl-10 focus:outline-none  text-gray-800 text-sm" type="text" id="tc" placeholder="T/C Name"
                                 v-model="form.tc_name">
                         </div>
                     </div>
@@ -134,8 +134,10 @@ export default {
             code1Total: 0,
             code2Total: 0,
             form: {
+                    report_number: this.createReportNumber(),
                     tour_agent_id: '',
                     tour_guide_id: '',
+                    tour_date: '',
                     tc_name: null,
                     grp_code: null,
                     adult_count: '',
@@ -158,6 +160,13 @@ export default {
     },
     methods: {
 
+        createReportNumber: function()
+        {
+            const today = new Date();
+
+            return `${today.getFullYear()}${today.getMonth() + 1}${today.getDay()}-${today.getHours()}${today.getMinutes()}${today.getMilliseconds()}`;
+        },
+
         loadSalesCommissionReference: async function()
         {
             try {
@@ -170,7 +179,7 @@ export default {
                 this.commissionReference.forEach(ref => {
 
                     const salesCommission = {
-                        id: ref.id,
+                        commission_id: ref.id,
                         name: ref.name,
                         type: ref.commission_type,
                         percentage: ref.amount,
@@ -197,7 +206,7 @@ export default {
                 //initialize deductions
                 this.deductionReference.forEach(ref => {
                     const deduction = {
-                        id: ref.id,
+                        deduction_id: ref.id,
                         name: ref.name,
                         amount: 0,
                         type: ref.type,
@@ -261,10 +270,10 @@ export default {
 
             });
 
-            this.form.total_commission = totalCommissions;
+            this.form.total_commissions = totalCommissions;
             // this.form.total_agent_sales = this.form.total_sales - this.this.form.total_deductions;
-            this.form.gst = this.form.total_commission * 0.10;
-            this.form.grand_total_commission = this.form.gst + this.form.total_commission;
+            this.form.gst = this.form.total_commissions * 0.10;
+            this.form.grand_total_commission = this.form.gst + this.form.total_commissions;
 
 
         },
@@ -281,7 +290,7 @@ export default {
 
                     this.form.sales_deductions[index].amount = this.code1Count * this.form.sales_deductions[index].multiplier
 
-                }else if(deduction.type === 3 && product.qty >= 1 && product.total === 0){
+                }else if(deduction.type === 3 && product.quantity >= 1 && product.total === 0){
 
                     console.log('Type3', deduction.type)
 
@@ -312,13 +321,14 @@ export default {
              * deduction amount is the product cost.
              */
 
+
             this.form.selected_products.push(product);
 
             this.form.total_sales = this.form.total_sales + product.total;
 
             if(product.code === 1) {
                 this.code1Total = this.code1Total + product.total;
-                this.code1Count = this.code1Count + product.qty;
+                this.code1Count = this.code1Count + product.quantity;
             }
 
             if(product.code === 2) this.code2Total = this.code2Total + product.total;
@@ -334,12 +344,13 @@ export default {
             this.computeCommission();
 
         },
-        removeSelection: function(index){
+        removeSelection: function(index)
+        {
 
             const removedProduct = this.form.selected_products.splice(index, 1);
 
             if(removedProduct[0].code === 1){
-                this.code1Count = this.code1Count - removedProduct[0].qty;
+                this.code1Count = this.code1Count - removedProduct[0].quantity;
                 this.code1Total = this.code1Total - removedProduct[0].total;
             }
 
@@ -368,27 +379,25 @@ export default {
             // })
              this.creating = true;
 
-            // try {
+            try {
                 
-            //     const data = {
-            //         ...this.form,
-            //         api_token: this.user.api_token
-            //     }
+                const data = {
+                    ...this.form,
+                    api_token: this.user.api_token
+                }
 
-            //     response = await axios.post(backendUrl + '/api/sales', data)
+                const response = await axios.post(backendUrl + '/api/sales', data)
 
-            //     this.creating = false;
+                this.creating = false;
 
-            //     console.log(response.data);
+                console.log(response.data);
 
-            // } catch (error) {
+            } catch (error) {
                 
-            //     console.log(error);
+                console.log(error);
 
-            //     this.creating = false;
-            // }
-
-
+                this.creating = false;
+            }
 
         }
     },
@@ -399,6 +408,7 @@ export default {
         this.loadDeductionsReference();
     
         this.loadTourAgents();
+
 
     }
    

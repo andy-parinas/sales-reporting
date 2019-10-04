@@ -114,11 +114,11 @@ export default {
         selectProduct: function(product, index){
 
             const selectedProduct = {
-                id: product.id,
+                product_id: product.id,
                 name: product.name,
                 price: product.price,
                 cost: product.cost,
-                qty: this.productInput[index].qty,
+                quantity: this.productInput[index].qty,
                 total: this.productInput[index].total,
                 type: product.product_type,
                 code: product.product_type_code

@@ -64,7 +64,6 @@ class SalesReportFeatureTest extends TestCase
         });
 
 
-
     }
 
 

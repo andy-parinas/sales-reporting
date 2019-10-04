@@ -25,12 +25,12 @@ class SalesReportRequest extends FormRequest
     {
         return [
             'report_number' => 'required',
-            'grp_code' => 'required',
+            'grp_code' => '',
             'adult_count' => 'required',
             'children_count' => 'required',
             'tour_agent_id' => 'required',
             'tour_guide_id' => 'required',
-            'tc_name' => 'required',
+            'tc_name' => '',
             'tour_date' => 'required',
             'total_sales' => 'required',
             'total_agent_sales' => 'required',

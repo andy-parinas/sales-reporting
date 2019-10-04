@@ -17,7 +17,7 @@
                         <currency-format :value="product.price" ></currency-format>
                         <!-- {{ Number.parseFloat(product.price).toFixed(2) }}  -->
                     </td>
-                    <td class="py-2 px-4 border border-gray-800 w-12"> {{ product.qty }}</td>
+                    <td class="py-2 px-4 border border-gray-800 w-12"> {{ product.quantity }}</td>
                     <td class="py-2 px-4 border border-gray-800 w-12"> 
                         <currency-format :value="product.total" ></currency-format>
                         <!-- {{ Number.parseFloat(product.total).toFixed(2) }} -->

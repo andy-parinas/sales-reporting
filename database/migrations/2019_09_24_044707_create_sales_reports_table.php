@@ -16,12 +16,12 @@ class CreateSalesReportsTable extends Migration
         Schema::create('sales_reports', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('report_number');
-            $table->string('grp_code');
+            $table->string('grp_code')->nullable(true);
             $table->integer('adult_count');
             $table->integer('children_count');
             $table->unsignedBigInteger('tour_agent_id');
             $table->unsignedBigInteger('tour_guide_id');
-            $table->string('tc_name');
+            $table->string('tc_name')->nullable(true);
             $table->date('tour_date');
             $table->float('total_sales');
             $table->float('total_agent_sales');
