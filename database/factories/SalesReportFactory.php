@@ -16,6 +16,7 @@ $factory->define(SalesReport::class, function (Faker $faker) {
         'tour_agent_id' => factory(TourAgent::class),
         'tour_guide_id' => factory(TourGuide::class),
         'tc_name' => $faker->name,
+        'tour_date' => $faker->date('d/m/Y'),
         'total_sales' => $faker->randomFloat(2),
         'total_agent_sales' => $faker->randomFloat(2),
         'total_commissions' => $faker->randomFloat(2),

@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(TourAgent::class, function (Faker $faker) {
     return [
-        'name' => $faker->words(3, true),
+        'name' => $faker->company,
         'address' => $faker->address,
         'email' => $faker->email,
         'phone' => $faker->phoneNumber

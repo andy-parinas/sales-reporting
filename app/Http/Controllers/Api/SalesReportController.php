@@ -58,6 +58,7 @@ class SalesReportController extends Controller
             'tour_agent_id' => $request->validated()['tour_agent_id'],
             'tour_guide_id' => $request->validated()['tour_guide_id'],
             'tc_name' => $request->validated()['tc_name'],
+            'tour_date' => $request->validated()['tour_date'],
             'total_sales' => $request->validated()['total_sales'],
             'total_agent_sales' => $request->validated()['total_agent_sales'],
             'total_commissions' => $request->validated()['total_commissions'],

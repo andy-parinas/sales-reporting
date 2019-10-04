@@ -102,6 +102,7 @@ class SalesReportFeatureTest extends TestCase
             'tour_agent_id' => $tourAgent->id,
             'tour_guide_id' => $tourGuide->id,
             'tc_name' => $this->faker->name,
+            'tour_date' => $this->faker->date('d/m/Y'),
             'total_sales' => $this->faker->randomFloat(2),
             'total_agent_sales' => $this->faker->randomFloat(2),
             'total_commissions' => $this->faker->randomFloat(2),
