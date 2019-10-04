@@ -4,6 +4,8 @@ use App\Commission;
 use App\Deduction;
 use App\Product;
 use App\ProductType;
+use App\TourAgent;
+use App\TourGuide;
 use App\User;
 use Illuminate\Database\Seeder;
 
@@ -85,6 +87,12 @@ class DatabaseSeeder extends Seeder
         });
 
         factory(User::class, 5)->create();
+
+        $agents = factory(TourAgent::class, 10)->create();
+
+        $agents->each(function($agent){
+            factory(TourGuide::class, 5)->create(['tour_agent_id' => $agent->id]);
+        });
 
 
     }

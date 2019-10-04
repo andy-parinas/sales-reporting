@@ -7,15 +7,13 @@
                         <label  class="text-sm font-semibold text-gray-800 uppercase" for="agent">Tour Agent</label>
                     </div>
                     <div  class="flex-1 p-1 border-b border-gray-700">
-                        <input class="w-full pl-10 focus:outline-none"  type="text" id="agent" 
-                            placeholder="Tour Agent Name" list="agents">
-                            <datalist id="agents">
-                                <option value="Internet Explorer"></option>
-                                <option value="Firefox"></option>
-                                <option value="Chrome"></option>
-                                <option value="Opera"></option>
-                                <option value="Safari"></option>
-                            </datalist>
+                        <select class="w-full pl-10 focus:outline-none"  type="text" id="agent" 
+                            placeholder="Tour Agent Name" 
+                            @change="tourAgentSelect" v-model="form.tour_agent_id" >
+                                <option disabled value="" > --- Select Tour Agent ---</option>
+                                <option v-for="agent in tourAgents" :key="agent.id"
+                                    :value="agent.id">{{ agent.name }}</option>
+                        </select>
                     </div>
                 </div>
                 <div class="flex">
@@ -24,9 +22,9 @@
                     </div>
                     <div  class="flex-1 p-1 border-b border-gray-700 flex items-center">
                         <input class=" flex-1 pl-10 border-r border-gray-700 focus:outline-none"  
-                            type="text" id="pax" placeholder="Adult">
+                            type="text" id="pax" placeholder="Adult" v-model.number="form.adult_count" >
                         <input class=" flex-1 pl-10 focus:outline-none"  type="text" id="pax" 
-                            placeholder="Children">
+                            placeholder="Children" v-model.number="form.children_count" >
                     </div>
                 </div>
                 <div class="flex">
@@ -34,7 +32,12 @@
                         <label  class="text-sm font-semibold text-gray-800 uppercase" for="guide">Guide Name</label>
                     </div>
                     <div class="flex-1 p-1 border-gray-700">
-                        <input class="w-full pl-10 focus:outline-none"  type="text" id="guide" placeholder="Guide Name">
+                        <select class="w-full pl-10 focus:outline-none"  type="text" id="guide" placeholder="Guide Name"
+                                v-model="form.tour_guide_id">
+                            <option disabled value="" > --- Select Tour Guide ---</option>
+                            <option v-for="guide in tourGuides" :key="guide.id"
+                                :value="guide.id">{{ guide.name }}</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -53,7 +56,8 @@
                             <label class="text-sm font-semibold text-gray-800 uppercase" for="grp">GRP Code</label>
                         </div>
                         <div class="flex-1 p-1 border-b border-gray-700">
-                            <input class="w-full pl-10 focus:outline-none" type="numner" id="grp" placeholder="GRP Code">
+                            <input class="w-full pl-10 focus:outline-none" type="numner" id="grp" placeholder="GRP Code"
+                                    v-model="form.grp_code">
                         </div>
                     </div>
                     <div class="flex">
@@ -61,7 +65,8 @@
                             <label class="text-sm font-semibold text-gray-800 uppercase" for="tc">T/C Name</label>
                         </div>
                         <div class="flex-1 p-1 border-gray-700">
-                            <input class="w-full pl-10 focus:outline-none" type="text" id="tc" placeholder="T/C Name">
+                            <input class="w-full pl-10 focus:outline-none" type="text" id="tc" placeholder="T/C Name"
+                                v-model="form.tc_name">
                         </div>
                     </div>
                 </div>
@@ -112,6 +117,7 @@ import SelectedProduct from './SelectedProduct';
 import Deductions from './Deductions';
 import TotalSales from './TotalSales';
 import CircleLoader from './ui/loader/CircleLoader';
+import { async } from 'q';
 
 export default {
     name: 'SalesReportForm',
@@ -121,17 +127,19 @@ export default {
         return {
             commissionReference: [],
             deductionReference: [],
+            tourAgents: [],
+            tourGuides: [],
             creating: false,
             code1Count: 0,
             code1Total: 0,
             code2Total: 0,
             form: {
-                    tour_agent_id: null,
-                    tour_guide_id: null,
+                    tour_agent_id: '',
+                    tour_guide_id: '',
                     tc_name: null,
                     grp_code: null,
-                    adult_count: null,
-                    children_count: null,
+                    adult_count: '',
+                    children_count: '',
                     total_sales: 0,
                     total_agent_sales: 0,
                     total_deductions: 0,
@@ -150,7 +158,91 @@ export default {
     },
     methods: {
 
-        computeCommission: function(){
+        loadSalesCommissionReference: async function()
+        {
+            try {
+                
+                const commissionsUrl =  backendUrl + '/api/commissions?api_token=' + this.user.api_token;
+                const commissionResponse = await axios.get(commissionsUrl);
+                this.commissionReference = commissionResponse.data;
+
+                //initialize the sales_commission
+                this.commissionReference.forEach(ref => {
+
+                    const salesCommission = {
+                        id: ref.id,
+                        name: ref.name,
+                        type: ref.commission_type,
+                        percentage: ref.amount,
+                        amount: 0
+                    }
+
+                this.form.sales_commissions.push(salesCommission);
+
+            });
+            } catch (error) {
+                console.log('Error Loading Commission Reference:', error);
+            }
+
+        },
+
+        loadDeductionsReference: async function()
+        {
+            try {
+                
+                const deductionUrl = backendUrl + '/api/deductions?api_token=' + this.user.api_token;
+                const deductionResponse = await axios.get(deductionUrl);
+                this.deductionReference = deductionResponse.data;
+
+                //initialize deductions
+                this.deductionReference.forEach(ref => {
+                    const deduction = {
+                        id: ref.id,
+                        name: ref.name,
+                        amount: 0,
+                        type: ref.type,
+                        multiplier: ref.amount
+                    }
+
+                    this.form.sales_deductions.push(deduction);
+                })
+
+
+            } catch (error) {
+                console.log('Error Loading Deduction Reference:', error);
+            }
+
+        },
+
+        loadTourAgents: async function()
+        {
+            try {
+                const url = backendUrl + '/api/agents?api_token=' + this.user.api_token;
+                const response = await axios.get(url);
+
+                this.tourAgents = response.data.data;
+
+
+            } catch (error) {
+                console.log('Error Loading Tour Agents:', error);
+            }
+        },
+
+        tourAgentSelect: async function()
+        {
+            try {
+                
+                const url = backendUrl + `/api/agents/${this.form.tour_agent_id}?api_token=${this.user.api_token}`;
+                const response = await axios.get(url);
+
+                this.tourGuides = response.data.data.tourGuides;
+
+            } catch (error) {
+                console.log('Error Loading Tour Guides:', error);
+            }
+        },
+        computeCommission: function()
+        {
 
             let totalCommissions = 0;
 
@@ -177,7 +269,8 @@ export default {
 
         },
 
-        computeDeduction: function(product, action){
+        computeDeduction: function(product, action)
+        {
 
             let total = 0;
 
@@ -265,63 +358,48 @@ export default {
 
         },
 
-        submit: function(){
+        submit: async function()
+        {
             // console.log('submit');
             // window.axios.post('/sales', {}).then(res =>{
             //     window.location.href = '/sales';
             // }).catch(err => {
             //     console.log(err);
             // })
-            this.creating = true;
+             this.creating = true;
+
+            // try {
+                
+            //     const data = {
+            //         ...this.form,
+            //         api_token: this.user.api_token
+            //     }
+
+            //     response = await axios.post(backendUrl + '/api/sales', data)
+
+            //     this.creating = false;
+
+            //     console.log(response.data);
+
+            // } catch (error) {
+                
+            //     console.log(error);
+
+            //     this.creating = false;
+            // }
+
+
+
         }
     },
-    async mounted(){
-        try {
-            
-            const commissionsUrl =  backendUrl + '/api/commissions?api_token=' + this.user.api_token;
-            const commissionResponse = await axios.get(commissionsUrl);
-            this.commissionReference = commissionResponse.data;
+    async mounted()
+    {
+        this.loadSalesCommissionReference();
 
-            //initialize the sales_commission
-            this.commissionReference.forEach(ref => {
+        this.loadDeductionsReference();
+    
+        this.loadTourAgents();
 
-                const salesCommission = {
-                    id: ref.id,
-                    name: ref.name,
-                    type: ref.commission_type,
-                    percentage: ref.amount,
-                    amount: 0
-                }
-
-                this.form.sales_commissions.push(salesCommission);
-
-            });
-
-
-            const deductionUrl = backendUrl + '/api/deductions?api_token=' + this.user.api_token;
-            const deductionResponse = await axios.get(deductionUrl);
-            this.deductionReference = deductionResponse.data;
-
-            //initialize deductions
-            this.deductionReference.forEach(ref => {
-                const deduction = {
-                    id: ref.id,
-                    name: ref.name,
-                    amount: 0,
-                    type: ref.type,
-                    multiplier: ref.amount
-                }
-
-                this.form.sales_deductions.push(deduction);
-            })
-
-
-
-            console.log(this.form.sales_deductions);
-
-        } catch (error) {
-            console.log('Error Loading Commissions', error);
-        }
     }
    
 }

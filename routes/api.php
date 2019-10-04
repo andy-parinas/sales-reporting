@@ -21,6 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/products', 'Api\ProductController@index');
 Route::get('/commissions', 'Api\CommissionController@index');
 Route::get('/agents', 'Api\TourAgentController@index');
+Route::get('/agents/{agent}', 'Api\TourAgentController@show');
 Route::get('/deductions', 'Api\DeductionController@index');
 
 Route::post('/sales', 'Api\SalesReportController@store');
