@@ -48,7 +48,7 @@ class SalesReportFeatureTest extends TestCase
     {
         
         $fields = collect(['report_number','grp_code', 'adult_count', 'children_count', 'tour_agent_id', 
-        'tour_guide_id', 'tc_name', 'total_sales', 'total_agent_sales', 'total_commission', 
+        'tour_guide_id', 'tc_name', 'total_sales', 'total_agent_sales', 'total_commissions', 'total_deductions',
         'gst', 'grand_total_commission','guide_incentive', 'delivery', 'service','total', ]);
 
 
@@ -104,7 +104,8 @@ class SalesReportFeatureTest extends TestCase
             'tc_name' => $this->faker->name,
             'total_sales' => $this->faker->randomFloat(2),
             'total_agent_sales' => $this->faker->randomFloat(2),
-            'total_commission' => $this->faker->randomFloat(2),
+            'total_commissions' => $this->faker->randomFloat(2),
+            'total_deductions' => $this->faker->randomFloat(2),
             'gst' => $this->faker->randomFloat(2),
             'grand_total_commission' => $this->faker->randomFloat(2),
             'total' => $this->faker->randomFloat(2),

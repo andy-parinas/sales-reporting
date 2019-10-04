@@ -60,7 +60,8 @@ class SalesReportController extends Controller
             'tc_name' => $request->validated()['tc_name'],
             'total_sales' => $request->validated()['total_sales'],
             'total_agent_sales' => $request->validated()['total_agent_sales'],
-            'total_commission' => $request->validated()['total_commission'],
+            'total_commissions' => $request->validated()['total_commissions'],
+            'total_deductions' => $request->validated()['total_deductions'],
             'gst' => $request->validated()['gst'],
             'grand_total_commission' => $request->validated()['grand_total_commission'],
         ];

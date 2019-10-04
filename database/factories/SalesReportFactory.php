@@ -18,7 +18,8 @@ $factory->define(SalesReport::class, function (Faker $faker) {
         'tc_name' => $faker->name,
         'total_sales' => $faker->randomFloat(2),
         'total_agent_sales' => $faker->randomFloat(2),
-        'total_commission' => $faker->randomFloat(2),
+        'total_commissions' => $faker->randomFloat(2),
+        'total_deductions'=> $faker->randomFloat(2),
         'gst' => $faker->randomFloat(2),
         'grand_total_commission' => $faker->randomFloat(2)
     ];

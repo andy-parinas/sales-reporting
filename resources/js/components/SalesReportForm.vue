@@ -86,7 +86,7 @@
                             :totalSales="form.total_sales"
                             :totalDeduction="form.total_deductions"
                             :totalAgentSales='form.total_agent_sales'
-                            :totalCommissions="form.total_commission"
+                            :totalCommissions="form.total_commissions"
                             :gst="form.gst"
                             :grandTotal="form.grand_total_commission" >
                 </total-sales>
@@ -135,7 +135,7 @@ export default {
                     total_sales: 0,
                     total_agent_sales: 0,
                     total_deductions: 0,
-                    total_commission: 0,
+                    total_commissions: 0,
                     gst: 0,
                     grand_total_commission: 0,
                     guide_incentive: 0,

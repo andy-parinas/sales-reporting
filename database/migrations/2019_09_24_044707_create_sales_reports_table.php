@@ -24,7 +24,8 @@ class CreateSalesReportsTable extends Migration
             $table->string('tc_name');
             $table->float('total_sales');
             $table->float('total_agent_sales');
-            $table->float('total_commission');
+            $table->float('total_commissions');
+            $table->float('total_deductions');
             $table->float('gst');
             $table->float('grand_total_commission');
             $table->timestamps();

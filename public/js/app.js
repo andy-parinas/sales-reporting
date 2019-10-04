@@ -2322,7 +2322,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         total_sales: 0,
         total_agent_sales: 0,
         total_deductions: 0,
-        total_commission: 0,
+        total_commissions: 0,
         gst: 0,
         grand_total_commission: 0,
         guide_incentive: 0,
@@ -21598,7 +21598,7 @@ var render = function() {
                 totalSales: _vm.form.total_sales,
                 totalDeduction: _vm.form.total_deductions,
                 totalAgentSales: _vm.form.total_agent_sales,
-                totalCommissions: _vm.form.total_commission,
+                totalCommissions: _vm.form.total_commissions,
                 gst: _vm.form.gst,
                 grandTotal: _vm.form.grand_total_commission
               }
