@@ -17,6 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/sales', 'Api\SalesReportController@index');
 Route::post('/sales', 'Api\SalesReportController@store');
 
 Route::get('/products', 'Api\ProductController@index');

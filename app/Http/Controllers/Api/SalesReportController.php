@@ -6,6 +6,7 @@ use App\Deduction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SalesReportRequest;
+use App\Http\Resources\SalesReportListResource;
 use App\SalesReport;
 use App\SelectedProduct;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,12 @@ class SalesReportController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api');
+    }
+
+    public function index()
+    {
+
+        return SalesReportListResource::collection(SalesReport::paginate(10));
     }
     
 

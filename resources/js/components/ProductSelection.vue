@@ -147,8 +147,6 @@ export default {
 
             this.loading = false;
 
-            console.log(response);
-
         } catch (error) {
             
             console.log(err);

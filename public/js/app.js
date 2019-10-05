@@ -2119,21 +2119,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               }
 
               this.loading = false;
-              console.log(response);
-              _context2.next = 16;
+              _context2.next = 15;
               break;
 
-            case 13:
-              _context2.prev = 13;
+            case 12:
+              _context2.prev = 12;
               _context2.t0 = _context2["catch"](0);
               console.log(err);
 
-            case 16:
+            case 15:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, this, [[0, 13]]);
+      }, _callee2, this, [[0, 12]]);
     }));
 
     function mounted() {
@@ -2703,6 +2702,146 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }
       }, _callee6, this);
+    }));
+
+    function mounted() {
+      return _mounted.apply(this, arguments);
+    }
+
+    return mounted;
+  }()
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SalesReportList.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SalesReportList.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'SalesReportList',
+  props: ['user'],
+  data: function data() {
+    return {
+      loading: true,
+      reports: null,
+      meta: null
+    };
+  },
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      var url, response;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              console.log(this.user.api_token);
+              _context.prev = 1;
+              url = backendUrl + '/api/sales?api_token=' + this.user.api_token;
+              _context.next = 5;
+              return axios.get(url);
+
+            case 5:
+              response = _context.sent;
+              this.reports = response.data.data;
+              this.meta = response.data.meta;
+              this.loading = false;
+              console.log(response);
+              _context.next = 15;
+              break;
+
+            case 12:
+              _context.prev = 12;
+              _context.t0 = _context["catch"](1);
+              console.log(_context.t0);
+
+            case 15:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this, [[1, 12]]);
     }));
 
     function mounted() {
@@ -24324,6 +24463,243 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SalesReportList.vue?vue&type=template&id=c52058fa&":
+/*!******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SalesReportList.vue?vue&type=template&id=c52058fa& ***!
+  \******************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _vm.loading
+      ? _c("div", [_vm._v("\n        Loading...\n\n    ")])
+      : _c("div", { staticClass: "my-10 px-5 w-256 mx-auto" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("table", { staticClass: "w-full mt-5" }, [
+            _vm._m(1),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.reports, function(report) {
+                return _c(
+                  "tr",
+                  {
+                    key: report.id,
+                    staticClass: "bg-white even:bg-gray-100 text-sm"
+                  },
+                  [
+                    _c(
+                      "td",
+                      { staticClass: "py-2 px-4 border border-gray-800" },
+                      [
+                        _c(
+                          "a",
+                          {
+                            staticClass:
+                              "text-blue-700 font-semibold hover:text-blue-800",
+                            attrs: { href: "/sales/" + report.id }
+                          },
+                          [_vm._v(" " + _vm._s(report.report_number) + " ")]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      { staticClass: "py-2 px-4 border border-gray-800" },
+                      [_vm._v(" " + _vm._s(report.tour_date) + " ")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      { staticClass: "py-2 px-4 border border-gray-800" },
+                      [_vm._v(" " + _vm._s(report.tour_agent) + " ")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      { staticClass: "py-2 px-4 border border-gray-800" },
+                      [_vm._v(" " + _vm._s(report.tour_guide) + " ")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      { staticClass: "py-2 px-4 border border-gray-800" },
+                      [_vm._v(" " + _vm._s(report.total_agent_sales) + " ")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      { staticClass: "py-2 px-4 border border-gray-800" },
+                      [_vm._v(_vm._s(report.total_commissions))]
+                    )
+                  ]
+                )
+              }),
+              0
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "mt-2" },
+            [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "py-1 px-2 mr-1 text-sm font-semibold rounded-sm boder border-gray-500 bg-gray-400 focus:outline-none",
+                  class: _vm.meta.current_page === 1 ? "disabled" : "",
+                  attrs: {
+                    disabled: _vm.meta.current_page === 1 ? true : false
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.changePage(1)
+                    }
+                  }
+                },
+                [_vm._v("\n                First\n            ")]
+              ),
+              _vm._v(" "),
+              _vm._l(_vm.meta.last_page, function(n) {
+                return _c(
+                  "button",
+                  {
+                    key: n,
+                    staticClass:
+                      "py-1 px-2 mr-1 text-sm font-semibold rounded-sm boder border-gray-500 bg-gray-400 focus:outline-none",
+                    class: _vm.meta.current_page === n ? "disabled" : "",
+                    attrs: {
+                      disabled: _vm.meta.current_page === n ? true : false
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.changePage(n)
+                      }
+                    }
+                  },
+                  [_vm._v("\n                " + _vm._s(n) + "\n            ")]
+                )
+              }),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "py-1 px-2 mr-1 text-sm font-semibold rounded-sm boder border-gray-500 bg-gray-400 focus:outline-none",
+                  class:
+                    _vm.meta.current_page === _vm.meta.last_page
+                      ? "disabled"
+                      : "",
+                  attrs: {
+                    disabled:
+                      _vm.meta.current_page === _vm.meta.last_page
+                        ? true
+                        : false
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.changePage(_vm.meta.last_page)
+                    }
+                  }
+                },
+                [_vm._v("\n                Last\n            ")]
+              )
+            ],
+            2
+          )
+        ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("form", { attrs: { action: "#" } }, [
+      _c(
+        "div",
+        { staticClass: "flex items-center border border-gray-700 rounded" },
+        [
+          _c(
+            "label",
+            {
+              staticClass: "pl-2 font-bold text-gray-800",
+              attrs: { for: "search" }
+            },
+            [_vm._v("Find")]
+          ),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "py-2 px-4 flex-1 focus:outline-none",
+            attrs: { id: "search", type: "text", placeholder: "Report Number" }
+          }),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass:
+                "border border-blue-700 bg-blue-700 py-2 px-4 text-white"
+            },
+            [_vm._v("Search")]
+          )
+        ]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c(
+        "tr",
+        { staticClass: "text-left bg-gray-300 border border-gray-800" },
+        [
+          _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+            _vm._v("Report Number")
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+            _vm._v("Date")
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+            _vm._v("Tour Agent")
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+            _vm._v("Tour Guide")
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+            _vm._v("Total Agent Sales")
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+            _vm._v("Total Agent Commision")
+          ])
+        ]
+      )
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SelectedProduct.vue?vue&type=template&id=36993f8e&":
 /*!******************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SelectedProduct.vue?vue&type=template&id=36993f8e& ***!
@@ -37037,6 +37413,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 Vue.component('sales-report-form', __webpack_require__(/*! ./components/SalesReportForm.vue */ "./resources/js/components/SalesReportForm.vue")["default"]);
+Vue.component('sales-report-list', __webpack_require__(/*! ./components/SalesReportList.vue */ "./resources/js/components/SalesReportList.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -37377,6 +37754,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SalesReportForm_vue_vue_type_template_id_6976aca9___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SalesReportForm_vue_vue_type_template_id_6976aca9___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/SalesReportList.vue":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/SalesReportList.vue ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _SalesReportList_vue_vue_type_template_id_c52058fa___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SalesReportList.vue?vue&type=template&id=c52058fa& */ "./resources/js/components/SalesReportList.vue?vue&type=template&id=c52058fa&");
+/* harmony import */ var _SalesReportList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SalesReportList.vue?vue&type=script&lang=js& */ "./resources/js/components/SalesReportList.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _SalesReportList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SalesReportList_vue_vue_type_template_id_c52058fa___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _SalesReportList_vue_vue_type_template_id_c52058fa___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/SalesReportList.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/SalesReportList.vue?vue&type=script&lang=js&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/SalesReportList.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SalesReportList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./SalesReportList.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SalesReportList.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SalesReportList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/SalesReportList.vue?vue&type=template&id=c52058fa&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/SalesReportList.vue?vue&type=template&id=c52058fa& ***!
+  \************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SalesReportList_vue_vue_type_template_id_c52058fa___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./SalesReportList.vue?vue&type=template&id=c52058fa& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SalesReportList.vue?vue&type=template&id=c52058fa&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SalesReportList_vue_vue_type_template_id_c52058fa___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SalesReportList_vue_vue_type_template_id_c52058fa___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

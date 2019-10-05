@@ -66,6 +66,21 @@ class SalesReportFeatureTest extends TestCase
 
     }
 
+    /** @test */
+    public function reports_can_be_listed_via_api()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+    
+        $reports = factory(SalesReport::class)->create();
+
+        $response = $this->get('/api/sales/?api_token=' . $user->api_token);
+
+        $response->assertJsonCount(1);
+
+    }
+
 
 
     private function createSalesReportData()
