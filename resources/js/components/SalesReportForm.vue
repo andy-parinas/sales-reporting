@@ -3,36 +3,43 @@
         <div class="px-4 flex justify-between mt-5">
             <div class="border border-gray-700 flex-1 mr-4">
                 <div class="flex">
-                    <div class="border-b border-r border-gray-700 p-1 w-32 text-center">
+                    <div class="border-b border-r border-gray-700 w-32 text-center">
                         <label  class="text-sm font-semibold text-gray-800 uppercase" for="agent">Tour Agent</label>
                     </div>
-                    <div  class="flex-1 p-1 border-b border-gray-700">
-                        <select class="w-full pl-10 focus:outline-none text-gray-800 text-sm"  type="text" id="agent" 
-                            placeholder="Tour Agent Name" 
-                            @change="tourAgentSelect" v-model="form.tour_agent_id" >
-                                <option disabled value="" > --- Select Tour Agent ---</option>
-                                <option v-for="agent in tourAgents" :key="agent.id"
-                                    :value="agent.id">{{ agent.name }}</option>
+                    <div  class="flex-1 border-b border-gray-700" >
+                        <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm"
+                                :class="errors && errors.tour_agent_id ? 'bg-red-200' : ''"  
+                                type="text" id="agent" placeholder="Tour Agent Name"  
+                                @change="tourAgentSelect" v-model="form.tour_agent_id" >
+
+                            <option disabled value="" > --- Select Tour Agent ---</option>
+                            <option v-for="agent in tourAgents" :key="agent.id"
+                                :value="agent.id">{{ agent.name }}</option>
                         </select>
                     </div>
                 </div>
                 <div class="flex">
-                    <div class="border-b border-r border-gray-700 p-1 w-32 text-center">
+                    <div class="border-b border-r border-gray-700 w-32 text-center">
                         <label  class="text-sm font-semibold text-gray-800 uppercase" for="pax">PAX</label>
                     </div>
-                    <div  class="flex-1 p-1 border-b border-gray-700 flex items-center">
-                        <input class="flex-1 pl-10 border-r border-gray-700 focus:outline-none  text-gray-800 text-sm"  
+                    <div  class="flex-1 border-b border-gray-700 flex items-center">
+                        <input class="flex-1 py-1 pl-10 border-r border-gray-700 focus:outline-none  text-gray-800 text-sm"
+                            :class="errors && errors.adult_count ? 'bg-red-200' : ''"  
                             type="text" id="pax" placeholder="Adult" v-model.number="form.adult_count" >
-                        <input class="flex-1 pl-10 focus:outline-none  text-gray-800 text-sm"  type="text" id="pax" 
+                        <input class="flex-1 py-1 pl-10 focus:outline-none  text-gray-800 text-sm"
+                            :class="errors && errors.children_count ? 'bg-red-200' : ''"  
+                            type="text" id="pax" 
                             placeholder="Children" v-model.number="form.children_count" >
                     </div>
                 </div>
                 <div class="flex">
-                    <div class="border-r border-gray-700 p-1 w-32 text-center">
+                    <div class="border-r border-gray-700 w-32 text-center">
                         <label  class="text-sm font-semibold text-gray-800 uppercase" for="guide">Guide Name</label>
                     </div>
-                    <div class="flex-1 p-1 border-gray-700">
-                        <select class="w-full pl-10 focus:outline-none text-gray-800 text-sm"  type="text" id="guide" placeholder="Guide Name"
+                    <div class="flex-1 border-gray-700">
+                        <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm"
+                                :class="errors && errors.tour_guide_id ? 'bg-red-200' : ''"    
+                                type="text" id="guide" placeholder="Guide Name"
                                 v-model="form.tour_guide_id">
                             <option disabled value="" > --- Select Tour Guide ---</option>
                             <option v-for="guide in tourGuides" :key="guide.id"
@@ -43,29 +50,32 @@
             </div>
             <div class="border border-gray-700 flex-1">
                     <div class="flex">
-                        <div class="border-b border-r border-gray-700 p-1 w-32 text-center">
+                        <div class="border-b border-r border-gray-700 w-32 text-center">
                             <label class="text-sm font-semibold text-gray-800 uppercase" for="date">Date</label>
                         </div>
-                        <div class="flex-1 p-1 border-b border-gray-700">
-                            <input class="w-full focus:outline-none pl-10 uppercase text-gray-800 text-sm" type="date" id="date" 
+                        <div class="flex-1  border-b border-gray-700">
+                            <input class="w-full focus:outline-none py-1 pl-10 uppercase text-gray-800 text-sm"
+                                 :class="errors && errors.tour_guide_id ? 'bg-red-200' : ''"  
+                                type="date" id="date" 
                                 placeholder="Tour Date"  v-model="form.tour_date" >
                         </div>
                     </div>
                     <div class="flex">
-                        <div class="border-b border-r border-gray-700 p-1 w-32 text-center">
+                        <div class="border-b border-r border-gray-700 w-32 text-center">
                             <label class="text-sm font-semibold text-gray-800 uppercase" for="grp">GRP Code</label>
                         </div>
-                        <div class="flex-1 p-1 border-b border-gray-700">
-                            <input class="w-full pl-10 focus:outline-none text-gray-800 text-sm" type="numner" id="grp" placeholder="GRP Code"
+                        <div class="flex-1 border-b border-gray-700">
+                            <input class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm" 
+                                type="numner" id="grp" placeholder="GRP Code"
                                     v-model="form.grp_code">
                         </div>
                     </div>
                     <div class="flex">
-                        <div class="border-r border-gray-700 p-1 w-32 text-center">
+                        <div class="border-r border-gray-700 w-32 text-center">
                             <label class="text-sm font-semibold text-gray-800 uppercase" for="tc">T/C Name</label>
                         </div>
-                        <div class="flex-1 p-1 border-gray-700">
-                            <input class="w-full pl-10 focus:outline-none  text-gray-800 text-sm" type="text" id="tc" placeholder="T/C Name"
+                        <div class="flex-1border-gray-700">
+                            <input class="w-full py-1 py-1pl-10 focus:outline-none  text-gray-800 text-sm" type="text" id="tc" placeholder="T/C Name"
                                 v-model="form.tc_name">
                         </div>
                     </div>
@@ -96,14 +106,17 @@
                             :grandTotal="form.grand_total_commission" >
                 </total-sales>
 
-                <button class="flex items-center w-full mt-5 py-2 px-4 bg-indigo-600 text-white rounded-full justify-center focus:outline-none" @click="submit">
+                <button 
+                    class="flex items-center w-full mt-5 py-2 px-4 text-white rounded-full justify-center focus:outline-none" 
+                    :class="errors ? 'bg-red-600' : 'bg-indigo-600'"    @click="submit">
                     <div class="text-white w-5 h-5" title="2">
                        <div v-if="creating" >
                            <circle-loader></circle-loader>
                        </div>
                     </div>
                     <div v-if="creating" >Creating Report</div>
-                    <div v-else >Create Report</div>
+                    <div v-else-if="errors" > Error Creating Report! Try Again</div>
+                    <div v-else>Create Report</div>
                 </button>
                 
             </div>
@@ -125,6 +138,7 @@ export default {
     props: ['user'],
     data: function(){
         return {
+            errors: null,
             commissionReference: [],
             deductionReference: [],
             tourAgents: [],
@@ -392,9 +406,18 @@ export default {
 
                 console.log(response.data);
 
+                window.location.href = '/sales/' + response.data.id;
+
             } catch (error) {
                 
-                console.log(error);
+                console.log(error.response.data);
+
+                if(error.response && error.response.data && error.response.data.errors ){
+                    this.errors = error.response.data.errors
+                    console.log(this.errors);
+                }else {
+                    console.log(error);
+                }
 
                 this.creating = false;
             }

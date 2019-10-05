@@ -1874,19 +1874,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Deductions',
@@ -2302,6 +2289,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2320,6 +2320,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   props: ['user'],
   data: function data() {
     return {
+      errors: null,
       commissionReference: [],
       deductionReference: [],
       tourAgents: [],
@@ -2651,21 +2652,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 response = _context5.sent;
                 this.creating = false;
                 console.log(response.data);
-                _context5.next = 14;
+                window.location.href = '/sales/' + response.data.id;
+                _context5.next = 16;
                 break;
 
-              case 10:
-                _context5.prev = 10;
+              case 11:
+                _context5.prev = 11;
                 _context5.t0 = _context5["catch"](1);
-                console.log(_context5.t0);
+                console.log(_context5.t0.response.data);
+
+                if (_context5.t0.response && _context5.t0.response.data && _context5.t0.response.data.errors) {
+                  this.errors = _context5.t0.response.data.errors;
+                  console.log(this.errors);
+                } else {
+                  console.log(_context5.t0);
+                }
+
                 this.creating = false;
 
-              case 14:
+              case 16:
               case "end":
                 return _context5.stop();
             }
           }
-        }, _callee5, this, [[1, 10]]);
+        }, _callee5, this, [[1, 11]]);
       }));
 
       function submit() {
@@ -23369,7 +23379,7 @@ var render = function() {
     "div",
     {
       staticClass:
-        "flex border border-gray-700 mt-5 items-start text-sm bg-red-200"
+        "flex border border-gray-700 mt-5 items-start text-sm bg-orange-300"
     },
     [
       _vm._m(0),
@@ -23408,7 +23418,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "flex justify-between font-semibold bg-red-400" },
+            { staticClass: "flex justify-between font-semibold bg-orange-400" },
             [
               _c(
                 "div",
@@ -23815,7 +23825,7 @@ var render = function() {
         _c("div", { staticClass: "flex" }, [
           _vm._m(0),
           _vm._v(" "),
-          _c("div", { staticClass: "flex-1 p-1 border-b border-gray-700" }, [
+          _c("div", { staticClass: "flex-1 border-b border-gray-700" }, [
             _c(
               "select",
               {
@@ -23828,7 +23838,9 @@ var render = function() {
                   }
                 ],
                 staticClass:
-                  "w-full pl-10 focus:outline-none text-gray-800 text-sm",
+                  "w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm",
+                class:
+                  _vm.errors && _vm.errors.tour_agent_id ? "bg-red-200" : "",
                 attrs: {
                   type: "text",
                   id: "agent",
@@ -23881,8 +23893,7 @@ var render = function() {
           _c(
             "div",
             {
-              staticClass:
-                "flex-1 p-1 border-b border-gray-700 flex items-center"
+              staticClass: "flex-1 border-b border-gray-700 flex items-center"
             },
             [
               _c("input", {
@@ -23896,7 +23907,8 @@ var render = function() {
                   }
                 ],
                 staticClass:
-                  "flex-1 pl-10 border-r border-gray-700 focus:outline-none  text-gray-800 text-sm",
+                  "flex-1 py-1 pl-10 border-r border-gray-700 focus:outline-none  text-gray-800 text-sm",
+                class: _vm.errors && _vm.errors.adult_count ? "bg-red-200" : "",
                 attrs: { type: "text", id: "pax", placeholder: "Adult" },
                 domProps: { value: _vm.form.adult_count },
                 on: {
@@ -23927,7 +23939,9 @@ var render = function() {
                   }
                 ],
                 staticClass:
-                  "flex-1 pl-10 focus:outline-none  text-gray-800 text-sm",
+                  "flex-1 py-1 pl-10 focus:outline-none  text-gray-800 text-sm",
+                class:
+                  _vm.errors && _vm.errors.children_count ? "bg-red-200" : "",
                 attrs: { type: "text", id: "pax", placeholder: "Children" },
                 domProps: { value: _vm.form.children_count },
                 on: {
@@ -23953,7 +23967,7 @@ var render = function() {
         _c("div", { staticClass: "flex" }, [
           _vm._m(2),
           _vm._v(" "),
-          _c("div", { staticClass: "flex-1 p-1 border-gray-700" }, [
+          _c("div", { staticClass: "flex-1 border-gray-700" }, [
             _c(
               "select",
               {
@@ -23966,7 +23980,9 @@ var render = function() {
                   }
                 ],
                 staticClass:
-                  "w-full pl-10 focus:outline-none text-gray-800 text-sm",
+                  "w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm",
+                class:
+                  _vm.errors && _vm.errors.tour_guide_id ? "bg-red-200" : "",
                 attrs: { type: "text", id: "guide", placeholder: "Guide Name" },
                 on: {
                   change: function($event) {
@@ -24009,7 +24025,7 @@ var render = function() {
         _c("div", { staticClass: "flex" }, [
           _vm._m(3),
           _vm._v(" "),
-          _c("div", { staticClass: "flex-1 p-1 border-b border-gray-700" }, [
+          _c("div", { staticClass: "flex-1  border-b border-gray-700" }, [
             _c("input", {
               directives: [
                 {
@@ -24020,7 +24036,8 @@ var render = function() {
                 }
               ],
               staticClass:
-                "w-full focus:outline-none pl-10 uppercase text-gray-800 text-sm",
+                "w-full focus:outline-none py-1 pl-10 uppercase text-gray-800 text-sm",
+              class: _vm.errors && _vm.errors.tour_guide_id ? "bg-red-200" : "",
               attrs: { type: "date", id: "date", placeholder: "Tour Date" },
               domProps: { value: _vm.form.tour_date },
               on: {
@@ -24038,7 +24055,7 @@ var render = function() {
         _c("div", { staticClass: "flex" }, [
           _vm._m(4),
           _vm._v(" "),
-          _c("div", { staticClass: "flex-1 p-1 border-b border-gray-700" }, [
+          _c("div", { staticClass: "flex-1 border-b border-gray-700" }, [
             _c("input", {
               directives: [
                 {
@@ -24049,7 +24066,7 @@ var render = function() {
                 }
               ],
               staticClass:
-                "w-full pl-10 focus:outline-none text-gray-800 text-sm",
+                "w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm",
               attrs: { type: "numner", id: "grp", placeholder: "GRP Code" },
               domProps: { value: _vm.form.grp_code },
               on: {
@@ -24067,7 +24084,7 @@ var render = function() {
         _c("div", { staticClass: "flex" }, [
           _vm._m(5),
           _vm._v(" "),
-          _c("div", { staticClass: "flex-1 p-1 border-gray-700" }, [
+          _c("div", { staticClass: "flex-1border-gray-700" }, [
             _c("input", {
               directives: [
                 {
@@ -24078,7 +24095,7 @@ var render = function() {
                 }
               ],
               staticClass:
-                "w-full pl-10 focus:outline-none  text-gray-800 text-sm",
+                "w-full py-1 py-1pl-10 focus:outline-none  text-gray-800 text-sm",
               attrs: { type: "text", id: "tc", placeholder: "T/C Name" },
               domProps: { value: _vm.form.tc_name },
               on: {
@@ -24148,7 +24165,8 @@ var render = function() {
               "button",
               {
                 staticClass:
-                  "flex items-center w-full mt-5 py-2 px-4 bg-indigo-600 text-white rounded-full justify-center focus:outline-none",
+                  "flex items-center w-full mt-5 py-2 px-4 text-white rounded-full justify-center focus:outline-none",
+                class: _vm.errors ? "bg-red-600" : "bg-indigo-600",
                 on: { click: _vm.submit }
               },
               [
@@ -24164,6 +24182,8 @@ var render = function() {
                 _vm._v(" "),
                 _vm.creating
                   ? _c("div", [_vm._v("Creating Report")])
+                  : _vm.errors
+                  ? _c("div", [_vm._v(" Error Creating Report! Try Again")])
                   : _c("div", [_vm._v("Create Report")])
               ]
             )
@@ -24181,7 +24201,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c(
       "div",
-      { staticClass: "border-b border-r border-gray-700 p-1 w-32 text-center" },
+      { staticClass: "border-b border-r border-gray-700 w-32 text-center" },
       [
         _c(
           "label",
@@ -24200,7 +24220,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c(
       "div",
-      { staticClass: "border-b border-r border-gray-700 p-1 w-32 text-center" },
+      { staticClass: "border-b border-r border-gray-700 w-32 text-center" },
       [
         _c(
           "label",
@@ -24219,7 +24239,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c(
       "div",
-      { staticClass: "border-r border-gray-700 p-1 w-32 text-center" },
+      { staticClass: "border-r border-gray-700 w-32 text-center" },
       [
         _c(
           "label",
@@ -24238,7 +24258,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c(
       "div",
-      { staticClass: "border-b border-r border-gray-700 p-1 w-32 text-center" },
+      { staticClass: "border-b border-r border-gray-700 w-32 text-center" },
       [
         _c(
           "label",
@@ -24257,7 +24277,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c(
       "div",
-      { staticClass: "border-b border-r border-gray-700 p-1 w-32 text-center" },
+      { staticClass: "border-b border-r border-gray-700 w-32 text-center" },
       [
         _c(
           "label",
@@ -24276,7 +24296,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c(
       "div",
-      { staticClass: "border-r border-gray-700 p-1 w-32 text-center" },
+      { staticClass: "border-r border-gray-700 w-32 text-center" },
       [
         _c(
           "label",
