@@ -385,12 +385,7 @@ export default {
 
         submit: async function()
         {
-            // console.log('submit');
-            // window.axios.post('/sales', {}).then(res =>{
-            //     window.location.href = '/sales';
-            // }).catch(err => {
-            //     console.log(err);
-            // })
+
              this.creating = true;
 
             try {

@@ -9,6 +9,33 @@ class SalesReport extends Model
     protected $guarded = [];
 
 
+    public function getTotalSalesAttribute($value)
+    {
+        return number_format($value, 2, '.', ',');
+    }
+
+    public function getTotalAgentSalesAttribute($value)
+    {
+        return number_format($value, 2, '.', ',');
+    }
+
+    public function getTotalCommissionsAttribute($value)
+    {
+        return number_format($value, 2, '.', ',');
+    }
+
+    public function getTotalDeductionsAttribute($value)
+    {
+        return number_format($value, 2, '.', ',');
+    }
+
+    public function getGrandTotalCommissionAttribute($value)
+    {
+        return number_format($value, 2, '.', ',');
+    }
+
+    
+
     public function tourAgent()
     {
         return $this->belongsTo(TourAgent::class);

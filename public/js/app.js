@@ -2633,12 +2633,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                // console.log('submit');
-                // window.axios.post('/sales', {}).then(res =>{
-                //     window.location.href = '/sales';
-                // }).catch(err => {
-                //     console.log(err);
-                // })
                 this.creating = true;
                 _context5.prev = 1;
                 data = _objectSpread({}, this.form, {
@@ -24481,7 +24475,7 @@ var render = function() {
   return _c("div", [
     _vm.loading
       ? _c("div", [_vm._v("\n        Loading...\n\n    ")])
-      : _c("div", { staticClass: "my-10 px-5 w-256 mx-auto" }, [
+      : _c("div", { staticClass: "my-10 px-5 w-288 mx-auto" }, [
           _vm._m(0),
           _vm._v(" "),
           _c("table", { staticClass: "w-full mt-5" }, [
@@ -24533,13 +24527,19 @@ var render = function() {
                     _vm._v(" "),
                     _c(
                       "td",
-                      { staticClass: "py-2 px-4 border border-gray-800" },
+                      {
+                        staticClass:
+                          "py-2 px-4 border border-gray-800 text-right"
+                      },
                       [_vm._v(" " + _vm._s(report.total_agent_sales) + " ")]
                     ),
                     _vm._v(" "),
                     _c(
                       "td",
-                      { staticClass: "py-2 px-4 border border-gray-800" },
+                      {
+                        staticClass:
+                          "py-2 px-4 border border-gray-800 text-right"
+                      },
                       [_vm._v(_vm._s(report.total_commissions))]
                     )
                   ]
@@ -24682,13 +24682,17 @@ var staticRenderFns = [
             _vm._v("Tour Guide")
           ]),
           _vm._v(" "),
-          _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
-            _vm._v("Total Agent Sales")
-          ]),
+          _c(
+            "th",
+            { staticClass: "py-2 px-2 border border-gray-800 text-right" },
+            [_vm._v("Total Agent Sales")]
+          ),
           _vm._v(" "),
-          _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
-            _vm._v("Total Agent Commision")
-          ])
+          _c(
+            "th",
+            { staticClass: "py-2 px-2 border border-gray-800 text-right" },
+            [_vm._v("Total Agent Commision")]
+          )
         ]
       )
     ])
@@ -24775,7 +24779,7 @@ var render = function() {
                     },
                     [
                       _vm._v(
-                        "\n                         Remove\n                     "
+                        "\n                        Remove\n                    "
                       )
                     ]
                   )

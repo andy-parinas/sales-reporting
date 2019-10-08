@@ -13,5 +13,16 @@ class SelectedProduct extends Model
         'total'
     ];
 
-    
+    protected $with = ['product'];
+
+    public function getTotalAttribute($value)
+    {
+        return number_format($value, 2, '.', ',');
+    }
+
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

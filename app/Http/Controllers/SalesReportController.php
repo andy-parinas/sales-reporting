@@ -51,9 +51,19 @@ class SalesReportController extends Controller
      * @param  \App\SalesReport  $salesReport
      * @return \Illuminate\Http\Response
      */
-    public function show(SalesReport $salesReport)
+    public function show(SalesReport $sale)
     {
-        return view('sales.show');
+
+        $selectedProducts = $sale->selectedProducts;
+        $deductions = $sale->deductions;
+        $commissions = $sale->commissions;
+
+        // foreach ($selectedProducts as $product) {
+        //     dump($product->product->name);
+        // }
+
+
+        return view('sales.show', compact('sale', 'selectedProducts', 'deductions', 'commissions'));
     }
 
     /**

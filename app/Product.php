@@ -11,6 +11,7 @@ class Product extends Model
 
     protected $guarded = [];
 
+    protected $with = ['productType'];
 
     public function productType()
     {

@@ -1,5 +1,5 @@
 <template>
-   <table class="w-full">
+    <table class="w-full">
         <thead>
             <tr class="text-left bg-gray-300 border border-gray-800 text-sm">
                 <th class="py-2 px-2 border border-gray-800">Selected Product</th>

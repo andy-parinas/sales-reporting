@@ -4,7 +4,7 @@
             Loading...
 
         </div>
-        <div v-else class="my-10 px-5 w-256 mx-auto">
+        <div v-else class="my-10 px-5 w-288 mx-auto">
                 <form action="#">
                 <div class="flex items-center border border-gray-700 rounded">
                         <label for="search" class="pl-2 font-bold text-gray-800">Find</label>
@@ -20,8 +20,8 @@
                         <th class="py-2 px-2 border border-gray-800">Date</th>
                         <th class="py-2 px-2 border border-gray-800">Tour Agent</th>
                         <th class="py-2 px-2 border border-gray-800">Tour Guide</th>
-                        <th class="py-2 px-2 border border-gray-800">Total Agent Sales</th>
-                        <th class="py-2 px-2 border border-gray-800">Total Agent Commision</th>
+                        <th class="py-2 px-2 border border-gray-800 text-right">Total Agent Sales</th>
+                        <th class="py-2 px-2 border border-gray-800 text-right">Total Agent Commision</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,8 +33,8 @@
                         <td class="py-2 px-4 border border-gray-800"> {{ report.tour_date }} </td>
                         <td class="py-2 px-4 border border-gray-800"> {{ report.tour_agent }} </td>
                         <td class="py-2 px-4 border border-gray-800"> {{ report.tour_guide }} </td>
-                        <td class="py-2 px-4 border border-gray-800"> {{ report.total_agent_sales }} </td>
-                        <td class="py-2 px-4 border border-gray-800">{{ report.total_commissions }}</td>
+                        <td class="py-2 px-4 border border-gray-800 text-right"> {{ report.total_agent_sales }} </td>
+                        <td class="py-2 px-4 border border-gray-800 text-right">{{ report.total_commissions }}</td>
                     </tr>
                 </tbody>
                 
