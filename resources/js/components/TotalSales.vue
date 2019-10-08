@@ -1,5 +1,5 @@
 <template>
-   <div class="flex border border-gray-700 mt-5 items-start text-sm bg-green-200">
+    <div class="flex border border-gray-700 mt-5 items-start text-sm bg-green-200">
         <div class="flex-1">
             <div class="flex justify-between border-b border-gray-700">
                 <div class="flex-1 border-gray-700 border-r px-2 py-1">Total Sales</div>

@@ -12,6 +12,17 @@ class SalesDeduction extends Model
         'amount'
     ];
 
+    protected $with = ['deduction'];
 
+
+    public function getAmountAttribute($value)
+    {
+        return number_format($value, 2, '.', ',');
+    }
+
+    public function deduction()
+    {
+        return $this->belongsTo(Deduction::class);
+    }
     
 }

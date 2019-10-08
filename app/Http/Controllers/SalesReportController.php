@@ -55,15 +55,15 @@ class SalesReportController extends Controller
     {
 
         $selectedProducts = $sale->selectedProducts;
-        $deductions = $sale->deductions;
-        $commissions = $sale->commissions;
+        $salesDeductions = $sale->salesDeductions;
+        $salesCommissions = $sale->salesCommissions;
 
         // foreach ($selectedProducts as $product) {
         //     dump($product->product->name);
         // }
 
 
-        return view('sales.show', compact('sale', 'selectedProducts', 'deductions', 'commissions'));
+        return view('sales.show', compact('sale', 'selectedProducts', 'salesDeductions', 'salesCommissions'));
     }
 
     /**

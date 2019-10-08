@@ -11,5 +11,16 @@ class SalesCommission extends Model
         'amount'
     ];
 
+    protected $with = ['commission'];
+
+    public function getAmountAttribute($value)
+    {
+        return number_format($value, 2, '.', ',');
+    }
+
+    public function commission()
+    {
+        return $this->belongsTo(Commission::class);
+    }
     
 }
