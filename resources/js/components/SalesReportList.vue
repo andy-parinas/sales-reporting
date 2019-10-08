@@ -1,8 +1,7 @@
 <template>
     <div>
-        <div v-if="loading">
-            Loading...
-
+        <div v-if="loading" class="w-full h-96 flex items-center justify-center">
+            <bar-loader color="#a0aec0"></bar-loader>
         </div>
         <div v-else class="my-10 px-5 w-288 mx-auto">
                 <form action="#">
@@ -65,9 +64,11 @@
 </template>
 
 <script>
+import BarLoader from './ui/loader/BarLoader';
 export default {
     name: 'SalesReportList',
     props: ['user'],
+    components: {BarLoader},
     data: function()
     {
         return {
