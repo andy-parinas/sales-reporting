@@ -22,11 +22,23 @@ class SalesReportController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $salesReport = null;
 
+        if($request->has('sort') && $request->has('direction')){
+
+            $sort = request('sort');
+            $direction = request('direction');
+
+            $salesReport = SalesReport::orderBy($sort, $direction)->paginate(10);
+
+        }else {
+
+            $salesReport = SalesReport::orderBy('tour_date', 'desc')->paginate(10);
+        }
         
-        $salesReport = SalesReport::orderBy('tour_date', 'desc')->paginate(10);
+        
 
         return SalesReportListResource::collection($salesReport);
     }

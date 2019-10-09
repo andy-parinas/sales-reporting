@@ -15,12 +15,56 @@
             <table class="w-full mt-5">
                 <thead>
                     <tr class="text-left bg-gray-300 border border-gray-800">
-                        <th class="py-2 px-2 border border-gray-800">Report Number</th>
-                        <th class="py-2 px-2 border border-gray-800">Date</th>
-                        <th class="py-2 px-2 border border-gray-800">Tour Agent</th>
-                        <th class="py-2 px-2 border border-gray-800">Tour Guide</th>
-                        <th class="py-2 px-2 border border-gray-800 text-right">Total Agent Sales</th>
-                        <th class="py-2 px-2 border border-gray-800 text-right">Total Agent Commision</th>
+                        <th class="py-2 px-2 border-r border-gray-800">
+                            <button class="text-gray-800 font-bold flex w-full focus:outline-none hover:text-gray-700"
+                                :class="sortDir == 'desc' ? 'items-start' : 'items-end'"
+                                @click="sort('report_number')">
+                                <span class="mr-1">Report Number</span>
+                                <sort-up v-if="sortCol==='report_number' && sortDir==='asc'" ></sort-up>
+                                <sort-down v-else-if="sortCol==='report_number' && sortDir==='desc'"></sort-down>
+                            </button>
+                        </th>
+                        <th class="py-2 px-2 border-r border-gray-800">
+                             <button class="text-gray-800 font-bold flex items-start w-full focus:outline-none hover:text-gray-700" 
+                                :class="sortDir == 'desc' ? 'items-start' : 'items-end'"
+                                @click="sort('tour_date')">
+                                <span class="mr-1">Date</span>
+                                <sort-up v-if="sortCol==='tour_date' && sortDir==='asc'" ></sort-up>
+                                <sort-down v-else-if="sortCol==='tour_date' && sortDir==='desc'"></sort-down>
+                            </button>
+                        </th>
+                        <th class="py-2 px-2 border-r border-gray-800">
+                             <button class="text-gray-800 font-bold flex items-center w-full focus:outline-none hover:text-gray-700">
+                                <span class="mr-1">Tour Agent</span>
+                                <sort-up v-if="sortCol==='tour_agent' && sortDir==='asc'" ></sort-up>
+                                <sort-down v-else-if="sortCol==='tour_agent' && sortDir==='desc'"></sort-down>
+                            </button>
+                        </th>
+                        <th class="py-2 px-2 border-r border-gray-800">
+                             <button class="text-gray-800 font-bold flex items-center w-full focus:outline-none hover:text-gray-700">
+                                <span class="mr-1">Tour Guide</span>
+                                <sort-up v-if="sortCol==='tour_guide' && sortDir==='asc'" ></sort-up>
+                                <sort-down v-else-if="sortCol==='tour_guide' && sortDir==='desc'"></sort-down>
+                            </button>
+                        </th>
+                        <th class="py-2 px-2 border-r border-gray-800 text-right">
+                             <button class="text-gray-800 font-bold flex items-center w-full justify-end focus:outline-none hover:text-gray-700"
+                                :class="sortDir == 'desc' ? 'items-start' : 'items-end'"
+                                @click="sort('total_agent_sales')">
+                                <span class="mr-1">Total Agent Sales</span>
+                                <sort-up v-if="sortCol==='total_agent_sales' && sortDir==='asc'" ></sort-up>
+                                <sort-down v-else-if="sortCol==='total_agent_sales' && sortDir==='desc'"></sort-down>
+                            </button>
+                        </th>
+                        <th class="py-2 px-2 border border-gray-800 text-right">
+                             <button class="text-gray-800 font-bold flex items-center w-full justify-end focus:outline-none hover:text-gray-700"
+                                :class="sortDir == 'desc' ? 'items-start' : 'items-end'"
+                                @click="sort('total_commissions')">
+                                <span class="mr-1">Total Agent Commision</span>
+                                <sort-up v-if="sortCol==='total_commissions' && sortDir==='asc'" ></sort-up>
+                                <sort-down v-else-if="sortCol==='total_commissions' && sortDir==='desc'"></sort-down>
+                            </button>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,22 +109,28 @@
 
 <script>
 import BarLoader from './ui/loader/BarLoader';
+import SortIcon from './ui/icons/Sort';
+import SortUp from './ui/icons/SortUp';
+import SortDown from './ui/icons/SortDown';
+
 export default {
     name: 'SalesReportList',
     props: ['user'],
-    components: {BarLoader},
+    components: {BarLoader, SortIcon,SortUp,SortDown},
     data: function()
     {
         return {
             loading: true,
             reports: null,
             meta: null,
+            sortCol: 'tour_date',
+            sortDir: 'desc'
         }
     },
     methods: {
         changePage: async function(page){
            try {
-                const url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&page=' + page;
+                const url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&page=' + page  + '&sort=' + this.sortCol + '&direction=' + this.sortDir;
                 const response = await axios.get(url);
                 this.reports = response.data.data;
                 this.meta = response.data.meta;
@@ -88,6 +138,30 @@ export default {
            } catch (error) {
                console.log(error);
            }
+        },
+        sort: async function(column){
+
+            try {
+
+                this.sortCol = column;
+
+                if(this.sortDir === 'asc'){
+                    this.sortDir = 'desc'
+                }else {
+                    this.sortDir = 'asc'
+                }
+                
+                const url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&sort=' + this.sortCol + '&direction=' + this.sortDir;
+
+                const response = await axios.get(url);
+
+                this.reports = response.data.data;
+                this.meta = response.data.meta;
+                
+            } catch (error) {
+                console.log(error);
+            }
+
         }
     },
     async mounted(){
@@ -96,7 +170,7 @@ export default {
 
         try {
             
-            const url = backendUrl + '/api/sales?api_token=' + this.user.api_token
+            const url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&sort=' + this.sortCol + '&direction=' + this.sortDir;
 
             const response = await axios.get(url);
 
