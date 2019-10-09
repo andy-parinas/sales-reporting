@@ -2365,7 +2365,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   methods: {
     createReportNumber: function createReportNumber() {
       var today = new Date();
-      return "".concat(today.getFullYear()).concat(today.getMonth() + 1).concat(today.getDay(), "-").concat(today.getHours()).concat(today.getMinutes()).concat(today.getMilliseconds());
+      return "".concat(today.getFullYear()).concat(today.getMonth() + 1).concat(today.getDate(), "-").concat(today.getHours()).concat(today.getMinutes()).concat(today.getMilliseconds());
     },
     loadSalesCommissionReference: function () {
       var _loadSalesCommissionReference = _asyncToGenerator(
@@ -2827,7 +2827,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 this.loadDeductionsReference();
               }
 
-              console.log(this.form.sales_commissions);
+              console.log('report number', this.form.report_number);
 
             case 3:
             case "end":
@@ -2944,41 +2944,83 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       meta: null
     };
   },
+  methods: {
+    changePage: function () {
+      var _changePage = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(page) {
+        var url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&page=' + page;
+                _context.next = 4;
+                return axios.get(url);
+
+              case 4:
+                response = _context.sent;
+                this.reports = response.data.data;
+                this.meta = response.data.meta;
+                _context.next = 12;
+                break;
+
+              case 9:
+                _context.prev = 9;
+                _context.t0 = _context["catch"](0);
+                console.log(_context.t0);
+
+              case 12:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[0, 9]]);
+      }));
+
+      function changePage(_x) {
+        return _changePage.apply(this, arguments);
+      }
+
+      return changePage;
+    }()
+  },
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
       var url, response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
         while (1) {
-          switch (_context.prev = _context.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
               console.log(this.user.api_token);
-              _context.prev = 1;
+              _context2.prev = 1;
               url = backendUrl + '/api/sales?api_token=' + this.user.api_token;
-              _context.next = 5;
+              _context2.next = 5;
               return axios.get(url);
 
             case 5:
-              response = _context.sent;
+              response = _context2.sent;
               this.reports = response.data.data;
               this.meta = response.data.meta;
               this.loading = false;
               console.log(response);
-              _context.next = 15;
+              _context2.next = 15;
               break;
 
             case 12:
-              _context.prev = 12;
-              _context.t0 = _context["catch"](1);
-              console.log(_context.t0);
+              _context2.prev = 12;
+              _context2.t0 = _context2["catch"](1);
+              console.log(_context2.t0);
 
             case 15:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
         }
-      }, _callee, this, [[1, 12]]);
+      }, _callee2, this, [[1, 12]]);
     }));
 
     function mounted() {
@@ -24798,7 +24840,7 @@ var staticRenderFns = [
           _c(
             "label",
             {
-              staticClass: "pl-2 font-bold text-gray-800",
+              staticClass: "pl-2 font-bold text-gray-800 mr-2",
               attrs: { for: "search" }
             },
             [_vm._v("Find")]

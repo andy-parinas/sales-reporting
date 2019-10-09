@@ -187,7 +187,7 @@ export default {
         {
             const today = new Date();
 
-            return `${today.getFullYear()}${today.getMonth() + 1}${today.getDay()}-${today.getHours()}${today.getMinutes()}${today.getMilliseconds()}`;
+            return `${today.getFullYear()}${today.getMonth() + 1}${today.getDate()}-${today.getHours()}${today.getMinutes()}${today.getMilliseconds()}`;
         },
 
         loadSalesCommissionReference: async function()
@@ -543,7 +543,7 @@ export default {
     
         }
 
-        console.log(this.form.sales_commissions);
+        console.log('report number', this.form.report_number);
 
     },
    

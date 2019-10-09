@@ -25,7 +25,10 @@ class SalesReportController extends Controller
     public function index()
     {
 
-        return SalesReportListResource::collection(SalesReport::paginate(10));
+        
+        $salesReport = SalesReport::orderBy('tour_date', 'desc')->paginate(10);
+
+        return SalesReportListResource::collection($salesReport);
     }
     
 

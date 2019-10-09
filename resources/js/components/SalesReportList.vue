@@ -6,7 +6,7 @@
         <div v-else class="my-10 px-5 w-288 mx-auto">
                 <form action="#">
                 <div class="flex items-center border border-gray-700 rounded">
-                        <label for="search" class="pl-2 font-bold text-gray-800">Find</label>
+                        <label for="search" class="pl-2 font-bold text-gray-800 mr-2">Find</label>
                         <input class="py-2 px-4 flex-1 focus:outline-none"
                             id="search" type="text" placeholder="Report Number">
                         <button class="border border-blue-700 bg-blue-700 py-2 px-4 text-white">Search</button>
@@ -75,6 +75,19 @@ export default {
             loading: true,
             reports: null,
             meta: null,
+        }
+    },
+    methods: {
+        changePage: async function(page){
+           try {
+                const url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&page=' + page;
+                const response = await axios.get(url);
+                this.reports = response.data.data;
+                this.meta = response.data.meta;
+
+           } catch (error) {
+               console.log(error);
+           }
         }
     },
     async mounted(){
