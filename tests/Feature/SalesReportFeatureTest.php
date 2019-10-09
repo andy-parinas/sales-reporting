@@ -73,12 +73,28 @@ class SalesReportFeatureTest extends TestCase
 
         $user = factory(User::class)->create();
     
-        $reports = factory(SalesReport::class)->create();
+        factory(SalesReport::class)->create();
 
         $response = $this->get('/api/sales/?api_token=' . $user->api_token);
 
         $response->assertJsonCount(1);
 
+    }
+
+    /** @test */
+    public function reports_can_be_sorted_via_tour_agent_name()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+    
+        factory(SalesReport::class, 5)->create();
+
+
+
+        $response = $this->get('/api/sales/?api_token=' . $user->api_token . '&sort=tour_agents&direction=desc');
+
+        $response->assertJsonCount(3);
     }
 
     /** @test */

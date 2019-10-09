@@ -2977,6 +2977,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -2996,7 +3000,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       reports: null,
       meta: null,
       sortCol: 'tour_date',
-      sortDir: 'desc'
+      sortDir: 'desc',
+      search: ''
     };
   },
   methods: {
@@ -3004,34 +3009,38 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _changePage = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(page) {
-        var url, response;
+        var url, response, meta;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&page=' + page + '&sort=' + this.sortCol + '&direction=' + this.sortDir;
+                url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&page=' + page + '&sort=' + this.sortCol + '&direction=' + this.sortDir + '&search=' + this.search;
                 _context.next = 4;
                 return axios.get(url);
 
               case 4:
                 response = _context.sent;
                 this.reports = response.data.data;
-                this.meta = response.data.meta;
-                _context.next = 12;
+                meta = {
+                  current_page: response.data.current_page,
+                  last_page: response.data.last_page
+                };
+                this.meta = meta;
+                _context.next = 13;
                 break;
 
-              case 9:
-                _context.prev = 9;
+              case 10:
+                _context.prev = 10;
                 _context.t0 = _context["catch"](0);
                 console.log(_context.t0);
 
-              case 12:
+              case 13:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 9]]);
+        }, _callee, this, [[0, 10]]);
       }));
 
       function changePage(_x) {
@@ -3044,7 +3053,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _sort = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(column) {
-        var url, response;
+        var url, response, meta;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -3058,28 +3067,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   this.sortDir = 'asc';
                 }
 
-                url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&sort=' + this.sortCol + '&direction=' + this.sortDir;
+                url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&sort=' + this.sortCol + '&direction=' + this.sortDir + '&search=' + this.search;
                 _context2.next = 6;
                 return axios.get(url);
 
               case 6:
                 response = _context2.sent;
                 this.reports = response.data.data;
-                this.meta = response.data.meta;
-                _context2.next = 14;
+                meta = {
+                  current_page: response.data.current_page,
+                  last_page: response.data.last_page
+                };
+                this.meta = meta;
+                _context2.next = 15;
                 break;
 
-              case 11:
-                _context2.prev = 11;
+              case 12:
+                _context2.prev = 12;
                 _context2.t0 = _context2["catch"](0);
                 console.log(_context2.t0);
 
-              case 14:
+              case 15:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[0, 11]]);
+        }, _callee2, this, [[0, 12]]);
       }));
 
       function sort(_x2) {
@@ -3087,43 +3100,91 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return sort;
+    }(),
+    searchReport: function () {
+      var _searchReport = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(search) {
+        var url, response, meta;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&search=' + this.search;
+                _context3.next = 4;
+                return axios.get(url);
+
+              case 4:
+                response = _context3.sent;
+                this.reports = response.data.data;
+                meta = {
+                  current_page: response.data.current_page,
+                  last_page: response.data.last_page
+                };
+                this.meta = meta;
+                _context3.next = 13;
+                break;
+
+              case 10:
+                _context3.prev = 10;
+                _context3.t0 = _context3["catch"](0);
+                console.log(_context3.t0);
+
+              case 13:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[0, 10]]);
+      }));
+
+      function searchReport(_x3) {
+        return _searchReport.apply(this, arguments);
+      }
+
+      return searchReport;
     }()
   },
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-      var url, response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+      var url, response, meta;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
               console.log(this.user.api_token);
-              _context3.prev = 1;
+              _context4.prev = 1;
               url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&sort=' + this.sortCol + '&direction=' + this.sortDir;
-              _context3.next = 5;
+              _context4.next = 5;
               return axios.get(url);
 
             case 5:
-              response = _context3.sent;
+              response = _context4.sent;
+              console.log(response.data.data);
+              meta = {
+                current_page: response.data.current_page,
+                last_page: response.data.last_page
+              };
               this.reports = response.data.data;
-              this.meta = response.data.meta;
+              this.meta = meta;
               this.loading = false;
-              console.log(response);
-              _context3.next = 15;
+              _context4.next = 16;
               break;
 
-            case 12:
-              _context3.prev = 12;
-              _context3.t0 = _context3["catch"](1);
-              console.log(_context3.t0);
+            case 13:
+              _context4.prev = 13;
+              _context4.t0 = _context4["catch"](1);
+              console.log(_context4.t0);
 
-            case 15:
+            case 16:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
         }
-      }, _callee3, this, [[1, 12]]);
+      }, _callee4, this, [[1, 13]]);
     }));
 
     function mounted() {
@@ -24935,7 +24996,14 @@ var render = function() {
                         "button",
                         {
                           staticClass:
-                            "text-gray-800 font-bold flex items-center w-full focus:outline-none hover:text-gray-700"
+                            "text-gray-800 font-bold flex items-center w-full focus:outline-none hover:text-gray-700",
+                          class:
+                            _vm.sortDir == "desc" ? "items-start" : "items-end",
+                          on: {
+                            click: function($event) {
+                              return _vm.sort("tour_agent")
+                            }
+                          }
                         },
                         [
                           _c("span", { staticClass: "mr-1" }, [
@@ -24962,7 +25030,14 @@ var render = function() {
                         "button",
                         {
                           staticClass:
-                            "text-gray-800 font-bold flex items-center w-full focus:outline-none hover:text-gray-700"
+                            "text-gray-800 font-bold flex items-center w-full focus:outline-none hover:text-gray-700",
+                          class:
+                            _vm.sortDir == "desc" ? "items-start" : "items-end",
+                          on: {
+                            click: function($event) {
+                              return _vm.sort("tour_guide")
+                            }
+                          }
                         },
                         [
                           _c("span", { staticClass: "mr-1" }, [

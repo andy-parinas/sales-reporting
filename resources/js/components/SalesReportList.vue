@@ -34,14 +34,18 @@
                             </button>
                         </th>
                         <th class="py-2 px-2 border-r border-gray-800">
-                             <button class="text-gray-800 font-bold flex items-center w-full focus:outline-none hover:text-gray-700">
+                             <button class="text-gray-800 font-bold flex items-center w-full focus:outline-none hover:text-gray-700"
+                                :class="sortDir == 'desc' ? 'items-start' : 'items-end'"
+                                @click="sort('tour_agent')">
                                 <span class="mr-1">Tour Agent</span>
                                 <sort-up v-if="sortCol==='tour_agent' && sortDir==='asc'" ></sort-up>
                                 <sort-down v-else-if="sortCol==='tour_agent' && sortDir==='desc'"></sort-down>
                             </button>
                         </th>
                         <th class="py-2 px-2 border-r border-gray-800">
-                             <button class="text-gray-800 font-bold flex items-center w-full focus:outline-none hover:text-gray-700">
+                             <button class="text-gray-800 font-bold flex items-center w-full focus:outline-none hover:text-gray-700"
+                                :class="sortDir == 'desc' ? 'items-start' : 'items-end'"
+                                @click="sort('tour_guide')">
                                 <span class="mr-1">Tour Guide</span>
                                 <sort-up v-if="sortCol==='tour_guide' && sortDir==='asc'" ></sort-up>
                                 <sort-down v-else-if="sortCol==='tour_guide' && sortDir==='desc'"></sort-down>
@@ -124,16 +128,26 @@ export default {
             reports: null,
             meta: null,
             sortCol: 'tour_date',
-            sortDir: 'desc'
+            sortDir: 'desc',
+            search: ''
         }
     },
     methods: {
         changePage: async function(page){
            try {
-                const url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&page=' + page  + '&sort=' + this.sortCol + '&direction=' + this.sortDir;
+                const url = backendUrl + '/api/sales?api_token=' + this.user.api_token 
+                + '&page=' + page  
+                + '&sort=' + this.sortCol 
+                + '&direction=' + this.sortDir
+                + '&search=' + this.search;
+
                 const response = await axios.get(url);
                 this.reports = response.data.data;
-                this.meta = response.data.meta;
+                const meta = {
+                    current_page: response.data.current_page,
+                    last_page: response.data.last_page
+                }
+                this.meta = meta;
 
            } catch (error) {
                console.log(error);
@@ -151,17 +165,42 @@ export default {
                     this.sortDir = 'asc'
                 }
                 
-                const url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&sort=' + this.sortCol + '&direction=' + this.sortDir;
+                const url = backendUrl + '/api/sales?api_token=' + this.user.api_token 
+                    + '&sort=' + this.sortCol 
+                    + '&direction=' + this.sortDir
+                    + '&search=' + this.search;
 
                 const response = await axios.get(url);
 
                 this.reports = response.data.data;
-                this.meta = response.data.meta;
+                const meta = {
+                    current_page: response.data.current_page,
+                    last_page: response.data.last_page
+                }
+                this.meta = meta;
                 
             } catch (error) {
                 console.log(error);
             }
 
+        },
+        searchReport: async function(search){
+            
+            try {
+                const url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&search=' + this.search;
+
+                const response = await axios.get(url);
+
+                this.reports = response.data.data;
+                const meta = {
+                    current_page: response.data.current_page,
+                    last_page: response.data.last_page
+                }
+                this.meta = meta;
+
+            } catch (error) {
+                console.log(error);
+            }
         }
     },
     async mounted(){
@@ -174,12 +213,17 @@ export default {
 
             const response = await axios.get(url);
 
+            console.log(response.data.data);
+
+            const meta = {
+                current_page: response.data.current_page,
+                last_page: response.data.last_page
+            }
+
             this.reports = response.data.data;
-            this.meta = response.data.meta;
+            this.meta = meta;
 
             this.loading = false
-
-            console.log(response);
 
         } catch (error) {
             

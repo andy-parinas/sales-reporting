@@ -6,6 +6,7 @@ use App\Deduction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SalesReportRequest;
+use App\Http\Resources\SalesReportListQueryResource;
 use App\Http\Resources\SalesReportListResource;
 use App\SalesCommission;
 use App\SalesDeduction;
@@ -24,23 +25,29 @@ class SalesReportController extends Controller
 
     public function index(Request $request)
     {
-        $salesReport = null;
 
         if($request->has('sort') && $request->has('direction')){
 
-            $sort = request('sort');
-            $direction = request('direction');
+            
+            return DB::table('sales_reports')
+                ->join('tour_agents', 'tour_agents.id', '=', 'sales_reports.tour_agent_id')
+                ->join('tour_guides', 'tour_guides.id', '=','sales_reports.tour_guide_id')
+                ->select('sales_reports.*', 'tour_agents.name as tour_agent', 'tour_guides.name as tour_guide')
+                ->orderBy(request('sort'), request('direction'))
+                ->paginate(10);
 
-            $salesReport = SalesReport::orderBy($sort, $direction)->paginate(10);
-
+         
         }else {
 
-            $salesReport = SalesReport::orderBy('tour_date', 'desc')->paginate(10);
+            return DB::table('sales_reports')
+                ->join('tour_agents', 'tour_agents.id', '=', 'sales_reports.tour_agent_id')
+                ->join('tour_guides', 'tour_guides.id', '=','sales_reports.tour_guide_id')
+                ->select('sales_reports.*', 'tour_agents.name as tour_agent', 'tour_guides.name as tour_guide')
+                ->orderBy('tour_date', 'desc')
+                ->paginate(10);
         }
         
         
-
-        return SalesReportListResource::collection($salesReport);
     }
     
 
