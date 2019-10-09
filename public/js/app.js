@@ -2981,6 +2981,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 
@@ -3104,7 +3106,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     searchReport: function () {
       var _searchReport = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(search) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
         var url, response, meta;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
@@ -3139,7 +3141,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee3, this, [[0, 10]]);
       }));
 
-      function searchReport(_x3) {
+      function searchReport() {
         return _searchReport.apply(this, arguments);
       }
 
@@ -24913,7 +24915,76 @@ var render = function() {
           1
         )
       : _c("div", { staticClass: "my-10 px-5 w-288 mx-auto" }, [
-          _vm._m(0),
+          _c(
+            "form",
+            {
+              attrs: { method: "POST" },
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.searchReport($event)
+                }
+              }
+            },
+            [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "flex items-center border border-gray-700 rounded"
+                },
+                [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "pl-2 font-bold text-gray-800 mr-2",
+                      attrs: { for: "search" }
+                    },
+                    [_vm._v("Find")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.search,
+                        expression: "search"
+                      }
+                    ],
+                    staticClass: "py-2 px-4 flex-1 focus:outline-none",
+                    attrs: {
+                      id: "search",
+                      type: "text",
+                      placeholder: "Report Number"
+                    },
+                    domProps: { value: _vm.search },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.search = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "border border-blue-700 bg-blue-700 py-2 px-4 text-white"
+                    },
+                    [
+                      _vm._v(
+                        "\n                        Search\n                    "
+                      )
+                    ]
+                  )
+                ]
+              )
+            ]
+          ),
           _vm._v(" "),
           _c("table", { staticClass: "w-full mt-5" }, [
             _c("thead", [
@@ -25274,43 +25345,7 @@ var render = function() {
         ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("form", { attrs: { action: "#" } }, [
-      _c(
-        "div",
-        { staticClass: "flex items-center border border-gray-700 rounded" },
-        [
-          _c(
-            "label",
-            {
-              staticClass: "pl-2 font-bold text-gray-800 mr-2",
-              attrs: { for: "search" }
-            },
-            [_vm._v("Find")]
-          ),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "py-2 px-4 flex-1 focus:outline-none",
-            attrs: { id: "search", type: "text", placeholder: "Report Number" }
-          }),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass:
-                "border border-blue-700 bg-blue-700 py-2 px-4 text-white"
-            },
-            [_vm._v("Search")]
-          )
-        ]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

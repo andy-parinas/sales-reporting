@@ -26,25 +26,34 @@ class SalesReportController extends Controller
     public function index(Request $request)
     {
 
-        if($request->has('sort') && $request->has('direction')){
+        if(($request->has('sort') && $request->has('direction')) || $request->has('search')){
 
-            
-            return DB::table('sales_reports')
+            $query = DB::table('sales_reports')
                 ->join('tour_agents', 'tour_agents.id', '=', 'sales_reports.tour_agent_id')
                 ->join('tour_guides', 'tour_guides.id', '=','sales_reports.tour_guide_id')
-                ->select('sales_reports.*', 'tour_agents.name as tour_agent', 'tour_guides.name as tour_guide')
-                ->orderBy(request('sort'), request('direction'))
-                ->paginate(10);
+                ->select('sales_reports.*', 'tour_agents.name as tour_agent', 'tour_guides.name as tour_guide');
 
-         
+            if($request->has('search')){
+                $query->where('report_number', 'like', '%' . request('search') . '%');
+            }
+
+            if($request->has('sort') && $request->has('direction')){
+                $query->orderBy(request('sort'), request('direction'));
+            }else{
+                $query->orderBy('tour_date', 'desc');
+            }
+
+            return $query->paginate(10);
+        
         }else {
-
+        
             return DB::table('sales_reports')
                 ->join('tour_agents', 'tour_agents.id', '=', 'sales_reports.tour_agent_id')
                 ->join('tour_guides', 'tour_guides.id', '=','sales_reports.tour_guide_id')
                 ->select('sales_reports.*', 'tour_agents.name as tour_agent', 'tour_guides.name as tour_guide')
                 ->orderBy('tour_date', 'desc')
                 ->paginate(10);
+
         }
         
         
