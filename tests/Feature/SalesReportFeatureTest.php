@@ -81,6 +81,138 @@ class SalesReportFeatureTest extends TestCase
 
     }
 
+    /** @test */
+    public function can_update_sales_report_and_related_data_via_api()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        $report = factory(SalesReport::class)->create();
+
+        $selectedProducts = factory(SelectedProduct::class, 3)->create(['sales_report_id' => $report->id]);
+        $salesCommissions = factory(SalesCommission::class, 4)->create(['sales_report_id' => $report->id]);
+        $salesDeductions = factory(SalesDeduction::class, 3)->create(['sales_report_id' => $report->id]);
+
+        // dd($salesDeductions[0]->id);
+
+        $addtionalProduct = factory(SelectedProduct::class)->raw([
+            'sales_report_id' => $report->id,
+            'quantity' => 100,
+            'total' => 100
+        ]);
+
+      
+        /**
+         * Need to simulate the removal and addition of SelectedProducts
+         */
+
+        $updatedData = [
+            'report_number' =>  $report->report_number,
+            'grp_code' => 'Foo Bar',
+            'tour_agent_id' => $report->tour_agent_id,
+            'tour_guide_id' => $report->tour_guide_id,
+            'tour_date' => $this->faker->date('d/m/Y'),
+            'adult_count' => 10,
+            'children_count' => 10,
+            'tc_name' => 'Foo Bar',
+            'total_sales' => 100,
+            'total_agent_sales' => 100,
+            'total_commissions' =>100,
+            'total_deductions' => 100,
+            'gst' => 100,
+            'grand_total_commission' => 100,
+            'total' => 100,
+            'sales_deductions' => [
+                [
+                    'id' => $salesDeductions[0]->id,
+                    'amount' => 100
+                ],
+                [
+                    'id' => $salesDeductions[1]->id,
+                    'amount' => 100
+                ],
+                [
+                    'id' => $salesDeductions[2]->id,
+                    'amount' => 100
+                ]
+            ],
+            'sales_commissions' => [
+                [
+                    'id' => $salesCommissions[0]->id,
+                    'amount' => 100
+                ],
+                [
+                    'id' => $salesCommissions[1]->id,
+                    'amount' => 100
+                ],
+                [
+                    'id' => $salesCommissions[2]->id,
+                    'amount' => 100
+                ],
+                [
+                    'id' => $salesCommissions[3]->id,
+                    'amount' => 100
+                ],
+
+            ],
+            'selected_products' => [
+                [
+                    'id' => $selectedProducts[0]->id,
+                    'product_id' => $selectedProducts[0]->product_id,
+                    'quantity' => 10,
+                    'total' => 100
+                ],
+                [
+                    'id' => $selectedProducts[1]->id,
+                    'product_id' =>$selectedProducts[1]->product_id,
+                    'quantity' => 100,
+                    'total' => 100
+                ],
+                [
+                    'id' => $selectedProducts[2]->id,
+                    'product_id' => $selectedProducts[2]->product_id,
+                    'quantity' => 100,
+                    'total' => 100
+                ],
+                $addtionalProduct
+            ]
+        ];
+
+        // dump($updatedData);
+
+        $this->patch('/api/sales/' . $report->id, array_merge($updatedData, ['api_token' => $user->api_token]));
+
+        $report->refresh();
+
+        $this->assertEquals('Foo Bar', $report->grp_code);
+        $this->assertEquals(100, $report->total_sales);
+
+        $report->salesDeductions->each(function($deduction){
+
+            $this->assertEquals(100, $deduction->amount);
+
+        });
+
+        $report->salesCommissions->each(function($commission){
+
+            $this->assertEquals(100, $commission->amount);
+            // dump($commission);
+
+        });
+
+        $report->selectedProducts->each(function($selected, $index) use ($selectedProducts){
+
+            $this->assertEquals(100, $selected->total);
+
+            // //Check the new primary key id was created.
+            // $this->assertNotEquals($selectedProducts[$index]->product_id, $selected->id);
+
+        });
+
+        $this->assertEquals(4,$report->selectedProducts->count());
+    
+    }
 
 
     private function createSalesReportData()

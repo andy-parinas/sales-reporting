@@ -72,9 +72,17 @@ class SalesReportController extends Controller
      * @param  \App\SalesReport  $salesReport
      * @return \Illuminate\Http\Response
      */
-    public function edit(SalesReport $salesReport)
+    public function edit(SalesReport $sale)
     {
-        //
+
+        $selectedProducts = $sale->selectedProducts;
+        $salesDeductions = $sale->salesDeductions;
+        $salesCommissions = $sale->salesCommissions;
+
+        // dump($sale);
+
+        // return view('sales.edit', compact('sale', 'selectedProducts', 'salesDeductions', 'salesCommissions'));
+        return view('sales.edit', compact('sale'));
     }
 
     /**

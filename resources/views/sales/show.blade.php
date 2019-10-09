@@ -7,7 +7,7 @@
             <h1 class="text-4xl font-bold uppercase text-gray-800" >Sales Report Details</h1>
         </div>
         <div  class="px-4 py-2">
-            <a href="" class="uppercase text-sm font-semibold bg-blue-700 py-2 px-4 rounded text-white mr-2 hover:bg-blue-600">Edit</a>
+            <a href="{{ route('sales.edit', ['sale' => $sale->id])}}" class="uppercase text-sm font-semibold bg-blue-700 py-2 px-4 rounded text-white mr-2 hover:bg-blue-600">Edit</a>
             <a href="" class="uppercase text-sm font-semibold bg-red-700 py-2 px-4 rounded text-white hover:bg-red-600">Delete</a>
         </div>
     </div>

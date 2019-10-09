@@ -2301,6 +2301,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2316,7 +2325,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     TotalSales: _TotalSales__WEBPACK_IMPORTED_MODULE_4__["default"],
     CircleLoader: _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
-  props: ['user'],
+  props: ['user', 'edit', 'report'],
   data: function data() {
     return {
       errors: null,
@@ -2503,17 +2512,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return loadTourAgents;
     }(),
-    tourAgentSelect: function () {
-      var _tourAgentSelect = _asyncToGenerator(
+    loadTourGuides: function () {
+      var _loadTourGuides = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(agentId) {
         var url, response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
                 _context4.prev = 0;
-                url = backendUrl + "/api/agents/".concat(this.form.tour_agent_id, "?api_token=").concat(this.user.api_token);
+                url = backendUrl + "/api/agents/".concat(agentId, "?api_token=").concat(this.user.api_token);
                 _context4.next = 4;
                 return axios.get(url);
 
@@ -2534,6 +2543,45 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             }
           }
         }, _callee4, this, [[0, 8]]);
+      }));
+
+      function loadTourGuides(_x) {
+        return _loadTourGuides.apply(this, arguments);
+      }
+
+      return loadTourGuides;
+    }(),
+    tourAgentSelect: function () {
+      var _tourAgentSelect = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+        var url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.prev = 0;
+                url = backendUrl + "/api/agents/".concat(this.form.tour_agent_id, "?api_token=").concat(this.user.api_token);
+                _context5.next = 4;
+                return axios.get(url);
+
+              case 4:
+                response = _context5.sent;
+                this.tourGuides = response.data.data.tourGuides;
+                _context5.next = 11;
+                break;
+
+              case 8:
+                _context5.prev = 8;
+                _context5.t0 = _context5["catch"](0);
+                console.log('Error Loading Tour Guides:', _context5.t0);
+
+              case 11:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, this, [[0, 8]]);
       }));
 
       function tourAgentSelect() {
@@ -2594,6 +2642,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
        */
       this.form.selected_products.push(product);
       this.form.total_sales = this.form.total_sales + product.total;
+      console.log('Total Product', product.total);
+      console.log('Total Sales', this.form.total_sales);
 
       if (product.code === 1) {
         this.code1Total = this.code1Total + product.total;
@@ -2627,48 +2677,67 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     submit: function () {
       var _submit = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
-        var data, response;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+        var data, response, _response;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
                 this.creating = true;
-                _context5.prev = 1;
+                _context6.prev = 1;
                 data = _objectSpread({}, this.form, {
                   api_token: this.user.api_token
                 });
-                _context5.next = 5;
-                return axios.post(backendUrl + '/api/sales', data);
 
-              case 5:
-                response = _context5.sent;
-                this.creating = false;
-                console.log(response.data);
+                if (!this.edit) {
+                  _context6.next = 11;
+                  break;
+                }
+
+                _context6.next = 6;
+                return axios.patch(backendUrl + '/api/sales/' + this.report.id, data);
+
+              case 6:
+                response = _context6.sent;
                 window.location.href = '/sales/' + response.data.id;
-                _context5.next = 16;
+                console.log(response);
+                _context6.next = 16;
                 break;
 
               case 11:
-                _context5.prev = 11;
-                _context5.t0 = _context5["catch"](1);
-                console.log(_context5.t0.response.data);
+                _context6.next = 13;
+                return axios.post(backendUrl + '/api/sales', data);
 
-                if (_context5.t0.response && _context5.t0.response.data && _context5.t0.response.data.errors) {
-                  this.errors = _context5.t0.response.data.errors;
+              case 13:
+                _response = _context6.sent;
+                this.creating = false;
+                window.location.href = '/sales/' + _response.data.id;
+
+              case 16:
+                _context6.next = 23;
+                break;
+
+              case 18:
+                _context6.prev = 18;
+                _context6.t0 = _context6["catch"](1);
+                console.log(_context6.t0.response.data);
+
+                if (_context6.t0.response && _context6.t0.response.data && _context6.t0.response.data.errors) {
+                  this.errors = _context6.t0.response.data.errors;
                   console.log(this.errors);
                 } else {
-                  console.log(_context5.t0);
+                  console.log(_context6.t0);
                 }
 
                 this.creating = false;
 
-              case 16:
+              case 23:
               case "end":
-                return _context5.stop();
+                return _context6.stop();
             }
           }
-        }, _callee5, this, [[1, 11]]);
+        }, _callee6, this, [[1, 18]]);
       }));
 
       function submit() {
@@ -2681,21 +2750,91 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7() {
+      var _this5 = this;
+
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
         while (1) {
-          switch (_context6.prev = _context6.next) {
+          switch (_context7.prev = _context7.next) {
             case 0:
-              this.loadSalesCommissionReference();
-              this.loadDeductionsReference();
               this.loadTourAgents();
+
+              if (this.edit) {
+                console.log(this.report);
+                this.form.report_number = this.report.report_number;
+                this.form.tour_agent_id = this.report.tour_agent_id;
+                this.loadTourGuides(this.report.tour_agent_id);
+                this.form.tour_guide_id = this.report.tour_guide_id;
+                this.form.tour_date = this.report.tour_date;
+                this.form.tc_name = this.report.tc_name;
+                this.form.grp_code = this.report.grp_code;
+                this.form.adult_count = this.report.adult_count;
+                this.form.children_count = this.report.children_count;
+                this.form.total_sales = parseFloat(this.report.total_sales.replace(',', ''));
+                this.form.total_agent_sales = parseFloat(this.report.total_agent_sales.replace(',', ''));
+                this.form.total_deductions = parseFloat(this.report.total_deductions.replace(',', ''));
+                this.form.total_commissions = parseFloat(this.report.total_commissions.replace(',', ''));
+                this.form.gst = parseFloat(this.report.gst.replace(',', '')).toFixed(2);
+                this.form.grand_total_commission = parseFloat(this.report.grand_total_commission.replace(',', '')); //initialize the sales_commission
+
+                this.report.sales_commissions.forEach(function (ref) {
+                  var salesCommission = {
+                    id: ref.id,
+                    commission_id: ref.commission_id,
+                    name: ref.commission.name,
+                    type: ref.commission.commission_type,
+                    percentage: ref.commission.amount,
+                    amount: parseFloat(ref.amount.replace(',', ''))
+                  };
+
+                  _this5.form.sales_commissions.push(salesCommission);
+                });
+                this.report.sales_deductions.forEach(function (ref) {
+                  var deduction = {
+                    id: ref.id,
+                    deduction_id: ref.deduction_id,
+                    name: ref.deduction.name,
+                    amount: parseFloat(ref.amount.replace(',', '')),
+                    type: ref.deduction.type,
+                    multiplier: ref.deduction.amount
+                  };
+
+                  _this5.form.sales_deductions.push(deduction);
+                });
+                this.report.selected_products.forEach(function (ref) {
+                  var selectedProduct = {
+                    product_id: ref.product_id,
+                    name: ref.product.name,
+                    price: ref.product.price,
+                    cost: ref.product.cost,
+                    quantity: ref.quantity,
+                    total: parseFloat(ref.total.replace(',', '')),
+                    type: ref.product.product_type.name,
+                    code: ref.product.product_type.code
+                  };
+
+                  if (ref.product.product_type.code === 1) {
+                    _this5.code1Total = _this5.code1Total + parseFloat(ref.total.replace(',', ''));
+                    _this5.code1Count = _this5.code1Count + ref.quantity;
+                  }
+
+                  if (ref.product.product_type.code === 2) _this5.code2Total = _this5.code2Total + parseFloat(ref.total.replace(',', ''));
+
+                  _this5.form.selected_products.push(selectedProduct);
+                });
+              } else {
+                this.loadSalesCommissionReference();
+                this.loadDeductionsReference();
+              }
+
+              console.log(this.form.sales_commissions);
 
             case 3:
             case "end":
-              return _context6.stop();
+              return _context7.stop();
           }
         }
-      }, _callee6, this);
+      }, _callee7, this);
     }));
 
     function mounted() {
@@ -24221,7 +24360,7 @@ var render = function() {
         _c("div", { staticClass: "flex" }, [
           _vm._m(5),
           _vm._v(" "),
-          _c("div", { staticClass: "flex-1border-gray-700" }, [
+          _c("div", { staticClass: "flex-1 border-gray-700" }, [
             _c("input", {
               directives: [
                 {
@@ -24232,7 +24371,7 @@ var render = function() {
                 }
               ],
               staticClass:
-                "w-full py-1 py-1pl-10 focus:outline-none  text-gray-800 text-sm",
+                "w-full py-1 pl-10 focus:outline-none  text-gray-800 text-sm",
               attrs: { type: "text", id: "tc", placeholder: "T/C Name" },
               domProps: { value: _vm.form.tc_name },
               on: {
@@ -24318,10 +24457,26 @@ var render = function() {
                 ),
                 _vm._v(" "),
                 _vm.creating
-                  ? _c("div", [_vm._v("Creating Report")])
+                  ? _c("div", [
+                      _vm.edit
+                        ? _c("span", [_vm._v("Updating Report")])
+                        : _c("span", [_vm._v("Creating Report")])
+                    ])
                   : _vm.errors
-                  ? _c("div", [_vm._v(" Error Creating Report! Try Again")])
-                  : _c("div", [_vm._v("Create Report")])
+                  ? _c("div", [
+                      _vm.edit
+                        ? _c("span", [
+                            _vm._v("Error Updating Report! Try Again")
+                          ])
+                        : _c("span", [
+                            _vm._v("Error Creating Report! Try Again")
+                          ])
+                    ])
+                  : _c("div", [
+                      _vm.edit
+                        ? _c("span", [_vm._v("Update Report")])
+                        : _c("span", [_vm._v("Create Report")])
+                    ])
               ]
             )
           ],

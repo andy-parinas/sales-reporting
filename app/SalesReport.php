@@ -34,6 +34,12 @@ class SalesReport extends Model
         return number_format($value, 2, '.', ',');
     }
 
+    public function getGstAttribute($value)
+    {
+        return number_format($value, 2, '.', ',');
+    }
+
+
     
 
     public function tourAgent()

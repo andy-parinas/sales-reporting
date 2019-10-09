@@ -18,7 +18,7 @@ class CreateSelectedProductsTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('sales_report_id');
             $table->integer('quantity');
-            $table->integer('total');
+            $table->float('total');
             $table->timestamps();
         });
     }

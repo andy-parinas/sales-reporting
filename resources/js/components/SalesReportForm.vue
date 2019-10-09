@@ -74,8 +74,8 @@
                         <div class="border-r border-gray-700 w-32 text-center">
                             <label class="text-sm font-semibold text-gray-800 uppercase" for="tc">T/C Name</label>
                         </div>
-                        <div class="flex-1border-gray-700">
-                            <input class="w-full py-1 py-1pl-10 focus:outline-none  text-gray-800 text-sm" type="text" id="tc" placeholder="T/C Name"
+                        <div class="flex-1 border-gray-700">
+                            <input class="w-full py-1 pl-10 focus:outline-none  text-gray-800 text-sm" type="text" id="tc" placeholder="T/C Name"
                                 v-model="form.tc_name">
                         </div>
                     </div>
@@ -114,9 +114,18 @@
                            <circle-loader></circle-loader>
                        </div>
                     </div>
-                    <div v-if="creating" >Creating Report</div>
-                    <div v-else-if="errors" > Error Creating Report! Try Again</div>
-                    <div v-else>Create Report</div>
+                    <div v-if="creating" >
+                         <span v-if="edit">Updating Report</span>
+                        <span v-else>Creating Report</span>
+                    </div>
+                    <div v-else-if="errors" > 
+                        <span v-if="edit">Error Updating Report! Try Again</span>
+                        <span v-else>Error Creating Report! Try Again</span>
+                    </div>
+                    <div v-else>
+                        <span v-if="edit">Update Report</span>
+                        <span v-else>Create Report</span>
+                    </div>
                 </button>
                 
             </div>
@@ -135,7 +144,7 @@ import { async } from 'q';
 export default {
     name: 'SalesReportForm',
     components: {ProductSelection, SelectedProduct, Deductions, TotalSales, CircleLoader},
-    props: ['user'],
+    props: ['user', 'edit', 'report'],
     data: function(){
         return {
             errors: null,
@@ -251,6 +260,21 @@ export default {
             }
         },
 
+        loadTourGuides: async function(agentId)
+        {
+             try {
+                
+                const url = backendUrl + `/api/agents/${agentId}?api_token=${this.user.api_token}`;
+                const response = await axios.get(url);
+
+                this.tourGuides = response.data.data.tourGuides;
+
+            } catch (error) {
+                console.log('Error Loading Tour Guides:', error);
+            }
+
+        },
+
         tourAgentSelect: async function()
         {
             try {
@@ -340,6 +364,9 @@ export default {
 
             this.form.total_sales = this.form.total_sales + product.total;
 
+            console.log('Total Product', product.total);
+            console.log('Total Sales', this.form.total_sales);
+
             if(product.code === 1) {
                 this.code1Total = this.code1Total + product.total;
                 this.code1Count = this.code1Count + product.quantity;
@@ -358,6 +385,7 @@ export default {
             this.computeCommission();
 
         },
+
         removeSelection: function(index)
         {
 
@@ -395,13 +423,17 @@ export default {
                     api_token: this.user.api_token
                 }
 
-                const response = await axios.post(backendUrl + '/api/sales', data)
+                if(this.edit){
+                    const response = await axios.patch(backendUrl + '/api/sales/' + this.report.id, data)
+                    window.location.href = '/sales/' + response.data.id;
+                    console.log(response);
 
-                this.creating = false;
+                }else {
+                    const response = await axios.post(backendUrl + '/api/sales', data)
+                    this.creating = false;
 
-                console.log(response.data);
-
-                window.location.href = '/sales/' + response.data.id;
+                    window.location.href = '/sales/' + response.data.id;
+                }
 
             } catch (error) {
                 
@@ -421,14 +453,99 @@ export default {
     },
     async mounted()
     {
-        this.loadSalesCommissionReference();
-
-        this.loadDeductionsReference();
-    
+      
         this.loadTourAgents();
 
+        if(this.edit){
 
-    }
+            console.log(this.report);
+
+            this.form.report_number = this.report.report_number;
+            this.form.tour_agent_id = this.report.tour_agent_id;
+
+            this.loadTourGuides(this.report.tour_agent_id);
+
+            this.form.tour_guide_id = this.report.tour_guide_id;
+            this.form.tour_date = this.report.tour_date;
+            this.form.tc_name = this.report.tc_name;
+            this.form.grp_code = this.report.grp_code;
+            this.form.adult_count = this.report.adult_count;
+            this.form.children_count = this.report.children_count;
+            this.form.total_sales = parseFloat((this.report.total_sales).replace(',',''));
+            this.form.total_agent_sales = parseFloat((this.report.total_agent_sales).replace(',',''));
+            this.form.total_deductions = parseFloat((this.report.total_deductions).replace(',',''));
+            this.form.total_commissions = parseFloat((this.report.total_commissions).replace(',',''));
+            this.form.gst = parseFloat((this.report.gst).replace(',','')).toFixed(2);
+            this.form.grand_total_commission = parseFloat((this.report.grand_total_commission).replace(',',''));
+
+
+            //initialize the sales_commission
+            this.report.sales_commissions.forEach(ref => {
+
+                const salesCommission = {
+                    id: ref.id,
+                    commission_id: ref.commission_id,
+                    name: ref.commission.name,
+                    type: ref.commission.commission_type,
+                    percentage: ref.commission.amount,
+                    amount: parseFloat((ref.amount).replace(',',''))
+                }
+
+                this.form.sales_commissions.push(salesCommission);
+
+            });
+
+
+            this.report.sales_deductions.forEach(ref => {
+                const deduction = {
+                    id : ref.id,
+                    deduction_id: ref.deduction_id,
+                    name: ref.deduction.name,
+                    amount: parseFloat((ref.amount).replace(',','')),
+                    type: ref.deduction.type,
+                    multiplier: ref.deduction.amount
+                }
+
+                this.form.sales_deductions.push(deduction);
+            });
+
+            this.report.selected_products.forEach(ref => {
+
+                
+                const selectedProduct = {
+                    product_id: ref.product_id,
+                    name: ref.product.name,
+                    price: ref.product.price,
+                    cost: ref.product.cost,
+                    quantity: ref.quantity,
+                    total: parseFloat((ref.total).replace(',','')),
+                    type: ref.product.product_type.name,
+                    code: ref.product.product_type.code
+                }
+
+                if(ref.product.product_type.code === 1){
+                    this.code1Total = this.code1Total + parseFloat((ref.total).replace(',',''));
+                    this.code1Count = this.code1Count + ref.quantity;
+                }
+
+                if(ref.product.product_type.code === 2) this.code2Total = this.code2Total + parseFloat((ref.total).replace(',',''));
+
+                this.form.selected_products.push(selectedProduct);
+
+            });
+
+       
+        }else {
+
+            this.loadSalesCommissionReference();
+
+            this.loadDeductionsReference();
+    
+        }
+
+        console.log(this.form.sales_commissions);
+
+    },
    
 }
 </script>
