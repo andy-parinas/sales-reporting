@@ -10,7 +10,6 @@ services:
       dockerfile: docker/app.dockerfile
     volumes: 
       - ./:/var/www
-    env_file: '.env.prod'
     environment: 
       - "DB_HOST=database"
   
