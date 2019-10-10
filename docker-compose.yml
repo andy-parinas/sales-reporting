@@ -1,0 +1,43 @@
+version: '3'
+
+services: 
+
+  # Application
+  app:
+    container_name: laravel_app
+    build: 
+      context: ./
+      dockerfile: docker/app.dockerfile
+      volumes: 
+        - ./:/var/www
+      env_file: '.env.prod'
+      environment: 
+        - "DB_HOST=database"
+  
+  # The Web Server
+  web:
+    container_name: nginx_server
+    build: 
+      context: ./
+      dockerfile: docker/web.dockerfile
+      volumes: 
+        - app
+      ports: 
+        - 80:80
+
+  # The Database
+  database:
+    container_name: mysql_database
+    image: mysql:5.7
+    volumes: 
+      - dbdata:/var/lib/mysql
+    environment: 
+      - "MYSQL_DATABASE=wool_house"
+      - "MYSQL_USER=myadmin"
+      - "MYSQL_PASSWORD=myadmin2019"
+      - "MYSQL_ROOT_PASSWORD=finallyJDBC2017"
+    ports: 
+      - 3306:3306
+
+volumes: 
+  dbdata:
