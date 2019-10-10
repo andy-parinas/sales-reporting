@@ -7,7 +7,7 @@
     </div>
 </div>
 <div class="mt-10 px-10 flex flex-wrap w-256 mx-auto">
-    <div class="p-10 border border-gray-400 rounded w-64 m-5">
+    <a href="{{ route('sales.create')}}"  class="p-10 border border-gray-400 rounded w-64 m-5">
         <div class="w-32 h-32 mx-auto text-white bg-green-700 p-8 rounded-full">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="file-invoice-dollar" 
                 class="w-full h-full" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
@@ -25,7 +25,7 @@
         <div class="text-center mt-5">
            <h2 class="text-gray-800 font-bold text-lg" > Create Sales Report</h2>
         </div>
-    </div>
+    </a>
     <div class="p-10 border border-gray-400 rounded w-64 m-5">
         <div class="w-32 h-32 mx-auto text-white bg-blue-700 p-8 rounded-full">
                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="scroll" 
