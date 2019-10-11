@@ -9,5 +9,5 @@
             <a href="{{ route('sales.create')}}" class="uppercase text-sm font-semibold bg-blue-700 py-2 px-4 rounded text-white hover:bg-blue-600">Create Sales Report</a>
         </div>
     </div>
-    <sales-report-list :user="{{ auth()->user() }}"></sales-report-list>
+    <sales-report-list :user="{{ auth()->user() }}" :backend="{{ env('APP_URL'}}" ></sales-report-list>
 @endsection
