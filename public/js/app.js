@@ -2013,7 +2013,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'ProductSelection',
-  props: ['user'],
+  props: ['user', 'backend'],
   components: {
     BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"],
     CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_2__["default"]
@@ -2041,7 +2041,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                url = backendUrl + '/api/products?api_token=' + this.user.api_token + '&page=' + page;
+                url = this.backend + '/api/products?api_token=' + this.user.api_token + '&page=' + page;
                 _context.next = 4;
                 return axios.get(url);
 
@@ -2100,12 +2100,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.prev = 0;
-              url = backendUrl + '/api/products?api_token=' + this.user.api_token;
-              _context2.next = 4;
+              console.log('Peroduct Selection', this.backend);
+              _context2.prev = 1;
+              url = this.backend + '/api/products?api_token=' + this.user.api_token;
+              _context2.next = 5;
               return axios.get(url);
 
-            case 4:
+            case 5:
               response = _context2.sent;
               this.products = response.data.data;
               this.meta = response.data.meta;
@@ -2119,20 +2120,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               }
 
               this.loading = false;
-              _context2.next = 15;
+              _context2.next = 16;
               break;
 
-            case 12:
-              _context2.prev = 12;
-              _context2.t0 = _context2["catch"](0);
-              console.log(err);
+            case 13:
+              _context2.prev = 13;
+              _context2.t0 = _context2["catch"](1);
+              console.log(_context2.t0);
 
-            case 15:
+            case 16:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, this, [[0, 12]]);
+      }, _callee2, this, [[1, 13]]);
     }));
 
     function mounted() {
@@ -2325,7 +2326,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     TotalSales: _TotalSales__WEBPACK_IMPORTED_MODULE_4__["default"],
     CircleLoader: _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
-  props: ['user', 'edit', 'report'],
+  props: ['user', 'edit', 'report', 'backend'],
   data: function data() {
     return {
       errors: null,
@@ -2379,7 +2380,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                commissionsUrl = backendUrl + '/api/commissions?api_token=' + this.user.api_token;
+                commissionsUrl = this.backend + '/api/commissions?api_token=' + this.user.api_token;
                 _context.next = 4;
                 return axios.get(commissionsUrl);
 
@@ -2432,7 +2433,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.prev = 0;
-                deductionUrl = backendUrl + '/api/deductions?api_token=' + this.user.api_token;
+                deductionUrl = this.backend + '/api/deductions?api_token=' + this.user.api_token;
                 _context2.next = 4;
                 return axios.get(deductionUrl);
 
@@ -2483,7 +2484,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context3.prev = _context3.next) {
               case 0:
                 _context3.prev = 0;
-                url = backendUrl + '/api/agents?api_token=' + this.user.api_token;
+                url = this.backend + '/api/agents?api_token=' + this.user.api_token;
                 _context3.next = 4;
                 return axios.get(url);
 
@@ -2522,7 +2523,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context4.prev = _context4.next) {
               case 0:
                 _context4.prev = 0;
-                url = backendUrl + "/api/agents/".concat(agentId, "?api_token=").concat(this.user.api_token);
+                url = this.backend + "/api/agents/".concat(agentId, "?api_token=").concat(this.user.api_token);
                 _context4.next = 4;
                 return axios.get(url);
 
@@ -2561,7 +2562,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context5.prev = _context5.next) {
               case 0:
                 _context5.prev = 0;
-                url = backendUrl + "/api/agents/".concat(this.form.tour_agent_id, "?api_token=").concat(this.user.api_token);
+                url = this.backend + "/api/agents/".concat(this.form.tour_agent_id, "?api_token=").concat(this.user.api_token);
                 _context5.next = 4;
                 return axios.get(url);
 
@@ -2696,7 +2697,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
 
                 _context6.next = 6;
-                return axios.patch(backendUrl + '/api/sales/' + this.report.id, data);
+                return axios.patch(this.backend + '/api/sales/' + this.report.id, data);
 
               case 6:
                 response = _context6.sent;
@@ -2707,7 +2708,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 11:
                 _context6.next = 13;
-                return axios.post(backendUrl + '/api/sales', data);
+                return axios.post(this.backend + '/api/sales', data);
 
               case 13:
                 _response = _context6.sent;
@@ -2757,6 +2758,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context7.prev = _context7.next) {
             case 0:
+              console.log('Form', this.backend);
               this.loadTourAgents();
 
               if (this.edit) {
@@ -2829,7 +2831,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               console.log('report number', this.form.report_number);
 
-            case 3:
+            case 4:
             case "end":
               return _context7.stop();
           }
@@ -2989,7 +2991,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'SalesReportList',
-  props: ['user'],
+  props: ['user', 'backend'],
   components: {
     BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"],
     SortIcon: _ui_icons_Sort__WEBPACK_IMPORTED_MODULE_2__["default"],
@@ -3017,7 +3019,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&page=' + page + '&sort=' + this.sortCol + '&direction=' + this.sortDir + '&search=' + this.search;
+                url = this.backend + '/api/sales?api_token=' + this.user.api_token + '&page=' + page + '&sort=' + this.sortCol + '&direction=' + this.sortDir + '&search=' + this.search;
                 _context.next = 4;
                 return axios.get(url);
 
@@ -3069,7 +3071,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   this.sortDir = 'asc';
                 }
 
-                url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&sort=' + this.sortCol + '&direction=' + this.sortDir + '&search=' + this.search;
+                url = this.backend + '/api/sales?api_token=' + this.user.api_token + '&sort=' + this.sortCol + '&direction=' + this.sortDir + '&search=' + this.search;
                 _context2.next = 6;
                 return axios.get(url);
 
@@ -3113,7 +3115,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context3.prev = _context3.next) {
               case 0:
                 _context3.prev = 0;
-                url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&search=' + this.search;
+                url = this.backend + '/api/sales?api_token=' + this.user.api_token + '&search=' + this.search;
                 _context3.next = 4;
                 return axios.get(url);
 
@@ -3157,13 +3159,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              console.log(this.user.api_token);
-              _context4.prev = 1;
-              url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&sort=' + this.sortCol + '&direction=' + this.sortDir;
-              _context4.next = 5;
+              _context4.prev = 0;
+              url = this.backend + '/api/sales?api_token=' + this.user.api_token + '&sort=' + this.sortCol + '&direction=' + this.sortDir;
+              _context4.next = 4;
               return axios.get(url);
 
-            case 5:
+            case 4:
               response = _context4.sent;
               console.log(response.data.data);
               meta = {
@@ -3173,20 +3174,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               this.reports = response.data.data;
               this.meta = meta;
               this.loading = false;
-              _context4.next = 16;
+              _context4.next = 15;
               break;
 
-            case 13:
-              _context4.prev = 13;
-              _context4.t0 = _context4["catch"](1);
+            case 12:
+              _context4.prev = 12;
+              _context4.t0 = _context4["catch"](0);
               console.log(_context4.t0);
 
-            case 16:
+            case 15:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, this, [[1, 13]]);
+      }, _callee4, this, [[0, 12]]);
     }));
 
     function mounted() {
@@ -24672,7 +24673,7 @@ var render = function() {
           { staticClass: "flex-1 mr-4" },
           [
             _c("product-selection", {
-              attrs: { user: _vm.user },
+              attrs: { user: _vm.user, backend: _vm.backend },
               on: { select: _vm.selectProduct }
             })
           ],
@@ -38243,8 +38244,8 @@ window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
  * to our Laravel back-end. This library automatically handles sending the
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
+// window.backendUrl = 'http://localhost:8000';
 
-window.backendUrl = 'http://localhost:8000';
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /**

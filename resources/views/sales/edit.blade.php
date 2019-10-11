@@ -12,5 +12,5 @@
     </div>
     <sales-report-form :user="{{ auth()->user() }}"
         :edit="{{true}}"
-        :report="{{$sale}}" ></sales-report-form>
+        :report="{{$sale}}" backend="{{ env('APP_URL')}}" ></sales-report-form>
 @endsection

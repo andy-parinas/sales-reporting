@@ -121,7 +121,7 @@ import SortDown from './ui/icons/SortDown';
 
 export default {
     name: 'SalesReportList',
-    props: ['user'],
+    props: ['user', 'backend'],
     components: {BarLoader, SortIcon,SortUp,SortDown},
     data: function()
     {
@@ -137,7 +137,7 @@ export default {
     methods: {
         changePage: async function(page){
            try {
-                const url = backendUrl + '/api/sales?api_token=' + this.user.api_token 
+                const url = this.backend + '/api/sales?api_token=' + this.user.api_token 
                 + '&page=' + page  
                 + '&sort=' + this.sortCol 
                 + '&direction=' + this.sortDir
@@ -167,7 +167,7 @@ export default {
                     this.sortDir = 'asc'
                 }
                 
-                const url = backendUrl + '/api/sales?api_token=' + this.user.api_token 
+                const url = this.backend + '/api/sales?api_token=' + this.user.api_token 
                     + '&sort=' + this.sortCol 
                     + '&direction=' + this.sortDir
                     + '&search=' + this.search;
@@ -189,7 +189,7 @@ export default {
         searchReport: async function(){
             
             try {
-                const url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&search=' + this.search;
+                const url = this.backend + '/api/sales?api_token=' + this.user.api_token + '&search=' + this.search;
 
                 const response = await axios.get(url);
 
@@ -207,11 +207,9 @@ export default {
     },
     async mounted(){
 
-        console.log(this.user.api_token);
-
         try {
             
-            const url = backendUrl + '/api/sales?api_token=' + this.user.api_token + '&sort=' + this.sortCol + '&direction=' + this.sortDir;
+            const url = this.backend + '/api/sales?api_token=' + this.user.api_token + '&sort=' + this.sortCol + '&direction=' + this.sortDir;
 
             const response = await axios.get(url);
 

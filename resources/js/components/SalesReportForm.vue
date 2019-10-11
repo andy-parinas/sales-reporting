@@ -83,7 +83,7 @@
         </div>
         <div class="px-4 flex justify-between mt-5 items-start mb-20">
             <div  class="flex-1 mr-4">
-                <product-selection :user="user" @select="selectProduct" ></product-selection>
+                <product-selection :user="user" @select="selectProduct" :backend="backend" ></product-selection>
             </div>
             <div class="flex-1">
                 <div class="mb-4">
@@ -144,7 +144,7 @@ import { async } from 'q';
 export default {
     name: 'SalesReportForm',
     components: {ProductSelection, SelectedProduct, Deductions, TotalSales, CircleLoader},
-    props: ['user', 'edit', 'report'],
+    props: ['user', 'edit', 'report', 'backend'],
     data: function(){
         return {
             errors: null,
@@ -194,7 +194,7 @@ export default {
         {
             try {
                 
-                const commissionsUrl =  backendUrl + '/api/commissions?api_token=' + this.user.api_token;
+                const commissionsUrl =  this.backend + '/api/commissions?api_token=' + this.user.api_token;
                 const commissionResponse = await axios.get(commissionsUrl);
                 this.commissionReference = commissionResponse.data;
 
@@ -222,7 +222,7 @@ export default {
         {
             try {
                 
-                const deductionUrl = backendUrl + '/api/deductions?api_token=' + this.user.api_token;
+                const deductionUrl = this.backend + '/api/deductions?api_token=' + this.user.api_token;
                 const deductionResponse = await axios.get(deductionUrl);
                 this.deductionReference = deductionResponse.data;
 
@@ -249,7 +249,7 @@ export default {
         loadTourAgents: async function()
         {
             try {
-                const url = backendUrl + '/api/agents?api_token=' + this.user.api_token;
+                const url = this.backend + '/api/agents?api_token=' + this.user.api_token;
                 const response = await axios.get(url);
 
                 this.tourAgents = response.data.data;
@@ -264,7 +264,7 @@ export default {
         {
              try {
                 
-                const url = backendUrl + `/api/agents/${agentId}?api_token=${this.user.api_token}`;
+                const url = this.backend + `/api/agents/${agentId}?api_token=${this.user.api_token}`;
                 const response = await axios.get(url);
 
                 this.tourGuides = response.data.data.tourGuides;
@@ -279,7 +279,7 @@ export default {
         {
             try {
                 
-                const url = backendUrl + `/api/agents/${this.form.tour_agent_id}?api_token=${this.user.api_token}`;
+                const url = this.backend + `/api/agents/${this.form.tour_agent_id}?api_token=${this.user.api_token}`;
                 const response = await axios.get(url);
 
                 this.tourGuides = response.data.data.tourGuides;
@@ -424,12 +424,12 @@ export default {
                 }
 
                 if(this.edit){
-                    const response = await axios.patch(backendUrl + '/api/sales/' + this.report.id, data)
+                    const response = await axios.patch(this.backend + '/api/sales/' + this.report.id, data)
                     window.location.href = '/sales/' + response.data.id;
                     console.log(response);
 
                 }else {
-                    const response = await axios.post(backendUrl + '/api/sales', data)
+                    const response = await axios.post(this.backend + '/api/sales', data)
                     this.creating = false;
 
                     window.location.href = '/sales/' + response.data.id;
@@ -453,6 +453,7 @@ export default {
     },
     async mounted()
     {
+        console.log('Form', this.backend);
       
         this.loadTourAgents();
 

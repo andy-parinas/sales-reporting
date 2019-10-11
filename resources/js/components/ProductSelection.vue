@@ -77,7 +77,7 @@ import CurrencyFormat from './ui/formated/CurrencyFormat';
 
 export default {
     name: 'ProductSelection',
-    props: ['user'],
+    props: ['user', 'backend'],
     components: {BarLoader, CurrencyFormat},
     data: function(){
 
@@ -96,7 +96,7 @@ export default {
         },
         changePage: async function(page){
            try {
-                const url = backendUrl + '/api/products?api_token=' + this.user.api_token + '&page=' + page;
+                const url = this.backend + '/api/products?api_token=' + this.user.api_token + '&page=' + page;
                 const response = await axios.get(url);
                 this.products = response.data.data;
                 this.meta = response.data.meta;
@@ -128,9 +128,10 @@ export default {
         }
     },
     async mounted(){
+        console.log('Peroduct Selection', this.backend);
         try {
 
-            const url = backendUrl + '/api/products?api_token=' + this.user.api_token;
+            const url = this.backend + '/api/products?api_token=' + this.user.api_token;
             const response = await axios.get(url);
 
             this.products = response.data.data;
@@ -149,7 +150,7 @@ export default {
 
         } catch (error) {
             
-            console.log(err);
+            console.log(error);
 
         }
 
