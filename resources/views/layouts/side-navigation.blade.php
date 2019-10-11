@@ -45,6 +45,18 @@
         <div class="mt-4 border-t border-gray-700 text-gray-500 py-4">
             Management
         </div>
+        <a href="{{ route('products.index')}} " class="block py-3 flex items-center hover:text-white {{ (strpos(Route::currentRouteName(), 'products') === 0) ? 'active' : '' }}">
+            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tags" 
+                class="w-5 h-5" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+                <path fill="currentColor" d="M497.941 225.941L286.059 14.059A48 48 0 0 0 252.118 0H48C21.49 0 0 
+                21.49 0 48v204.118a48 48 0 0 0 14.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882 
+                0l204.118-204.118c18.745-18.745 18.745-49.137 0-67.882zM112 160c-26.51 0-48-21.49-48-48s21.49-48 
+                48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882 
+                0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397 
+                0h48.721a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882z"></path>
+            </svg>
+            <span class="ml-2">Products</span>
+        </a>
         <a href="#" class="block py-3 flex items-center hover:text-white">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bus" 
                 class="h-5 w-5" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -59,26 +71,16 @@
             <span class="ml-2">Tour Agents</span>
         </a>
         <a href="#" class="block py-3 flex items-center hover:text-white">
-            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-tie" 
+            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="database" 
                 class="w-5 h-5" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                <path fill="currentColor" d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm95.8 32.6L272 
-                480l-32-136 32-56h-96l32 56-32 136-47.8-191.4C56.9 292 0 350.3 0 422.4V464c0 26.5 21.5 
-                48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-72.1-56.9-130.4-128.2-133.8z"></path>
+                <path fill="currentColor" d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 
+                224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 
+                33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 
+                438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"></path>
             </svg>
-            <span class="ml-2">Tour Guides</span>
+            <span class="ml-2">Attributes</span>
         </a>
-        <a href="#" class="block py-3 flex items-center hover:text-white">
-            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tags" 
-                class="w-5 h-5" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
-                <path fill="currentColor" d="M497.941 225.941L286.059 14.059A48 48 0 0 0 252.118 0H48C21.49 0 0 
-                21.49 0 48v204.118a48 48 0 0 0 14.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882 
-                0l204.118-204.118c18.745-18.745 18.745-49.137 0-67.882zM112 160c-26.51 0-48-21.49-48-48s21.49-48 
-                48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882 
-                0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397 
-                0h48.721a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882z"></path>
-            </svg>
-            <span class="ml-2">Products</span>
-        </a>
+      
         <div class="mt-4 border-t border-gray-700 text-gray-500 py-4">
             Utilities
         </div>

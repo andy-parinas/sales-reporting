@@ -128,7 +128,7 @@ export default {
         }
     },
     async mounted(){
-        console.log('Peroduct Selection', this.backend);
+
         try {
 
             const url = this.backend + '/api/products?api_token=' + this.user.api_token;
