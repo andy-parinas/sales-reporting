@@ -29,6 +29,13 @@ class ProductTypeController extends Controller
 
     }
 
+    public function update(ProductType $type)
+    {
+        $type->update($this->validateData());
+
+        return response($type, Response::HTTP_OK);
+    }
+
 
     public function validateData()
     {
