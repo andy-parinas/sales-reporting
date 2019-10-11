@@ -8,21 +8,23 @@
             <h1 class="mb-2 text-lg font-light" >Enter Product Information</h1>
             <div class="border border-gray-700">
                 <div class="flex">
-                    <div class="border-b border-r py-2  border-gray-700 w-32 text-center">
+                    <div class="border-b border-r py-1  border-gray-700 w-32 text-center">
                         <label  class="text-sm font-semibold text-gray-800 uppercase" for="agent">Product Name</label>
                     </div>
                     <div  class="flex-1 border-b border-gray-700" >
                         <input class="w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm"
+                            :class="errors && errors.name ? 'bg-red-200' : ''"
                             type="text" id="date" placeholder="Product Name" 
                             v-model="productForm.name">
                     </div>
                 </div>
                 <div class="flex">
-                    <div class="border-r border-b py-2  border-gray-700 w-32 text-center">
+                    <div class="border-r border-b py-1  border-gray-700 w-32 text-center">
                         <label  class="text-sm font-semibold text-gray-800 uppercase" for="guide">Product Type</label>
                     </div>
                     <div class="flex-1 border-b  border-gray-700">
                         <select class="w-full py-2  pl-10 focus:outline-none text-gray-800 text-sm"  
+                            :class="errors && errors.product_type_id ? 'bg-red-200' : ''"
                                 type="text" id="guide" placeholder="Guide Name"
                                 v-model="productForm.product_type_id">
                             <option disabled value="" > --- Select Product Type ---</option>
@@ -31,21 +33,23 @@
                     </div>
                 </div>
                 <div class="flex">
-                    <div class="border-b border-r py-2  border-gray-700 w-32 text-center">
+                    <div class="border-b border-r py-1  border-gray-700 w-32 text-center">
                         <label class="text-sm font-semibold text-gray-800 uppercase" for="grp">Price</label>
                     </div>
                     <div class="flex-1 border-b border-gray-700">
-                        <input class="w-full py-2  pl-10 focus:outline-none text-gray-800 text-sm"  
+                        <input class="w-full py-2  pl-10 focus:outline-none text-gray-800 text-sm"
+                            :class="errors && errors.price ? 'bg-red-200' : ''"  
                             id="grp" placeholder="Product Price"
                             v-model.number="productForm.price">
                     </div>
                 </div>
                 <div class="flex">
-                    <div class="border-r py-2  border-b border-gray-700 w-32 text-center">
-                        <label class="text-sm  font-semibold text-gray-800 uppercase" for="tc">Cost</label>
+                    <div class="border-r py-1  border-b border-gray-700 w-32 text-center">
+                        <label class="text-xs font-semibold text-gray-800 uppercase" for="tc">Cost</label>
                     </div>
                     <div class="flex-1 border-b border-gray-700">
                         <input class="w-full py-2 pl-10 focus:outline-none  text-gray-800 text-sm"
+                            :class="errors && errors.cost ? 'bg-red-200' : ''"
                             type="text" id="cost" placeholder="Product Cost"
                             v-model.number="productForm.cost">
                     </div>
@@ -56,6 +60,7 @@
                     </div>
                     <div  class="flex-1 border-gray-700 flex items-center">
                         <textarea class="flex-1 py-1 pl-10 border-gray-700 focus:outline-none  text-gray-800 text-sm"
+                            :class="errors && errors.description ? 'bg-red-200' : ''"
                             id="description" rows="5" placeholder="Product Description" v-model.number="productForm.description"></textarea>
                     </div>
                 </div>
@@ -97,7 +102,7 @@
                         <div  class="flex-1 border-b border-gray-700" >
                             <input class="w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm"
                                 type="text" id="date" 
-                                placeholder="Product Name">
+                                placeholder="Product Name" v-model="productTypeForm.name" >
                         </div>
                     </div>
                     <div class="flex">
@@ -106,14 +111,15 @@
                         </div>
                         <div class="flex-1 border-gray-700">
                             <select class="w-full py-2  pl-10 focus:outline-none text-gray-800 text-sm"  
-                                    type="text" id="guide" placeholder="Guide Name">
+                                    type="text" id="guide" placeholder="Guide Name" v-model="productTypeForm.code">
                                 <option value="1" > 1 - High Value </option>
                                 <option value="1" > 2 - Regular </option>
                             </select>
                         </div>
                     </div>
                 </div>
-            <button class="flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center focus:outline-none bg-blue-600 text-sm    " >
+                <button class="flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center focus:outline-none bg-blue-600 text-sm hover:bg-blue-700"
+                    @click="createProductType">
                     Add Product Type
                 </button>
             </div>
@@ -141,13 +147,64 @@ export default {
                 cost: ''
             },
             productTypeForm: {
-
-            }
+                name: '',
+                code: ''
+            },
+            errors: null
         }
     },
     methods: {
-        createProduct: function(){
-            console.log(this.productForm);
+        createProduct: async function(){
+
+            try {
+                    
+                const data = {
+                    ...this.productForm,
+                    api_token: this.user.api_token
+                }
+
+                const url =  this.backend + '/api/products';
+
+                const response = await axios.post(url, data);
+
+                console.log(response);
+
+            } catch (error) {
+                
+                console.log(error.response);
+
+                 if(error.response && error.response.data && error.response.data.errors ){
+                    this.errors = error.response.data.errors
+                    console.log(this.errors);
+                }else {
+                    console.log(error);
+                }
+
+
+            }
+
+        },
+
+        createProductType: async function(){
+
+            try {
+
+                const data = {
+                    ...this.productTypeForm,
+                    api_token: this.user.api_token
+                }
+
+                const url =  this.backend + '/api/product-types';
+
+                const response = await axios.post(url, data);
+
+                this.productTypes.push(response.data);
+
+                console.log(response)
+
+            } catch (error) {
+                console.log(error);
+            }
         }
     },
     async mounted(){

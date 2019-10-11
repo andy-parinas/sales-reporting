@@ -22,6 +22,7 @@ Route::post('/sales', 'Api\SalesReportController@store');
 Route::patch('/sales/{sale}', 'Api\SalesReportController@update');
 
 Route::get('product-types', 'Api\ProductTypeController@index');
+Route::post('product-types', 'Api\ProductTypeController@store');
 
 Route::get('/products', 'Api\ProductController@index');
 Route::post('/products', 'Api\ProductController@store');

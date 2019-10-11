@@ -1932,10 +1932,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui/loader/BarLoader */ "./resources/js/components/ui/loader/BarLoader.vue");
 
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2078,46 +2090,139 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         price: '',
         cost: ''
       },
-      productTypeForm: {}
+      productTypeForm: {
+        name: '',
+        code: ''
+      },
+      errors: null
     };
   },
   methods: {
-    createProduct: function createProduct() {
-      console.log(this.productForm);
-    }
+    createProduct: function () {
+      var _createProduct = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var data, url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                data = _objectSpread({}, this.productForm, {
+                  api_token: this.user.api_token
+                });
+                url = this.backend + '/api/products';
+                _context.next = 5;
+                return axios.post(url, data);
+
+              case 5:
+                response = _context.sent;
+                console.log(response);
+                _context.next = 13;
+                break;
+
+              case 9:
+                _context.prev = 9;
+                _context.t0 = _context["catch"](0);
+                console.log(_context.t0.response);
+
+                if (_context.t0.response && _context.t0.response.data && _context.t0.response.data.errors) {
+                  this.errors = _context.t0.response.data.errors;
+                  console.log(this.errors);
+                } else {
+                  console.log(_context.t0);
+                }
+
+              case 13:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[0, 9]]);
+      }));
+
+      function createProduct() {
+        return _createProduct.apply(this, arguments);
+      }
+
+      return createProduct;
+    }(),
+    createProductType: function () {
+      var _createProductType = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var data, url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                data = _objectSpread({}, this.productTypeForm, {
+                  api_token: this.user.api_token
+                });
+                url = this.backend + '/api/product-types';
+                _context2.next = 5;
+                return axios.post(url, data);
+
+              case 5:
+                response = _context2.sent;
+                this.productTypes.push(response.data);
+                console.log(response);
+                _context2.next = 13;
+                break;
+
+              case 10:
+                _context2.prev = 10;
+                _context2.t0 = _context2["catch"](0);
+                console.log(_context2.t0);
+
+              case 13:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 10]]);
+      }));
+
+      function createProductType() {
+        return _createProductType.apply(this, arguments);
+      }
+
+      return createProductType;
+    }()
   },
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
       var url, response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
         while (1) {
-          switch (_context.prev = _context.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              _context.prev = 0;
+              _context3.prev = 0;
               url = this.backend + '/api/product-types?api_token=' + this.user.api_token;
-              _context.next = 4;
+              _context3.next = 4;
               return axios.get(url);
 
             case 4:
-              response = _context.sent;
+              response = _context3.sent;
               this.productTypes = response.data;
               this.loading = false;
-              _context.next = 12;
+              _context3.next = 12;
               break;
 
             case 9:
-              _context.prev = 9;
-              _context.t0 = _context["catch"](0);
-              console.log(_context.t0);
+              _context3.prev = 9;
+              _context3.t0 = _context3["catch"](0);
+              console.log(_context3.t0);
 
             case 12:
             case "end":
-              return _context.stop();
+              return _context3.stop();
           }
         }
-      }, _callee, this, [[0, 9]]);
+      }, _callee3, this, [[0, 9]]);
     }));
 
     function mounted() {
@@ -24520,6 +24625,8 @@ var render = function() {
                         ],
                         staticClass:
                           "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm",
+                        class:
+                          _vm.errors && _vm.errors.name ? "bg-red-200" : "",
                         attrs: {
                           type: "text",
                           id: "date",
@@ -24563,6 +24670,10 @@ var render = function() {
                           ],
                           staticClass:
                             "w-full py-2  pl-10 focus:outline-none text-gray-800 text-sm",
+                          class:
+                            _vm.errors && _vm.errors.product_type_id
+                              ? "bg-red-200"
+                              : "",
                           attrs: {
                             type: "text",
                             id: "guide",
@@ -24626,6 +24737,8 @@ var render = function() {
                         ],
                         staticClass:
                           "w-full py-2  pl-10 focus:outline-none text-gray-800 text-sm",
+                        class:
+                          _vm.errors && _vm.errors.price ? "bg-red-200" : "",
                         attrs: { id: "grp", placeholder: "Product Price" },
                         domProps: { value: _vm.productForm.price },
                         on: {
@@ -24667,6 +24780,8 @@ var render = function() {
                         ],
                         staticClass:
                           "w-full py-2 pl-10 focus:outline-none  text-gray-800 text-sm",
+                        class:
+                          _vm.errors && _vm.errors.cost ? "bg-red-200" : "",
                         attrs: {
                           type: "text",
                           id: "cost",
@@ -24712,6 +24827,10 @@ var render = function() {
                         ],
                         staticClass:
                           "flex-1 py-1 pl-10 border-gray-700 focus:outline-none  text-gray-800 text-sm",
+                        class:
+                          _vm.errors && _vm.errors.description
+                            ? "bg-red-200"
+                            : "",
                         attrs: {
                           id: "description",
                           rows: "5",
@@ -24789,7 +24908,123 @@ var render = function() {
               _vm._v(" "),
               _vm._m(6),
               _vm._v(" "),
-              _vm._m(7)
+              _c("div", { staticClass: "mt-5 mb-2" }, [
+                _c("h1", { staticClass: "text-lg font-light" }, [
+                  _vm._v("Add New Product Type")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "border border-gray-700" }, [
+                  _c("div", { staticClass: "flex" }, [
+                    _vm._m(7),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "flex-1 border-b border-gray-700" },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.productTypeForm.name,
+                              expression: "productTypeForm.name"
+                            }
+                          ],
+                          staticClass:
+                            "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm",
+                          attrs: {
+                            type: "text",
+                            id: "date",
+                            placeholder: "Product Name"
+                          },
+                          domProps: { value: _vm.productTypeForm.name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.productTypeForm,
+                                "name",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "flex" }, [
+                    _vm._m(8),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "flex-1 border-gray-700" }, [
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.productTypeForm.code,
+                              expression: "productTypeForm.code"
+                            }
+                          ],
+                          staticClass:
+                            "w-full py-2  pl-10 focus:outline-none text-gray-800 text-sm",
+                          attrs: {
+                            type: "text",
+                            id: "guide",
+                            placeholder: "Guide Name"
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.productTypeForm,
+                                "code",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
+                          }
+                        },
+                        [
+                          _c("option", { attrs: { value: "1" } }, [
+                            _vm._v(" 1 - High Value ")
+                          ]),
+                          _vm._v(" "),
+                          _c("option", { attrs: { value: "1" } }, [
+                            _vm._v(" 2 - Regular ")
+                          ])
+                        ]
+                      )
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass:
+                      "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center focus:outline-none bg-blue-600 text-sm hover:bg-blue-700",
+                    on: { click: _vm.createProductType }
+                  },
+                  [
+                    _vm._v(
+                      "\r\n                    Add Product Type\r\n                "
+                    )
+                  ]
+                )
+              ])
             ])
           ]
         )
@@ -24803,7 +25038,7 @@ var staticRenderFns = [
     return _c(
       "div",
       {
-        staticClass: "border-b border-r py-2  border-gray-700 w-32 text-center"
+        staticClass: "border-b border-r py-1  border-gray-700 w-32 text-center"
       },
       [
         _c(
@@ -24824,7 +25059,7 @@ var staticRenderFns = [
     return _c(
       "div",
       {
-        staticClass: "border-r border-b py-2  border-gray-700 w-32 text-center"
+        staticClass: "border-r border-b py-1  border-gray-700 w-32 text-center"
       },
       [
         _c(
@@ -24845,7 +25080,7 @@ var staticRenderFns = [
     return _c(
       "div",
       {
-        staticClass: "border-b border-r py-2  border-gray-700 w-32 text-center"
+        staticClass: "border-b border-r py-1  border-gray-700 w-32 text-center"
       },
       [
         _c(
@@ -24866,13 +25101,13 @@ var staticRenderFns = [
     return _c(
       "div",
       {
-        staticClass: "border-r py-2  border-b border-gray-700 w-32 text-center"
+        staticClass: "border-r py-1  border-b border-gray-700 w-32 text-center"
       },
       [
         _c(
           "label",
           {
-            staticClass: "text-sm  font-semibold text-gray-800 uppercase",
+            staticClass: "text-xs font-semibold text-gray-800 uppercase",
             attrs: { for: "tc" }
           },
           [_vm._v("Cost")]
@@ -24937,87 +25172,41 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "mt-5 mb-2" }, [
-      _c("h1", { staticClass: "text-lg font-light" }, [
-        _vm._v("Add New Product Type")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "border border-gray-700" }, [
-        _c("div", { staticClass: "flex" }, [
-          _c(
-            "div",
-            {
-              staticClass:
-                "border-b border-r py-2  border-gray-700 w-32 text-center"
-            },
-            [
-              _c(
-                "label",
-                {
-                  staticClass: "text-sm font-semibold text-gray-800 uppercase",
-                  attrs: { for: "agent" }
-                },
-                [_vm._v("Type Name")]
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "flex-1 border-b border-gray-700" }, [
-            _c("input", {
-              staticClass:
-                "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm",
-              attrs: { type: "text", id: "date", placeholder: "Product Name" }
-            })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "flex" }, [
-          _c(
-            "div",
-            { staticClass: "border-r py-2  border-gray-700 w-32 text-center" },
-            [
-              _c(
-                "label",
-                {
-                  staticClass: "text-sm font-semibold text-gray-800 uppercase",
-                  attrs: { for: "guide" }
-                },
-                [_vm._v("Type Code")]
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "flex-1 border-gray-700" }, [
-            _c(
-              "select",
-              {
-                staticClass:
-                  "w-full py-2  pl-10 focus:outline-none text-gray-800 text-sm",
-                attrs: { type: "text", id: "guide", placeholder: "Guide Name" }
-              },
-              [
-                _c("option", { attrs: { value: "1" } }, [
-                  _vm._v(" 1 - High Value ")
-                ]),
-                _vm._v(" "),
-                _c("option", { attrs: { value: "1" } }, [
-                  _vm._v(" 2 - Regular ")
-                ])
-              ]
-            )
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass:
-            "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center focus:outline-none bg-blue-600 text-sm    "
-        },
-        [_vm._v("\r\n                    Add Product Type\r\n                ")]
-      )
-    ])
+    return _c(
+      "div",
+      {
+        staticClass: "border-b border-r py-2  border-gray-700 w-32 text-center"
+      },
+      [
+        _c(
+          "label",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase",
+            attrs: { for: "agent" }
+          },
+          [_vm._v("Type Name")]
+        )
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "border-r py-2  border-gray-700 w-32 text-center" },
+      [
+        _c(
+          "label",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase",
+            attrs: { for: "guide" }
+          },
+          [_vm._v("Type Code")]
+        )
+      ]
+    )
   }
 ]
 render._withStripped = true
