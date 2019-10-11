@@ -7,7 +7,7 @@
             <h1 class="text-4xl font-bold uppercase text-gray-800" >Products</h1>
         </div>
         <div  class="px-4 py-2">
-            <a href="#" class="uppercase text-sm font-semibold bg-blue-700 py-2 px-4 rounded text-white hover:bg-blue-600">Add New Product</a>
+            <a href="{{ route('products.create') }}" class="uppercase text-sm font-semibold bg-blue-700 py-2 px-4 rounded text-white hover:bg-blue-600">Add New Product</a>
         </div>
     </div>
     <products-list :user="{{ auth()->user() }}"  backend="{{ env('APP_URL')}}" ></products-list>

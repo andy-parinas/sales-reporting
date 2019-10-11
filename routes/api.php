@@ -21,6 +21,8 @@ Route::get('/sales', 'Api\SalesReportController@index');
 Route::post('/sales', 'Api\SalesReportController@store');
 Route::patch('/sales/{sale}', 'Api\SalesReportController@update');
 
+Route::get('product-types', 'Api\ProductTypeController@index');
+
 Route::get('/products', 'Api\ProductController@index');
 Route::get('/commissions', 'Api\CommissionController@index');
 Route::get('/agents', 'Api\TourAgentController@index');
