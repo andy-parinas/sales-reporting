@@ -105,32 +105,32 @@ class ProductApiTest extends TestCase
         
     }
 
-    /** @test */
-    public function user_can_search_product_via_api()
-    {
-        $user = factory(User::class)->create();
+    // /** @test */
+    // public function user_can_search_product_via_api()
+    // {
+    //     $user = factory(User::class)->create();
 
-        //Hay Stack
-        factory(Product::class,15)->create();
+    //     //Hay Stack
+    //     factory(Product::class,15)->create();
 
-        //Needle
-        $product =factory(Product::class)->create(['name' => 'FooBar']);
+    //     //Needle
+    //     $product =factory(Product::class)->create(['name' => 'FooBar']);
 
-        $url = '/api/products?api_token=' . $user->api_token . '&search=FooBar';
+    //     $url = '/api/products?api_token=' . $user->api_token . '&search=FooBar';
 
-        $response = $this->get($url);
+    //     $response = $this->get($url);
 
-        $response->assertJson([
-            'data' => [
-               [ 'name' => 'FooBar',
-                'description' => $product->description,
-                'price' => $product->price,
-                'product_type_id' => $product->product_type_id,
-                'product_type' => $product->productType->name]
-            ]
-        ]);
+    //     $response->assertJson([
+    //         'data' => [
+    //            [ 'name' => 'FooBar',
+    //             'description' => $product->description,
+    //             'price' => $product->price,
+    //             'product_type_id' => $product->product_type_id,
+    //             'product_type' => $product->productType->name]
+    //         ]
+    //     ]);
 
-    }
+    // }
 
     /** @test */
     public function can_create_product_via_api()
