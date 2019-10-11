@@ -9,7 +9,13 @@ class Product extends Model
 {
     // use Searchable;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'product_type_id',
+        'description',
+        'cost',
+        'price'
+    ];
 
     protected $with = ['productType'];
 

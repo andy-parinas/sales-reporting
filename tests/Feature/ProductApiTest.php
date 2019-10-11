@@ -131,4 +131,39 @@ class ProductApiTest extends TestCase
         ]);
 
     }
+
+    /** @test */
+    public function can_create_product_via_api()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        $data = factory(Product::class)->raw();
+
+        $this->post('/api/products', array_merge($data, ['api_token' => $user->api_token]))
+            ->assertStatus(201);
+
+        $this->assertCount(1, Product::all());
+        
+    }
+
+    /** @test */
+    public function fields_are_required_via_api()
+    {
+
+        $user = factory(User::class)->create();
+
+        $fields = collect(['name', 'description', 'product_type_id', 'price']);
+
+        $fields->each(function($field) use ($user){
+
+            $data = factory(Product::class)->raw([$field => '']);
+
+            $this->post('/api/products', array_merge($data, ['api_token' => $user->api_token]))
+                ->assertSessionHasErrors($field);
+
+            $this->assertCount(0, Product::all());
+        });
+    }
 }
