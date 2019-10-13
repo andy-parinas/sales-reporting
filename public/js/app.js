@@ -2672,6 +2672,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -25809,12 +25811,20 @@ var render = function() {
                         staticClass: "py-2 px-4 border border-gray-800 text-sm"
                       },
                       [
-                        _vm._v(
-                          " \n                             " +
-                            _vm._s(product.name) +
-                            " " +
-                            _vm._s(product.product_type) +
-                            "\n                         "
+                        _c(
+                          "a",
+                          {
+                            staticClass:
+                              "text-blue-600 hover:text-blue-700 font-semibold",
+                            attrs: { href: "/products/" + product.id }
+                          },
+                          [
+                            _vm._v(
+                              "\n                                 " +
+                                _vm._s(product.name) +
+                                "\n                             "
+                            )
+                          ]
                         )
                       ]
                     ),

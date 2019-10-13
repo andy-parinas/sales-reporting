@@ -27,7 +27,9 @@
                         <tr v-for="product in products" :key="product.id"
                             class="bg-white even:bg-gray-100 text-sm">
                             <td class="py-2 px-4 border border-gray-800 text-sm"> 
-                                {{ product.name }} {{ product.product_type }}
+                                <a :href="'/products/' + product.id" class="text-blue-600 hover:text-blue-700 font-semibold">
+                                    {{ product.name }}
+                                </a>
                             </td>
                             <td class="py-2 px-4 border border-gray-800 text-sm"> 
                                 {{ product.product_type }}
