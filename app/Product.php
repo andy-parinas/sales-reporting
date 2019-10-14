@@ -19,6 +19,18 @@ class Product extends Model
 
     protected $with = ['productType'];
 
+
+    public function getPriceAttribute($value)
+    {
+        return number_format($value, 2, '.', ',');
+    }
+
+    public function getCostAttribute($value)
+    {
+        return number_format($value, 2, '.', ',');
+    }
+
+
     public function productType()
     {
         return $this->belongsTo(ProductType::class);

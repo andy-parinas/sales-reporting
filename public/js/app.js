@@ -2023,11 +2023,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'ProductForm',
-  props: ['user', 'backend'],
+  props: ['user', 'backend', 'edit', 'product'],
   components: {
     BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"],
     ProductTypeForm: _ProductTypeForm__WEBPACK_IMPORTED_MODULE_2__["default"]
@@ -2066,7 +2074,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 5:
                 response = _context.sent;
-                console.log(response);
+                window.location.href = '/products/' + response.data.id;
                 _context.next = 13;
                 break;
 
@@ -2077,7 +2085,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 if (_context.t0.response && _context.t0.response.data && _context.t0.response.data.errors) {
                   this.errors = _context.t0.response.data.errors;
-                  console.log(this.errors);
                 } else {
                   console.log(_context.t0);
                 }
@@ -2096,6 +2103,54 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return createProduct;
     }(),
+    updateProduct: function () {
+      var _updateProduct = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var url, data, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                url = this.backend + '/api/products/' + this.product.id;
+                data = _objectSpread({}, this.productForm, {
+                  api_token: this.user.api_token
+                });
+                _context2.next = 5;
+                return axios.patch(url, data);
+
+              case 5:
+                response = _context2.sent;
+                window.location.href = '/products/' + response.data.id;
+                _context2.next = 13;
+                break;
+
+              case 9:
+                _context2.prev = 9;
+                _context2.t0 = _context2["catch"](0);
+                console.log(_context2.t0.response);
+
+                if (_context2.t0.response && _context2.t0.response.data && _context2.t0.response.data.errors) {
+                  this.errors = _context2.t0.response.data.errors;
+                } else {
+                  console.log(_context2.t0);
+                }
+
+              case 13:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 9]]);
+      }));
+
+      function updateProduct() {
+        return _updateProduct.apply(this, arguments);
+      }
+
+      return updateProduct;
+    }(),
     pushProductType: function pushProductType(productType) {
       this.productTypes.push(productType);
     }
@@ -2103,35 +2158,43 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
       var url, response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              _context2.prev = 0;
+              _context3.prev = 0;
               url = this.backend + '/api/product-types?api_token=' + this.user.api_token;
-              _context2.next = 4;
+              _context3.next = 4;
               return axios.get(url);
 
             case 4:
-              response = _context2.sent;
+              response = _context3.sent;
               this.productTypes = response.data;
+
+              if (this.edit) {
+                this.productForm = _objectSpread({}, this.product, {
+                  price: parseFloat(this.product.price.replace(',', '')),
+                  cost: parseFloat(this.product.cost.replace(',', ''))
+                });
+              }
+
               this.loading = false;
-              _context2.next = 12;
+              _context3.next = 13;
               break;
 
-            case 9:
-              _context2.prev = 9;
-              _context2.t0 = _context2["catch"](0);
-              console.log(_context2.t0);
+            case 10:
+              _context3.prev = 10;
+              _context3.t0 = _context3["catch"](0);
+              console.log(_context3.t0);
 
-            case 12:
+            case 13:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
         }
-      }, _callee2, this, [[0, 9]]);
+      }, _callee3, this, [[0, 10]]);
     }));
 
     function mounted() {
@@ -25098,15 +25161,33 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass:
-                    "flex items-center w-full mt-5 py-2 px-4 text-white rounded-full justify-center focus:outline-none bg-indigo-600",
-                  on: { click: _vm.createProduct }
-                },
-                [_vm._v("\r\n                Add New Product \r\n            ")]
-              )
+              _vm.edit
+                ? _c(
+                    "button",
+                    {
+                      staticClass:
+                        "flex items-center w-full mt-5 py-2 px-4 text-white \r\n                                rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
+                      on: { click: _vm.updateProduct }
+                    },
+                    [
+                      _vm._v(
+                        "\r\n                Update Product \r\n            "
+                      )
+                    ]
+                  )
+                : _c(
+                    "button",
+                    {
+                      staticClass:
+                        "flex items-center w-full mt-5 py-2 px-4 text-white\r\n                             rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
+                      on: { click: _vm.createProduct }
+                    },
+                    [
+                      _vm._v(
+                        "\r\n                Add New Product \r\n            "
+                      )
+                    ]
+                  )
             ]),
             _vm._v(" "),
             _c(

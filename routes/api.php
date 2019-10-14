@@ -28,6 +28,7 @@ Route::patch('product-types/{type}', 'Api\ProductTypeController@update');
 
 Route::get('/products', 'Api\ProductController@index');
 Route::post('/products', 'Api\ProductController@store');
+Route::patch('/products/{product}', 'Api\ProductController@update')->name('products.api.update');
 Route::delete('/products/{product}', 'Api\ProductController@destroy')->name('products.api.destroy');
 
 Route::get('/commissions', 'Api\CommissionController@index');

@@ -65,7 +65,15 @@
                     </div>
                 </div>
             </div>
-            <button class="flex items-center w-full mt-5 py-2 px-4 text-white rounded-full justify-center focus:outline-none bg-indigo-600"
+            <button v-if="edit" 
+                    class="flex items-center w-full mt-5 py-2 px-4 text-white 
+                                rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700"
+                @click="updateProduct" >
+                Update Product 
+            </button>
+            <button v-else 
+                    class="flex items-center w-full mt-5 py-2 px-4 text-white
+                             rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700"
                 @click="createProduct" >
                 Add New Product 
             </button>
@@ -84,7 +92,7 @@ import ProductTypeForm from './ProductTypeForm';
 
 export default {
     name: 'ProductForm',
-    props: ['user', 'backend'],
+    props: ['user', 'backend', 'edit', 'product'],
     components: {BarLoader, ProductTypeForm},
     data: function(){
         return {
@@ -115,20 +123,49 @@ export default {
 
                 const response = await axios.post(url, data);
 
-                console.log(response);
+                window.location.href = '/products/' + response.data.id;
 
             } catch (error) {
                 
                 console.log(error.response);
 
-                 if(error.response && error.response.data && error.response.data.errors ){
+                if(error.response && error.response.data && error.response.data.errors ){
                     this.errors = error.response.data.errors
-                    console.log(this.errors);
                 }else {
                     console.log(error);
                 }
 
             }
+        },
+
+        updateProduct: async function(){
+
+            try {
+                
+                 const url =  this.backend + '/api/products/' + this.product.id;
+
+                const data = {
+                    ...this.productForm,
+                    api_token: this.user.api_token
+                }
+
+                const response = await axios.patch(url, data);
+
+                 window.location.href = '/products/' + response.data.id;
+
+
+            } catch (error) {
+                
+                console.log(error.response);
+
+                if(error.response && error.response.data && error.response.data.errors ){
+                    this.errors = error.response.data.errors
+                }else {
+                    console.log(error);
+                }
+
+            }
+
         },
 
         pushProductType: function(productType){
@@ -143,6 +180,14 @@ export default {
             const response = await axios.get(url);
 
             this.productTypes = response.data
+
+            if(this.edit){
+                this.productForm = {
+                    ...this.product,
+                    price: parseFloat((this.product.price).replace(',','')),
+                    cost: parseFloat((this.product.cost).replace(',',''))
+                }
+            }
 
             this.loading = false;
 

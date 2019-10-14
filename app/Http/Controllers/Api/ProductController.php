@@ -36,6 +36,13 @@ class ProductController extends Controller
 
     }
 
+    public function update(Product $product)
+    {
+        $product->update($this->validateData());
+
+        return response($product, Response::HTTP_OK);
+    }
+
 
     public function destroy(Product $product)
     {
