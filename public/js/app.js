@@ -2298,6 +2298,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2370,8 +2372,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var selectedProduct = {
         product_id: product.id,
         name: product.name,
-        price: product.price,
-        cost: product.cost,
+        price: parseFloat(product.price.replace(',', '')),
+        cost: parseFloat(product.cost.replace(',', '')),
         quantity: this.productInput[index].qty,
         total: this.productInput[index].total,
         type: product.product_type,
@@ -2816,20 +2818,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               this.meta = response.data.meta;
               this.links = response.data.links;
               this.loading = false;
-              _context2.next = 14;
+              console.log(response.data);
+              _context2.next = 15;
               break;
 
-            case 11:
-              _context2.prev = 11;
+            case 12:
+              _context2.prev = 12;
               _context2.t0 = _context2["catch"](0);
               console.log(_context2.t0);
 
-            case 14:
+            case 15:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, this, [[0, 11]]);
+      }, _callee2, this, [[0, 12]]);
     }));
 
     function mounted() {
@@ -3503,8 +3506,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   var selectedProduct = {
                     product_id: ref.product_id,
                     name: ref.product.name,
-                    price: ref.product.price,
-                    cost: ref.product.cost,
+                    price: ref.price,
+                    cost: ref.cost,
                     quantity: ref.quantity,
                     total: parseFloat(ref.total.replace(',', '')),
                     type: ref.product.product_type.name,
@@ -25377,7 +25380,11 @@ var render = function() {
                         "py-2 px-4 border border-gray-800 w-24 text-xs"
                     },
                     [
-                      _c("currency-format", { attrs: { value: product.price } })
+                      _c("currency-format", {
+                        attrs: {
+                          value: parseFloat(product.price.replace(",", ""))
+                        }
+                      })
                     ],
                     1
                   ),
@@ -25401,7 +25408,10 @@ var render = function() {
                         domProps: { value: _vm.productInput[index].qty },
                         on: {
                           change: function($event) {
-                            return _vm.onQtyChange(index, product.price)
+                            _vm.onQtyChange(
+                              index,
+                              parseFloat(product.price.replace(",", ""))
+                            )
                           },
                           input: function($event) {
                             if ($event.target.composing) {
@@ -26047,7 +26057,9 @@ var render = function() {
                       },
                       [
                         _c("currency-format", {
-                          attrs: { value: product.price }
+                          attrs: {
+                            value: parseFloat(product.price.replace(",", ""))
+                          }
                         })
                       ],
                       1
@@ -26061,7 +26073,9 @@ var render = function() {
                       },
                       [
                         _c("currency-format", {
-                          attrs: { value: product.cost }
+                          attrs: {
+                            value: parseFloat(product.cost.replace(",", ""))
+                          }
                         })
                       ],
                       1

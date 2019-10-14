@@ -35,10 +35,10 @@
                                 {{ product.product_type }}
                             </td>
                             <td class="py-2 px-4 border border-gray-800 w-24 text-xs text-right"> 
-                                <currency-format :value="product.price"></currency-format>
+                                <currency-format :value="parseFloat((product.price).replace(',',''))"></currency-format>
                             </td>
                             <td class="py-2 px-4 border border-gray-800 w-24 text-xs text-right"> 
-                                <currency-format :value="product.cost"></currency-format>
+                                <currency-format :value="parseFloat((product.cost).replace(',',''))"></currency-format>
                             </td>
                         </tr>
                     </tbody>
@@ -111,6 +111,8 @@ export default {
             this.links = response.data.links;
 
             this.loading = false;
+
+            console.log(response.data);
 
         } catch (error) {
             

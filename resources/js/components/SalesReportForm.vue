@@ -516,8 +516,8 @@ export default {
                 const selectedProduct = {
                     product_id: ref.product_id,
                     name: ref.product.name,
-                    price: ref.product.price,
-                    cost: ref.product.cost,
+                    price: ref.price,
+                    cost: ref.cost,
                     quantity: ref.quantity,
                     total: parseFloat((ref.total).replace(',','')),
                     type: ref.product.product_type.name,

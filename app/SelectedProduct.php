@@ -9,6 +9,8 @@ class SelectedProduct extends Model
     
     protected $fillable = [
         'product_id',
+        'price',
+        'cost',
         'quantity',
         'total'
     ];

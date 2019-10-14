@@ -14,7 +14,7 @@
                     <tr class="text-sm">
                         <td class="py-2 px-4 border border-gray-800">{{ $selectedProduct->product->name }}</td>
                         <td class="py-2 px-4 border border-gray-800 "> {{ $selectedProduct->product->productType->name }} </td>
-                        <td class="py-2 px-4 border border-gray-800 text-right">{{ number_format($selectedProduct->product->price, 2, '.', ',') }}</td>
+                        <td class="py-2 px-4 border border-gray-800 text-right">{{ $selectedProduct->price }}</td>
                         <td class="py-2 px-4 border border-gray-800 text-right"> {{ $selectedProduct->quantity }}</td>
                         <td class="py-2 px-4 border border-gray-800 text-right"> {{ $selectedProduct->total }} </td>
                     </tr>

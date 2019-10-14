@@ -117,6 +117,8 @@ class SalesReportFeatureTest extends TestCase
 
         $addtionalProduct = factory(SelectedProduct::class)->raw([
             'sales_report_id' => $report->id,
+            'price' => 100,
+            'cost' => 100,
             'quantity' => 100,
             'total' => 100
         ]);
@@ -179,18 +181,24 @@ class SalesReportFeatureTest extends TestCase
                 [
                     'id' => $selectedProducts[0]->id,
                     'product_id' => $selectedProducts[0]->product_id,
+                    'price' => 10,
+                    'cost' => 10,
                     'quantity' => 10,
                     'total' => 100
                 ],
                 [
                     'id' => $selectedProducts[1]->id,
                     'product_id' =>$selectedProducts[1]->product_id,
+                    'price' => 10,
+                    'cost' => 10,
                     'quantity' => 100,
                     'total' => 100
                 ],
                 [
                     'id' => $selectedProducts[2]->id,
                     'product_id' => $selectedProducts[2]->product_id,
+                    'price' => 10,
+                    'cost' => 10,
                     'quantity' => 100,
                     'total' => 100
                 ],
@@ -319,16 +327,22 @@ class SalesReportFeatureTest extends TestCase
                 [
                     'product_id' => $product1->id,
                     'quantity' => $this->faker->randomDigit,
+                    'price' => $this->faker->randomFloat(2),
+                    'cost' => $this->faker->randomFloat(2),
                     'total' => $this->faker->randomFloat(2)
                 ],
                 [
                     'product_id' => $product2->id,
                     'quantity' => $this->faker->randomDigit,
+                    'price' => $this->faker->randomFloat(2),
+                    'cost' => $this->faker->randomFloat(2),
                     'total' => $this->faker->randomFloat(2)
                 ],
                 [
                     'product_id' => $product3->id,
                     'quantity' => $this->faker->randomDigit,
+                    'price' => $this->faker->randomFloat(2),
+                    'cost' => $this->faker->randomFloat(2),
                     'total' => $this->faker->randomFloat(2)
                 ],
             ],

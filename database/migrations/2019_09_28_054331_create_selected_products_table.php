@@ -17,6 +17,8 @@ class CreateSelectedProductsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('sales_report_id');
+            $table->float('price');
+            $table->float('cost');
             $table->integer('quantity');
             $table->float('total');
             $table->timestamps();
