@@ -18,7 +18,10 @@ class TourAgentController extends Controller
 
     public function index()
     {
-        return TourAgentListResource::collection(TourAgent::all());
+
+        $agents = TourAgent::orderBy('name', 'asc')->paginate(10);
+
+        return TourAgentListResource::collection($agents);
     }
 
     public function show(TourAgent $agent)

@@ -45,7 +45,8 @@
         <div class="mt-4 border-t border-gray-700 text-gray-500 py-4">
             Management
         </div>
-        <a href="{{ route('products.index')}} " class="block py-3 flex items-center hover:text-white {{ (strpos(Route::currentRouteName(), 'products') === 0) ? 'active' : '' }}">
+        <a href="{{ route('products.index')}} " 
+            class="block py-3 flex items-center hover:text-white {{ (strpos(Route::currentRouteName(), 'products') === 0) ? 'active' : '' }}">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tags" 
                 class="w-5 h-5" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
                 <path fill="currentColor" d="M497.941 225.941L286.059 14.059A48 48 0 0 0 252.118 0H48C21.49 0 0 
@@ -57,7 +58,8 @@
             </svg>
             <span class="ml-2">Products</span>
         </a>
-        <a href="#" class="block py-3 flex items-center hover:text-white">
+        <a href="{{ route('agents.index')}}" 
+            class="block py-3 flex items-center hover:text-white {{ (strpos(Route::currentRouteName(), 'agents') === 0) ? 'active' : '' }}">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bus" 
                 class="h-5 w-5" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                 <path fill="currentColor" d="M488 128h-8V80c0-44.8-99.2-80-224-80S32 35.2 32 80v48h-8c-13.25 0-24 
