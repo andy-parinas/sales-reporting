@@ -27,11 +27,11 @@
                         </td>
                         <td class="py-2 px-4 border border-gray-800 w-24 text-xs"> 
                             <currency-format 
-                            :value="parseFloat((product.price).replace(',',''))"></currency-format>
+                            :value="product.price"></currency-format>
                         </td>
                         <td class="py-2 px-4 border border-gray-800 w-12"> 
                             <input v-model.number="productInput[index].qty" 
-                                    @change="onQtyChange(index, parseFloat((product.price).replace(',','')))"
+                                    @change="onQtyChange(index, product.price)"
                             class="w-8 focus:outline-none text-xs" type="text" placeholder="0">
                         </td>
                         <td class="py-2 px-4 border border-gray-800 w-12"> 
@@ -118,8 +118,8 @@ export default {
             const selectedProduct = {
                 product_id: product.id,
                 name: product.name,
-                price: parseFloat((product.price).replace(',','')),
-                cost: parseFloat((product.cost).replace(',','')),
+                price: product.price,
+                cost: product.cost,
                 quantity: this.productInput[index].qty,
                 total: this.productInput[index].total,
                 type: product.product_type,

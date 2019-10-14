@@ -17,10 +17,10 @@ class SelectedProduct extends Model
 
     protected $with = ['product'];
 
-    public function getTotalAttribute($value)
-    {
-        return number_format($value, 2, '.', ',');
-    }
+    // public function getTotalAttribute($value)
+    // {
+    //     return number_format($value, 2, '.', ',');
+    // }
 
 
     public function product()

@@ -472,12 +472,12 @@ export default {
             this.form.grp_code = this.report.grp_code;
             this.form.adult_count = this.report.adult_count;
             this.form.children_count = this.report.children_count;
-            this.form.total_sales = parseFloat((this.report.total_sales).replace(',',''));
-            this.form.total_agent_sales = parseFloat((this.report.total_agent_sales).replace(',',''));
-            this.form.total_deductions = parseFloat((this.report.total_deductions).replace(',',''));
-            this.form.total_commissions = parseFloat((this.report.total_commissions).replace(',',''));
-            this.form.gst = parseFloat((this.report.gst).replace(',','')).toFixed(2);
-            this.form.grand_total_commission = parseFloat((this.report.grand_total_commission).replace(',',''));
+            this.form.total_sales = this.report.total_sales;
+            this.form.total_agent_sales = this.report.total_agent_sales;
+            this.form.total_deductions = this.report.total_deductions;
+            this.form.total_commissions = this.report.total_commissions;
+            this.form.gst = this.report.gst;
+            this.form.grand_total_commission = this.report.grand_total_commission;
 
 
             //initialize the sales_commission
@@ -489,7 +489,7 @@ export default {
                     name: ref.commission.name,
                     type: ref.commission.commission_type,
                     percentage: ref.commission.amount,
-                    amount: parseFloat((ref.amount).replace(',',''))
+                    amount: ref.amount
                 }
 
                 this.form.sales_commissions.push(salesCommission);
@@ -502,7 +502,7 @@ export default {
                     id : ref.id,
                     deduction_id: ref.deduction_id,
                     name: ref.deduction.name,
-                    amount: parseFloat((ref.amount).replace(',','')),
+                    amount: ref.amount,
                     type: ref.deduction.type,
                     multiplier: ref.deduction.amount
                 }
@@ -519,17 +519,17 @@ export default {
                     price: ref.price,
                     cost: ref.cost,
                     quantity: ref.quantity,
-                    total: parseFloat((ref.total).replace(',','')),
+                    total: ref.total,
                     type: ref.product.product_type.name,
                     code: ref.product.product_type.code
                 }
 
                 if(ref.product.product_type.code === 1){
-                    this.code1Total = this.code1Total + parseFloat((ref.total).replace(',',''));
+                    this.code1Total = this.code1Total + ref.total;
                     this.code1Count = this.code1Count + ref.quantity;
                 }
 
-                if(ref.product.product_type.code === 2) this.code2Total = this.code2Total + parseFloat((ref.total).replace(',',''));
+                if(ref.product.product_type.code === 2) this.code2Total = this.code2Total + ref.total;
 
                 this.form.selected_products.push(selectedProduct);
 

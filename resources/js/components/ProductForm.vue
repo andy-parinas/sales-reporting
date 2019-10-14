@@ -184,8 +184,8 @@ export default {
             if(this.edit){
                 this.productForm = {
                     ...this.product,
-                    price: parseFloat((this.product.price).replace(',','')),
-                    cost: parseFloat((this.product.cost).replace(',',''))
+                    price: this.product.price,
+                    cost: this.product.cost
                 }
             }
 

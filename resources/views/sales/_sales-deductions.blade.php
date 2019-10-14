@@ -8,14 +8,14 @@
             @foreach ($salesDeductions as $salesDeduction)
                 <div class="flex justify-between border-b border-gray-700">
                     <div class="flex-1 border-gray-700 border-r px-2 py-1">{{$salesDeduction->deduction->name}}</div>
-                    <div class="w-32  px-2 py-1 text-right"> {{ $salesDeduction->amount }} </div>
+                    <div class="w-32  px-2 py-1 text-right"> {{ number_format($salesDeduction->amount, 2, '.', ',') }} </div>
                 </div>
             @endforeach
 
             <div class="flex justify-between font-semibold bg-orange-400">
                 <div class="flex-1 border-gray-700 border-r  px-2 py-1">Sub Total</div>
                 <div class="w-32 px-2 py-1"> 
-                    <div class="w-32 px-4 py-1 text-right">{{ $sale->total_deductions }}</div>
+                    <div class="w-32 px-4 py-1 text-right">{{ number_format($sale->total_deductions, 2, '.', ',') }}</div>
                 </div>
             </div>
         </div>

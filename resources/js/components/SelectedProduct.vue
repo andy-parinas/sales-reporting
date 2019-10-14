@@ -15,12 +15,10 @@
                     <td class="py-2 px-4 border border-gray-800">{{ product.name }}</td>
                     <td class="py-2 px-4 border border-gray-800 w-24"> 
                         <currency-format :value="product.price" ></currency-format>
-                        <!-- {{ Number.parseFloat(product.price).toFixed(2) }}  -->
                     </td>
                     <td class="py-2 px-4 border border-gray-800 w-12"> {{ product.quantity }}</td>
                     <td class="py-2 px-4 border border-gray-800 w-12"> 
                         <currency-format :value="product.total" ></currency-format>
-                        <!-- {{ Number.parseFloat(product.total).toFixed(2) }} -->
                     </td>
                     <td class="py-2 px-4 border border-gray-800 w-12"> {{ product.type }} </td>
                     <td class="py-2 px-4 border border-gray-800 w-10 bg-orange-500 hover:bg-orange-600">

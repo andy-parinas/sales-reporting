@@ -2175,8 +2175,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               if (this.edit) {
                 this.productForm = _objectSpread({}, this.product, {
-                  price: parseFloat(this.product.price.replace(',', '')),
-                  cost: parseFloat(this.product.cost.replace(',', ''))
+                  price: this.product.price,
+                  cost: this.product.cost
                 });
               }
 
@@ -2372,8 +2372,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var selectedProduct = {
         product_id: product.id,
         name: product.name,
-        price: parseFloat(product.price.replace(',', '')),
-        cost: parseFloat(product.cost.replace(',', '')),
+        price: product.price,
+        cost: product.cost,
         quantity: this.productInput[index].qty,
         total: this.productInput[index].total,
         type: product.product_type,
@@ -3471,12 +3471,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 this.form.grp_code = this.report.grp_code;
                 this.form.adult_count = this.report.adult_count;
                 this.form.children_count = this.report.children_count;
-                this.form.total_sales = parseFloat(this.report.total_sales.replace(',', ''));
-                this.form.total_agent_sales = parseFloat(this.report.total_agent_sales.replace(',', ''));
-                this.form.total_deductions = parseFloat(this.report.total_deductions.replace(',', ''));
-                this.form.total_commissions = parseFloat(this.report.total_commissions.replace(',', ''));
-                this.form.gst = parseFloat(this.report.gst.replace(',', '')).toFixed(2);
-                this.form.grand_total_commission = parseFloat(this.report.grand_total_commission.replace(',', '')); //initialize the sales_commission
+                this.form.total_sales = this.report.total_sales;
+                this.form.total_agent_sales = this.report.total_agent_sales;
+                this.form.total_deductions = this.report.total_deductions;
+                this.form.total_commissions = this.report.total_commissions;
+                this.form.gst = this.report.gst;
+                this.form.grand_total_commission = this.report.grand_total_commission; //initialize the sales_commission
 
                 this.report.sales_commissions.forEach(function (ref) {
                   var salesCommission = {
@@ -3485,7 +3485,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     name: ref.commission.name,
                     type: ref.commission.commission_type,
                     percentage: ref.commission.amount,
-                    amount: parseFloat(ref.amount.replace(',', ''))
+                    amount: ref.amount
                   };
 
                   _this5.form.sales_commissions.push(salesCommission);
@@ -3495,7 +3495,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     id: ref.id,
                     deduction_id: ref.deduction_id,
                     name: ref.deduction.name,
-                    amount: parseFloat(ref.amount.replace(',', '')),
+                    amount: ref.amount,
                     type: ref.deduction.type,
                     multiplier: ref.deduction.amount
                   };
@@ -3509,17 +3509,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     price: ref.price,
                     cost: ref.cost,
                     quantity: ref.quantity,
-                    total: parseFloat(ref.total.replace(',', '')),
+                    total: ref.total,
                     type: ref.product.product_type.name,
                     code: ref.product.product_type.code
                   };
 
                   if (ref.product.product_type.code === 1) {
-                    _this5.code1Total = _this5.code1Total + parseFloat(ref.total.replace(',', ''));
+                    _this5.code1Total = _this5.code1Total + ref.total;
                     _this5.code1Count = _this5.code1Count + ref.quantity;
                   }
 
-                  if (ref.product.product_type.code === 2) _this5.code2Total = _this5.code2Total + parseFloat(ref.total.replace(',', ''));
+                  if (ref.product.product_type.code === 2) _this5.code2Total = _this5.code2Total + ref.total;
 
                   _this5.form.selected_products.push(selectedProduct);
                 });
@@ -3909,8 +3909,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
-//
-//
 //
 //
 //
@@ -25380,11 +25378,7 @@ var render = function() {
                         "py-2 px-4 border border-gray-800 w-24 text-xs"
                     },
                     [
-                      _c("currency-format", {
-                        attrs: {
-                          value: parseFloat(product.price.replace(",", ""))
-                        }
-                      })
+                      _c("currency-format", { attrs: { value: product.price } })
                     ],
                     1
                   ),
@@ -25408,10 +25402,7 @@ var render = function() {
                         domProps: { value: _vm.productInput[index].qty },
                         on: {
                           change: function($event) {
-                            _vm.onQtyChange(
-                              index,
-                              parseFloat(product.price.replace(",", ""))
-                            )
+                            return _vm.onQtyChange(index, product.price)
                           },
                           input: function($event) {
                             if ($event.target.composing) {
@@ -26057,9 +26048,7 @@ var render = function() {
                       },
                       [
                         _c("currency-format", {
-                          attrs: {
-                            value: parseFloat(product.price.replace(",", ""))
-                          }
+                          attrs: { value: product.price }
                         })
                       ],
                       1
@@ -26073,9 +26062,7 @@ var render = function() {
                       },
                       [
                         _c("currency-format", {
-                          attrs: {
-                            value: parseFloat(product.cost.replace(",", ""))
-                          }
+                          attrs: { value: product.cost }
                         })
                       ],
                       1

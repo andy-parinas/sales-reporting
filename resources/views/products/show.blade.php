@@ -44,7 +44,7 @@
                     </div>
                     <div class="flex-1 border-b border-gray-700">
                         <div class="w-full py-2  pl-10 focus:outline-none text-gray-800 text-sm">
-                            {{ $product->price }}
+                            {{ number_format($product->price , 2, '.', ',') }}
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                     </div>
                     <div class="flex-1 border-b border-gray-700">
                         <div class="w-full py-2 pl-10 focus:outline-none  text-gray-800 text-sm">
-                            {{ $product->cost }}
+                            {{ number_format($product->cost, 2, '.', ',')   }}
                         </div>
                     </div>
                 </div>
