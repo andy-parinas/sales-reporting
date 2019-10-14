@@ -4023,12 +4023,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'DeleteModal',
-  props: ['url', 'user'],
+  props: ['url', 'user', 'back'],
   data: function data() {
     return {
-      modal: false
+      modal: false,
+      success: false,
+      failed: false
     };
   },
   methods: {
@@ -4051,21 +4063,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 5:
                 response = _context.sent;
-                console.log(response);
-                _context.next = 12;
+                this.failed = false;
+                this.success = true;
+                _context.next = 14;
                 break;
 
-              case 9:
-                _context.prev = 9;
+              case 10:
+                _context.prev = 10;
                 _context.t0 = _context["catch"](0);
                 console.log(_context.t0.response);
+                this.failed = true;
 
-              case 12:
+              case 14:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 9]]);
+        }, _callee, this, [[0, 10]]);
       }));
 
       function deleteData() {
@@ -4076,7 +4090,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }()
   },
   mounted: function mounted() {
-    console.log(this.url);
+    console.log(this.back);
     console.log(this.user.api_token);
   }
 });
@@ -27509,37 +27523,105 @@ var render = function() {
                   "bg-white shadow rounded py-10 px-10  mt-64 w-144 mx-auto"
               },
               [
-                _c("div", { staticClass: "flex items-center justify-center" }, [
-                  _c(
-                    "h1",
-                    { staticClass: "text-gray-800 font-light text-xl mr-2" },
-                    [_vm._v("Are Your Sure You Want to Delete?")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass:
-                        "py-2 px-4 bg-red-600 text-white rounded hover:bg-red-700 mr-1",
-                      on: { click: _vm.deleteData }
-                    },
-                    [_vm._v("Yes")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass:
-                        "py-2 px-4 bg-gray-600 text-white rounded hover:bg-gray-700",
-                      on: {
-                        click: function($event) {
-                          _vm.modal = !_vm.modal
-                        }
-                      }
-                    },
-                    [_vm._v("No")]
-                  )
-                ])
+                _vm.success
+                  ? _c(
+                      "div",
+                      { staticClass: "flex items-center justify-center" },
+                      [
+                        _c(
+                          "h1",
+                          {
+                            staticClass: "text-gray-800 font-light text-xl mr-2"
+                          },
+                          [_vm._v("Successfully Deleted Item.")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "a",
+                          {
+                            staticClass:
+                              "py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700 mr-1",
+                            attrs: { href: _vm.back }
+                          },
+                          [_vm._v("OK")]
+                        )
+                      ]
+                    )
+                  : _vm.failed
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "flex flex-col justify-between items-start"
+                      },
+                      [
+                        _c(
+                          "h1",
+                          { staticClass: "text-red-800 font-semibold text-xl" },
+                          [_vm._v("Failed Deleting Item.")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "h2",
+                          { staticClass: "text-gray-800 font-light text-lg" },
+                          [
+                            _vm._v(
+                              "Make Sure that Item is not referenced. Otherwise Contact your IT"
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass:
+                              "py-2 px-4 bg-gray-600 text-white rounded hover:bg-gray-700 mr-1 mt-2",
+                            on: {
+                              click: function($event) {
+                                _vm.modal = false
+                              }
+                            }
+                          },
+                          [_vm._v("OK")]
+                        )
+                      ]
+                    )
+                  : _c(
+                      "div",
+                      { staticClass: "flex items-center justify-center" },
+                      [
+                        _c(
+                          "h1",
+                          {
+                            staticClass: "text-gray-800 font-light text-xl mr-2"
+                          },
+                          [_vm._v("Are Your Sure You Want to Delete?")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass:
+                              "py-2 px-4 bg-red-600 text-white rounded hover:bg-red-700 mr-1",
+                            on: { click: _vm.deleteData }
+                          },
+                          [_vm._v("Yes")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass:
+                              "py-2 px-4 bg-gray-600 text-white rounded hover:bg-gray-700",
+                            on: {
+                              click: function($event) {
+                                _vm.modal = !_vm.modal
+                              }
+                            }
+                          },
+                          [_vm._v("No")]
+                        )
+                      ]
+                    )
               ]
             )
           ]

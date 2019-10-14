@@ -10,7 +10,9 @@
             <a href="{{ route('sales.edit', ['sale' => $sale->id])}}" 
                 class="uppercase text-sm font-semibold bg-blue-700 py-2 px-4 rounded text-white mr-2 hover:bg-blue-600">Edit</a>
 
-            <delete-modal url="{{ route('sales.api.destroy', ['sale' => $sale->id])}}" :user="{{ auth()->user() }}" ></delete-modal>
+            <delete-modal url="{{ route('sales.api.destroy', ['sale' => $sale->id])}}" 
+                    back="{{route('sales.index')}}"
+                    :user="{{ auth()->user() }}" ></delete-modal>
         </div>
     </div>
     

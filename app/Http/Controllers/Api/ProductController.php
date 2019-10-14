@@ -37,6 +37,14 @@ class ProductController extends Controller
     }
 
 
+    public function destroy(Product $product)
+    {
+        $product->delete();
+
+        return response([], Response::HTTP_OK);
+    }
+
+
     private function validateData()
     {
         return request()->validate([
