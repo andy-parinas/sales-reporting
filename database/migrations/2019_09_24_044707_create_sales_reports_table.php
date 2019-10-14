@@ -30,6 +30,10 @@ class CreateSalesReportsTable extends Migration
             $table->float('gst');
             $table->float('grand_total_commission');
             $table->timestamps();
+
+            $table->foreign('tour_agent_id')->references('id')->on('tour_agents')->onDelete('restrict');
+            $table->foreign('tour_guide_id')->references('id')->on('tour_guides')->onDelete('restrict');
+            
         });
     }
 

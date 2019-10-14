@@ -19,6 +19,9 @@ class CreateSalesCommissionsTable extends Migration
             $table->unsignedBigInteger('commission_id');
             $table->float('amount');
             $table->timestamps();
+
+            $table->foreign('sales_report_id')->references('id')->on('sales_reports')->onDelete('restrict');
+            $table->foreign('commission_id')->references('id')->on('commissions')->onDelete('restrict');
         });
     }
 

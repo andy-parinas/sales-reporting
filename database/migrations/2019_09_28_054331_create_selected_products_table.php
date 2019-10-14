@@ -20,6 +20,10 @@ class CreateSelectedProductsTable extends Migration
             $table->integer('quantity');
             $table->float('total');
             $table->timestamps();
+
+            $table->foreign('sales_report_id')->references('id')->on('sales_reports')->onDelete('restrict');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('restrict');
+
         });
     }
 

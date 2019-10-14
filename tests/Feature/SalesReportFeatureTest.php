@@ -235,6 +235,8 @@ class SalesReportFeatureTest extends TestCase
     public function sales_report_can_be_delete_via_api()
     {
 
+        $this->withoutExceptionHandling();
+
         $user = factory(User::class)->create();
 
         $report = factory(SalesReport::class)->create();

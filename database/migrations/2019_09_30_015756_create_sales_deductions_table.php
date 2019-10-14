@@ -19,6 +19,9 @@ class CreateSalesDeductionsTable extends Migration
             $table->unsignedBigInteger('deduction_id');
             $table->float('amount');
             $table->timestamps();
+
+            $table->foreign('sales_report_id')->references('id')->on('sales_reports')->onDelete('restrict');
+            $table->foreign('deduction_id')->references('id')->on('deductions')->onDelete('restrict');
         });
     }
 

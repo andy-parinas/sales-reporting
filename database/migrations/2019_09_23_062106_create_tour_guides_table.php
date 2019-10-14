@@ -20,6 +20,9 @@ class CreateTourGuidesTable extends Migration
             $table->string('phone')->nullable(true);
             $table->unsignedInteger('tour_agent_id');
             $table->timestamps();
+
+            $table->foreign('tour_agent_id')->references('id')->on('tour_agents')->onDelete('restrict');
+
         });
     }
 
