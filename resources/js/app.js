@@ -24,6 +24,7 @@ Vue.component('sales-report-form', require('./components/SalesReportForm.vue').d
 Vue.component('sales-report-list', require('./components/SalesReportList.vue').default);
 Vue.component('products-list', require('./components/ProductsList.vue').default);
 Vue.component('product-form', require('./components/ProductForm.vue').default);
+Vue.component('delete-modal', require('./components/ui/actions/DeleteModal.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

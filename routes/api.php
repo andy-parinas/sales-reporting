@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/sales', 'Api\SalesReportController@index');
 Route::post('/sales', 'Api\SalesReportController@store');
 Route::patch('/sales/{sale}', 'Api\SalesReportController@update');
+Route::delete('/sales/{sale}', 'Api\SalesReportController@destroy')->name('sales.api.destroy');
 
 Route::get('product-types', 'Api\ProductTypeController@index');
 Route::post('product-types', 'Api\ProductTypeController@store');
@@ -27,6 +28,7 @@ Route::patch('product-types/{type}', 'Api\ProductTypeController@update');
 
 Route::get('/products', 'Api\ProductController@index');
 Route::post('/products', 'Api\ProductController@store');
+Route::delete('/products/{product}', 'Api\ProductController@destroy')->name('products.api.destroy');
 
 Route::get('/commissions', 'Api\CommissionController@index');
 Route::get('/agents', 'Api\TourAgentController@index');

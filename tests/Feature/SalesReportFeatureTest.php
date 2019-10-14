@@ -231,6 +231,30 @@ class SalesReportFeatureTest extends TestCase
     }
 
 
+    /** @test */
+    public function sales_report_can_be_delete_via_api()
+    {
+
+        $user = factory(User::class)->create();
+
+        $report = factory(SalesReport::class)->create();
+
+        factory(SelectedProduct::class, 3)->create(['sales_report_id' => $report->id]);
+        factory(SalesCommission::class, 4)->create(['sales_report_id' => $report->id]);
+        factory(SalesDeduction::class, 3)->create(['sales_report_id' => $report->id]);
+
+
+
+        $this->delete('/api/sales/' . $report->id . '?api_token=' . $user->api_token);
+
+        $this->assertCount(0, SalesReport::all());
+        $this->assertCount(0, SalesCommission::all());
+        $this->assertCount(0, SalesDeduction::all());
+        $this->assertCount(0, SelectedProduct::all());
+        
+    }
+
+
     private function createSalesReportData()
     {
 

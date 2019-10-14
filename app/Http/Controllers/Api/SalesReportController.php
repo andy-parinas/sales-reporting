@@ -143,6 +143,43 @@ class SalesReportController extends Controller
 
     }
 
+    public function destroy(SalesReport $sale) 
+    {
+
+        DB::beginTransaction();
+
+        try {
+
+
+            //Delete Related Data
+            $sale->salesCommissions->each(function($commission){
+                $commission->delete();
+            });
+
+            $sale->salesDeductions->each(function($deduction){
+                $deduction->delete();
+            });
+
+            $sale->selectedProducts->each(function($product){
+                $product->delete();
+            });
+            
+            $sale->delete();
+
+            DB::commit();
+
+            return response([], Response::HTTP_OK);
+
+
+        } catch (Exception $e) {
+
+             DB::rollBack();
+
+            return response(["error" => $e ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 
     private function reportData(SalesReportRequest $request)
     {
