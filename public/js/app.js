@@ -3563,6 +3563,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ui_icons_Sort__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui/icons/Sort */ "./resources/js/components/ui/icons/Sort.vue");
 /* harmony import */ var _ui_icons_SortUp__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui/icons/SortUp */ "./resources/js/components/ui/icons/SortUp.vue");
 /* harmony import */ var _ui_icons_SortDown__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ui/icons/SortDown */ "./resources/js/components/ui/icons/SortDown.vue");
+/* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -3684,6 +3685,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+
 
 
 
@@ -3695,7 +3701,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"],
     SortIcon: _ui_icons_Sort__WEBPACK_IMPORTED_MODULE_2__["default"],
     SortUp: _ui_icons_SortUp__WEBPACK_IMPORTED_MODULE_3__["default"],
-    SortDown: _ui_icons_SortDown__WEBPACK_IMPORTED_MODULE_4__["default"]
+    SortDown: _ui_icons_SortDown__WEBPACK_IMPORTED_MODULE_4__["default"],
+    CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   data: function data() {
     return {
@@ -27092,7 +27099,12 @@ var render = function() {
                         staticClass:
                           "py-2 px-4 border border-gray-800 text-right"
                       },
-                      [_vm._v(" " + _vm._s(report.total_agent_sales) + " ")]
+                      [
+                        _c("currency-format", {
+                          attrs: { value: report.total_agent_sales }
+                        })
+                      ],
+                      1
                     ),
                     _vm._v(" "),
                     _c(
@@ -27101,7 +27113,12 @@ var render = function() {
                         staticClass:
                           "py-2 px-4 border border-gray-800 text-right"
                       },
-                      [_vm._v(_vm._s(report.total_commissions))]
+                      [
+                        _c("currency-format", {
+                          attrs: { value: report.total_commissions }
+                        })
+                      ],
+                      1
                     )
                   ]
                 )

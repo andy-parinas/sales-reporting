@@ -82,8 +82,12 @@
                         <td class="py-2 px-4 border border-gray-800"> {{ report.tour_date }} </td>
                         <td class="py-2 px-4 border border-gray-800"> {{ report.tour_agent }} </td>
                         <td class="py-2 px-4 border border-gray-800"> {{ report.tour_guide }} </td>
-                        <td class="py-2 px-4 border border-gray-800 text-right"> {{ report.total_agent_sales }} </td>
-                        <td class="py-2 px-4 border border-gray-800 text-right">{{ report.total_commissions }}</td>
+                        <td class="py-2 px-4 border border-gray-800 text-right"> 
+                            <currency-format :value="report.total_agent_sales"></currency-format>
+                        </td>
+                        <td class="py-2 px-4 border border-gray-800 text-right">
+                             <currency-format :value="report.total_commissions"></currency-format>
+                        </td>
                     </tr>
                 </tbody>
                 
@@ -118,11 +122,12 @@ import BarLoader from './ui/loader/BarLoader';
 import SortIcon from './ui/icons/Sort';
 import SortUp from './ui/icons/SortUp';
 import SortDown from './ui/icons/SortDown';
+import CurrencyFormat from './ui/formated/CurrencyFormat';
 
 export default {
     name: 'SalesReportList',
     props: ['user', 'backend'],
-    components: {BarLoader, SortIcon,SortUp,SortDown},
+    components: {BarLoader, SortIcon,SortUp,SortDown,CurrencyFormat},
     data: function()
     {
         return {
