@@ -9,9 +9,4 @@ class TourGuide extends Model
     
     protected $guarded = [];
 
-
-    public function tourAgent()
-    {
-        return $this->belongsTo(TourAgent::class);
-    }
 }

@@ -9,8 +9,7 @@
                     <div  class="flex-1 border-b border-gray-700" >
                         <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm"
                                 :class="errors && errors.tour_agent_id ? 'bg-red-200' : ''"  
-                                type="text" id="agent" placeholder="Tour Agent Name"  
-                                @change="tourAgentSelect" v-model="form.tour_agent_id" >
+                                type="text" id="agent" placeholder="Tour Agent Name" v-model="form.tour_agent_id" >
 
                             <option disabled value="" > --- Select Tour Agent ---</option>
                             <option v-for="agent in tourAgents" :key="agent.id"
@@ -264,10 +263,10 @@ export default {
         {
              try {
                 
-                const url = this.backend + `/api/agents/${agentId}?api_token=${this.user.api_token}`;
+                const url = this.backend + `/api/guides?api_token=${this.user.api_token}`;
                 const response = await axios.get(url);
 
-                this.tourGuides = response.data.data.tourGuides;
+                this.tourGuides = response.data.data;
 
             } catch (error) {
                 console.log('Error Loading Tour Guides:', error);
@@ -275,19 +274,19 @@ export default {
 
         },
 
-        tourAgentSelect: async function()
-        {
-            try {
+        // tourAgentSelect: async function()
+        // {
+        //     try {
                 
-                const url = this.backend + `/api/agents/${this.form.tour_agent_id}?api_token=${this.user.api_token}`;
-                const response = await axios.get(url);
+        //         const url = this.backend + `/api/agents/${this.form.tour_agent_id}?api_token=${this.user.api_token}`;
+        //         const response = await axios.get(url);
 
-                this.tourGuides = response.data.data.tourGuides;
+        //         this.tourGuides = response.data.data.tourGuides;
 
-            } catch (error) {
-                console.log('Error Loading Tour Guides:', error);
-            }
-        },
+        //     } catch (error) {
+        //         console.log('Error Loading Tour Guides:', error);
+        //     }
+        // },
         computeCommission: function()
         {
 
@@ -453,9 +452,9 @@ export default {
     },
     async mounted()
     {
-        console.log('Form', this.backend);
-      
         this.loadTourAgents();
+
+        this.loadTourGuides();
 
         if(this.edit){
 

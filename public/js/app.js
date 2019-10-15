@@ -3009,7 +3009,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
 
 
 
@@ -3222,13 +3221,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context4.prev = _context4.next) {
               case 0:
                 _context4.prev = 0;
-                url = this.backend + "/api/agents/".concat(agentId, "?api_token=").concat(this.user.api_token);
+                url = this.backend + "/api/guides?api_token=".concat(this.user.api_token);
                 _context4.next = 4;
                 return axios.get(url);
 
               case 4:
                 response = _context4.sent;
-                this.tourGuides = response.data.data.tourGuides;
+                this.tourGuides = response.data.data;
                 _context4.next = 11;
                 break;
 
@@ -3251,45 +3250,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return loadTourGuides;
     }(),
-    tourAgentSelect: function () {
-      var _tourAgentSelect = _asyncToGenerator(
-      /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
-        var url, response;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                _context5.prev = 0;
-                url = this.backend + "/api/agents/".concat(this.form.tour_agent_id, "?api_token=").concat(this.user.api_token);
-                _context5.next = 4;
-                return axios.get(url);
-
-              case 4:
-                response = _context5.sent;
-                this.tourGuides = response.data.data.tourGuides;
-                _context5.next = 11;
-                break;
-
-              case 8:
-                _context5.prev = 8;
-                _context5.t0 = _context5["catch"](0);
-                console.log('Error Loading Tour Guides:', _context5.t0);
-
-              case 11:
-              case "end":
-                return _context5.stop();
-            }
-          }
-        }, _callee5, this, [[0, 8]]);
-      }));
-
-      function tourAgentSelect() {
-        return _tourAgentSelect.apply(this, arguments);
-      }
-
-      return tourAgentSelect;
-    }(),
+    // tourAgentSelect: async function()
+    // {
+    //     try {
+    //         const url = this.backend + `/api/agents/${this.form.tour_agent_id}?api_token=${this.user.api_token}`;
+    //         const response = await axios.get(url);
+    //         this.tourGuides = response.data.data.tourGuides;
+    //     } catch (error) {
+    //         console.log('Error Loading Tour Guides:', error);
+    //     }
+    // },
     computeCommission: function computeCommission() {
       var _this3 = this;
 
@@ -3377,67 +3347,67 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     submit: function () {
       var _submit = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
         var data, response, _response;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context6.prev = _context6.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
                 this.creating = true;
-                _context6.prev = 1;
+                _context5.prev = 1;
                 data = _objectSpread({}, this.form, {
                   api_token: this.user.api_token
                 });
 
                 if (!this.edit) {
-                  _context6.next = 11;
+                  _context5.next = 11;
                   break;
                 }
 
-                _context6.next = 6;
+                _context5.next = 6;
                 return axios.patch(this.backend + '/api/sales/' + this.report.id, data);
 
               case 6:
-                response = _context6.sent;
+                response = _context5.sent;
                 window.location.href = '/sales/' + response.data.id;
                 console.log(response);
-                _context6.next = 16;
+                _context5.next = 16;
                 break;
 
               case 11:
-                _context6.next = 13;
+                _context5.next = 13;
                 return axios.post(this.backend + '/api/sales', data);
 
               case 13:
-                _response = _context6.sent;
+                _response = _context5.sent;
                 this.creating = false;
                 window.location.href = '/sales/' + _response.data.id;
 
               case 16:
-                _context6.next = 23;
+                _context5.next = 23;
                 break;
 
               case 18:
-                _context6.prev = 18;
-                _context6.t0 = _context6["catch"](1);
-                console.log(_context6.t0.response.data);
+                _context5.prev = 18;
+                _context5.t0 = _context5["catch"](1);
+                console.log(_context5.t0.response.data);
 
-                if (_context6.t0.response && _context6.t0.response.data && _context6.t0.response.data.errors) {
-                  this.errors = _context6.t0.response.data.errors;
+                if (_context5.t0.response && _context5.t0.response.data && _context5.t0.response.data.errors) {
+                  this.errors = _context5.t0.response.data.errors;
                   console.log(this.errors);
                 } else {
-                  console.log(_context6.t0);
+                  console.log(_context5.t0);
                 }
 
                 this.creating = false;
 
               case 23:
               case "end":
-                return _context6.stop();
+                return _context5.stop();
             }
           }
-        }, _callee6, this, [[1, 18]]);
+        }, _callee5, this, [[1, 18]]);
       }));
 
       function submit() {
@@ -3450,15 +3420,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7() {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
       var _this5 = this;
 
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
         while (1) {
-          switch (_context7.prev = _context7.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
-              console.log('Form', this.backend);
               this.loadTourAgents();
+              this.loadTourGuides();
 
               if (this.edit) {
                 console.log(this.report);
@@ -3532,10 +3502,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
             case 4:
             case "end":
-              return _context7.stop();
+              return _context6.stop();
           }
         }
-      }, _callee7, this);
+      }, _callee6, this);
     }));
 
     function mounted() {
@@ -26685,26 +26655,21 @@ var render = function() {
                   placeholder: "Tour Agent Name"
                 },
                 on: {
-                  change: [
-                    function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.$set(
-                        _vm.form,
-                        "tour_agent_id",
-                        $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      )
-                    },
-                    _vm.tourAgentSelect
-                  ]
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.$set(
+                      _vm.form,
+                      "tour_agent_id",
+                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                    )
+                  }
                 }
               },
               [

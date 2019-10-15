@@ -88,11 +88,9 @@ class DatabaseSeeder extends Seeder
 
         factory(User::class, 5)->create();
 
-        $agents = factory(TourAgent::class, 10)->create();
+        factory(TourAgent::class, 10)->create();
 
-        $agents->each(function($agent){
-            factory(TourGuide::class, 5)->create(['tour_agent_id' => $agent->id]);
-        });
+        factory(TourGuide::class, 15)->create();
 
 
     }

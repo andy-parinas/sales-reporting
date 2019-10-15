@@ -14,9 +14,4 @@ class TourAgent extends Model
         'phone'
     ];
 
-
-    public function tourGuides()
-    {
-        return $this->hasMany(TourGuide::class);
-    }
 }
