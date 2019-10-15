@@ -4104,9 +4104,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TourAgentForm',
-  props: ['user', 'backend'],
+  props: ['user', 'backend', 'edit', 'agent'],
   data: function data() {
     return {
       agentForm: {
@@ -4166,7 +4172,60 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return submit;
+    }(),
+    update: function () {
+      var _update = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var data, url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                data = _objectSpread({}, this.agentForm, {
+                  api_token: this.user.api_token
+                });
+                url = this.backend + '/api/agents/' + this.agent.id;
+                _context2.next = 5;
+                return axios.patch(url, data);
+
+              case 5:
+                response = _context2.sent;
+                window.location.href = '/agents/' + response.data.id;
+                _context2.next = 12;
+                break;
+
+              case 9:
+                _context2.prev = 9;
+                _context2.t0 = _context2["catch"](0);
+
+                if (_context2.t0.response && _context2.t0.response.data && _context2.t0.response.data.errors) {
+                  this.errors = _context2.t0.response.data.errors;
+                  console.log(_context2.t0.response);
+                } else {
+                  console.log(_context2.t0);
+                }
+
+              case 12:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 9]]);
+      }));
+
+      function update() {
+        return _update.apply(this, arguments);
+      }
+
+      return update;
     }()
+  },
+  mounted: function mounted() {
+    if (this.edit) {
+      this.agentForm = _objectSpread({}, this.agent);
+    }
   }
 });
 
@@ -28127,15 +28186,25 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _c(
-      "button",
-      {
-        staticClass:
-          "flex items-center w-full mt-5 py-2 px-4 text-white \n                        rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
-        on: { click: _vm.submit }
-      },
-      [_vm._v("\n        Submit \n    ")]
-    )
+    _vm.edit
+      ? _c(
+          "button",
+          {
+            staticClass:
+              "flex items-center w-full mt-5 py-2 px-4 text-white \n                        rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
+            on: { click: _vm.update }
+          },
+          [_vm._v("\n        Update \n    ")]
+        )
+      : _c(
+          "button",
+          {
+            staticClass:
+              "flex items-center w-full mt-5 py-2 px-4 text-white \n                        rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
+            on: { click: _vm.submit }
+          },
+          [_vm._v("\n        Submit \n    ")]
+        )
   ])
 }
 var staticRenderFns = [

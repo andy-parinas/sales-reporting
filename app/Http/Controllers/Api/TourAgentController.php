@@ -41,6 +41,19 @@ class TourAgentController extends Controller
 
     }
 
+    public function update(TourAgent $agent)
+    {
+        $agent->update($this->validateData());
+
+        return response($agent, Response::HTTP_OK);
+    }
+
+    public function destroy(TourAgent $agent)
+    {
+        $agent->delete();
+
+        return response([], Response::HTTP_OK);
+    }
 
 
 

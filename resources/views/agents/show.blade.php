@@ -7,7 +7,7 @@
             <h1 class="text-4xl font-bold uppercase text-gray-800" >Tour Agent Details</h1>
         </div>
         <div  class="px-4 py-2 flex items-center">
-            <a href="{{ route('agents.edit', ['product' => $agent->id])}} " 
+            <a href="{{ route('agents.edit', ['agent' => $agent->id])}} " 
                 class="uppercase text-sm font-semibold bg-blue-700 py-2 px-4 rounded text-white mr-2 hover:bg-blue-600">
                 Edit
             </a>

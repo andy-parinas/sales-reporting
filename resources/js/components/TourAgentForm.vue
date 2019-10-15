@@ -47,7 +47,13 @@
                     </div>
                 </div>
         </div>
-         <button
+          <button v-if="edit"
+                class="flex items-center w-full mt-5 py-2 px-4 text-white 
+                            rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700"
+                @click="update">
+            Update 
+        </button>
+         <button v-else
                 class="flex items-center w-full mt-5 py-2 px-4 text-white 
                             rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700"
                 @click="submit">
@@ -59,7 +65,7 @@
 <script>
 export default {
     name: 'TourAgentForm',
-    props: ['user', 'backend'],
+    props: ['user', 'backend', 'edit', 'agent'],
     data: function(){
         return {
             agentForm: {
@@ -96,6 +102,41 @@ export default {
                 }else {
                     console.log(error);
                 }
+            }
+        },
+
+        update: async function(){
+            
+            try {
+                
+                const data = {
+                    ...this.agentForm,
+                    api_token: this.user.api_token
+                }
+
+                const url = this.backend + '/api/agents/' + this.agent.id ;
+
+                const response = await axios.patch(url,data);
+
+                window.location.href = '/agents/' + response.data.id;
+
+            } catch (error) {
+                 
+                if(error.response && error.response.data && error.response.data.errors ){
+                    this.errors = error.response.data.errors
+                     console.log(error.response);
+                }else {
+                    console.log(error);
+                }
+            }
+        }
+    },
+
+    mounted(){
+        
+        if(this.edit){
+            this.agentForm = {
+                ...this.agent
             }
         }
     }

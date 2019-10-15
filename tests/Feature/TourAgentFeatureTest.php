@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\TourAgent;
+use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -61,8 +62,10 @@ class TourAgentFeatureTest extends TestCase
 
 
     /** @test */
-    public function agent_can_be_updated()
+    public function agent_can_be_updated_via_api()
     {
+        $this->withoutExceptionHandling();
+        $user = factory(User::class)->create();
         $agent = factory(TourAgent::class)->create();
 
         $updates = [
@@ -73,8 +76,7 @@ class TourAgentFeatureTest extends TestCase
         ];
 
 
-        $this->patch('/agents/' . $agent->id, $updates)
-            ->assertRedirect('/agents/' . $agent->id);
+        $this->patch('/api/agents/' . $agent->id, array_merge($updates, ['api_token' => $user->api_token ]));
 
         $agent->refresh();
 

@@ -36,6 +36,7 @@ Route::get('/agents', 'Api\TourAgentController@index');
 Route::get('/agents/{agent}', 'Api\TourAgentController@show');
 Route::post('/agents','Api\TourAgentController@store');
 Route::delete('/agents/{agent}', 'Api\TourAgentController@destroy')->name('agents.api.destroy');
+Route::patch('/agents/{agent}', 'Api\TourAgentController@update')->name('agents.api.update');
 
 Route::get('/guides', 'Api\TourGuideController@index');
 

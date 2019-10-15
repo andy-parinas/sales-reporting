@@ -67,9 +67,10 @@ class TourAgentController extends Controller
      * @param  \App\TourAgent  $tourAgent
      * @return \Illuminate\Http\Response
      */
-    public function edit(TourAgent $tourAgent)
+    public function edit(TourAgent $agent)
     {
-        //
+        
+        return view('agents.edit', compact('agent'));
     }
 
     /**
