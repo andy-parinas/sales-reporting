@@ -25,7 +25,9 @@
                     <tr v-for="agent in agents" :key="agent.id"
                         class="bg-white even:bg-gray-100 text-sm">
                         <td class="py-2 px-4 border border-gray-800 text-sm"> 
-                            {{ agent.name }}
+                            <a :href="'/agents/' + agent.id" class="text-blue-600 font-semibold hover:text-blue-700">
+                                {{ agent.name }}
+                            </a>
                         </td>
 
                         <td class="py-2 px-4 border border-gray-800 text-sm"> 

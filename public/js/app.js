@@ -4251,6 +4251,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TourAgentList',
@@ -28340,10 +28342,20 @@ var render = function() {
                         staticClass: "py-2 px-4 border border-gray-800 text-sm"
                       },
                       [
-                        _vm._v(
-                          " \n                          " +
-                            _vm._s(agent.name) +
-                            "\n                      "
+                        _c(
+                          "a",
+                          {
+                            staticClass:
+                              "text-blue-600 font-semibold hover:text-blue-700",
+                            attrs: { href: "/agents/" + agent.id }
+                          },
+                          [
+                            _vm._v(
+                              "\n                              " +
+                                _vm._s(agent.name) +
+                                "\n                          "
+                            )
+                          ]
                         )
                       ]
                     ),
