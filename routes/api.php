@@ -37,5 +37,7 @@ Route::get('/agents/{agent}', 'Api\TourAgentController@show');
 Route::post('/agents','Api\TourAgentController@store');
 Route::delete('/agents/{agent}', 'Api\TourAgentController@destroy')->name('agents.api.destroy');
 
+Route::get('/guides', 'Api\TourGuideController@index');
+
 Route::get('/deductions', 'Api\DeductionController@index');
 Route::get('/commissions', 'Api\CommissionController@index');

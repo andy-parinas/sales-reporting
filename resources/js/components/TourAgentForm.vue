@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-10 w-224 mx-auto">
+    <div class="mt-10 w-224 mx-auto">
         <h1 class="mb-2 text-lg font-light" >Enter Tour Agent Information</h1>
         <div class="border border-gray-700">
                 <div class="flex">
@@ -53,7 +53,7 @@
                 @click="submit">
             Submit 
         </button>
-  </div>
+    </div>
 </template>
 
 <script>

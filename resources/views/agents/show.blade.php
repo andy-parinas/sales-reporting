@@ -16,5 +16,13 @@
                         :user="{{ auth()->user() }}" ></delete-modal>
         </div>
     </div>
-    
+    <div class="px-4 flex justify-around mt-5 items-start">
+            <div class="mr-4 w-144">
+                @include('agents._agent-info')
+            </div>
+            <div class="w-144">
+                <h1 class="mb-2 text-lg font-light" >Tour Guide List</h1>
+                <tour-guide-list  :user="{{ auth()->user() }}" backend="{{ env('APP_URL')}}"></tour-guide-list>
+            </div>
+    </div>
 @endsection
