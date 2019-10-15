@@ -1,9 +1,9 @@
-<div class="w-64 bg-gray-800 h-screen">
-    <div class="text-center text-white font-bold border-b border-gray-600 pb-4">
-        <h1 class="text-xl text-center  mt-3">WoolHouse</h1>
-        <h2 class="text-normal">REPORTING DASHBOARD</h2>
-    </div>
-    <div class="mt-5 text-gray-500 px-4 ">
+<div class="w-64 bg-gray-800 h-screen flex flex-col overflow-y-hidden">
+    <div class="text-gray-500 px-4 overflow-x-hidden">
+        <div class="text-center text-white font-bold border-b border-gray-600 pb-4">
+            <h1 class="text-lg text-center  mt-3">WoolHouse</h1>
+            <h2 class="text-sm font-light">REPORTING DASHBOARD</h2>
+        </div>
         <a href="/" class="block py-3 flex items-center hover:text-white {{ (strpos(Route::currentRouteName(), 'home') === 0) ? 'active' : '' }}">
             <svg aria-hidden="true" focusable="false"
                 data-prefix="fas" data-icon="home" class="w-5 h-5"
@@ -94,7 +94,7 @@
             </svg>
             <span class="ml-2">Attributes</span>
         </a>
-      
+        
         <div class="mt-4 border-t border-gray-700 text-gray-500 py-4">
             Utilities
         </div>
