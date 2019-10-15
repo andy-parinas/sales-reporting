@@ -16,6 +16,8 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::resource('products', 'ProductController');
 Route::resource('agents', 'TourAgentController');
 Route::resource('sales', 'SalesReportController');
+Route::resource('guides', 'TourGuideController');
+
 Auth::routes([
     'register' => false, // Registration Routes...
     'reset' => false, // Password Reset Routes...
