@@ -31,8 +31,11 @@ Route::post('/products', 'Api\ProductController@store');
 Route::patch('/products/{product}', 'Api\ProductController@update')->name('products.api.update');
 Route::delete('/products/{product}', 'Api\ProductController@destroy')->name('products.api.destroy');
 
-Route::get('/commissions', 'Api\CommissionController@index');
+
 Route::get('/agents', 'Api\TourAgentController@index');
 Route::get('/agents/{agent}', 'Api\TourAgentController@show');
-Route::get('/deductions', 'Api\DeductionController@index');
+Route::post('/agents','Api\TourAgentController@store');
+Route::delete('/agents/{agent}', 'Api\TourAgentController@destroy')->name('agents.api.destroy');
 
+Route::get('/deductions', 'Api\DeductionController@index');
+Route::get('/commissions', 'Api\CommissionController@index');

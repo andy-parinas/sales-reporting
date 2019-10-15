@@ -156,10 +156,9 @@ export default {
 
             } catch (error) {
                 
-                console.log(error.response);
-
                 if(error.response && error.response.data && error.response.data.errors ){
                     this.errors = error.response.data.errors
+                     console.log(error.response);
                 }else {
                     console.log(error);
                 }

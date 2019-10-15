@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\TourAgentListResource;
 use App\Http\Resources\TourAgentResource;
 use App\TourAgent;
+use Symfony\Component\HttpFoundation\Response;
 
 class TourAgentController extends Controller
 {
@@ -30,4 +31,26 @@ class TourAgentController extends Controller
         return new TourAgentResource($agent);
         
     }
+
+
+    public function store()
+    {
+        $agent = TourAgent::create($this->validateData());
+
+        return response($agent, Response::HTTP_CREATED);
+
+    }
+
+
+
+
+    private function validateData(){
+        return request()->validate([
+            'name' => 'required',
+            'email' => '',
+            'address' => '',
+            'phone' => ''
+        ]);
+    }
+
 }

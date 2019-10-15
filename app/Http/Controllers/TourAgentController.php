@@ -32,7 +32,7 @@ class TourAgentController extends Controller
      */
     public function create()
     {
-        //
+        return view('agents.create');
     }
 
     /**
