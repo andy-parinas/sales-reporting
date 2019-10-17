@@ -9,4 +9,5 @@
             <a href="{{ route('guides.create') }}" class="uppercase text-sm font-semibold bg-blue-700 py-2 px-4 rounded text-white hover:bg-blue-600">Add New Tour Guide</a>
         </div>
     </div>
+    <tour-guide-list :user="{{ auth()->user() }}"  backend="{{ env('APP_URL')}}" ></tour-guide-list>
 @endsection

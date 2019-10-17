@@ -24,7 +24,7 @@ class TourGuideController extends Controller
      */
     public function create()
     {
-        //
+        return view('guides.create');
     }
 
     /**
