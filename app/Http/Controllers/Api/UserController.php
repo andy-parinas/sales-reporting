@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\User;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -21,6 +22,14 @@ class UserController extends Controller
         $users = User::orderBy('name', 'asc')->paginate(10);
 
         return UserResource::collection($users);
+
+    }
+
+    public function destroy(User $user)
+    {
+        $user->delete();
+
+        return response([], Response::HTTP_OK);
 
     }
 

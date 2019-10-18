@@ -27,9 +27,16 @@ class UserController extends Controller
         return view('users.index');
     }
 
+    public function show(User $user)
+    {
+        return view('users.show', compact('user'));
+    }
+
     public function create()
     {
-        return view('users.create');
+        $user = new User();
+
+        return view('users.create', compact('user'));
     }
 
     public function store()
@@ -42,6 +49,20 @@ class UserController extends Controller
 
     }
 
+    public function edit(User $user)
+    {
+        return view('users.edit', compact('user'));
+    }
+
+    public function update(User $user)
+    {
+        // dd(request()->all());
+
+        $user->update($this->validateOnUpdate($user));
+
+        return redirect(route('users.show', ['user'=> $user->id]));
+    }
+
 
     private function validateData()
     {
@@ -52,5 +73,26 @@ class UserController extends Controller
         ]);
     }
     
+    private function validateOnUpdate(User $user)
+    {
+        $email = 'sometimes|required|string|email|max:255';
 
+        if($user->email !== request('email')){
+            $email = $email . '|unique:users';
+        }
+
+        $validateData = [
+            'name' => 'sometimes|required|string|max:255',
+            'email' => $email,
+        ];
+
+        return request()->validate($validateData);
+    }
+
+    private function passwordResetValidation()
+    {
+        return request()->validate([
+            'password' => ['required', 'string', 'min:8', 'confirmed']
+        ]);
+    }
 }
