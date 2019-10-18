@@ -7,7 +7,7 @@
             <h1 class="text-4xl font-bold uppercase text-gray-800" >Users</h1>
         </div>
         <div  class="px-4 py-2">
-            <a href="#" class="uppercase text-sm font-semibold bg-blue-700 py-2 px-4 rounded text-white hover:bg-blue-600">Create New User</a>
+            <a href="{{ route('users.create')}}" class="uppercase text-sm font-semibold bg-blue-700 py-2 px-4 rounded text-white hover:bg-blue-600">Create New User</a>
         </div>
     </div>
 
