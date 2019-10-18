@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class TourGuide extends Model
 {
     
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'email',
+        'phone'
+    ];
 
 }

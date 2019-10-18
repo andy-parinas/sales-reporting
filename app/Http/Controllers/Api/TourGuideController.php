@@ -23,4 +23,39 @@ class TourGuideController extends Controller
 
         return TourGuideResource::collection($guides);
     }
+
+
+    public function store()
+    {
+        $guide = TourGuide::create($this->validateData());
+
+        return response($guide, Response::HTTP_CREATED);
+    }
+
+    public function update(TourGuide $guide)
+    {
+        $guide->update($this->validateData());
+
+        return response($guide, Response::HTTP_OK);
+    }
+
+    public function destroy(TourGuide $guide)
+    {
+        $guide->delete();
+
+        return response([], Response::HTTP_OK);
+    }
+
+
+
+    private function validateData()
+    {
+        return request()->validate([
+            'name' => 'required',
+            'email' => '',
+            'phone' => ''
+        ]);
+    }
+
+
 }

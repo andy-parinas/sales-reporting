@@ -4428,6 +4428,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -4487,7 +4493,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TourGuideForm',
-  props: ['user', 'backend', 'edit', 'guides'],
+  props: ['user', 'backend', 'edit', 'guide'],
   components: {},
   data: function data() {
     return {
@@ -4504,15 +4510,42 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _submit = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var data, url, response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                _context.prev = 0;
+                data = _objectSpread({}, this.guideForm, {
+                  api_token: this.user.api_token
+                });
+                url = this.backend + '/api/guides';
+                _context.next = 5;
+                return axios.post(url, data);
+
+              case 5:
+                response = _context.sent;
+                window.location.href = '/guides/' + response.data.id;
+                _context.next = 12;
+                break;
+
+              case 9:
+                _context.prev = 9;
+                _context.t0 = _context["catch"](0);
+
+                if (_context.t0.response && _context.t0.response.data && _context.t0.response.data.errors) {
+                  this.errors = _context.t0.response.data.errors;
+                  console.log(_context.t0.response);
+                } else {
+                  console.log(_context.t0);
+                }
+
+              case 12:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee);
+        }, _callee, this, [[0, 9]]);
       }));
 
       function submit() {
@@ -4525,15 +4558,42 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _update = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var data, url, response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
+                _context2.prev = 0;
+                data = _objectSpread({}, this.guideForm, {
+                  api_token: this.user.api_token
+                });
+                url = this.backend + '/api/guides/' + this.guide.id;
+                _context2.next = 5;
+                return axios.patch(url, data);
+
+              case 5:
+                response = _context2.sent;
+                window.location.href = '/guides/' + response.data.id;
+                _context2.next = 12;
+                break;
+
+              case 9:
+                _context2.prev = 9;
+                _context2.t0 = _context2["catch"](0);
+
+                if (_context2.t0.response && _context2.t0.response.data && _context2.t0.response.data.errors) {
+                  this.errors = _context2.t0.response.data.errors;
+                  console.log(_context2.t0.response);
+                } else {
+                  console.log(_context2.t0);
+                }
+
+              case 12:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2);
+        }, _callee2, this, [[0, 9]]);
       }));
 
       function update() {
@@ -4543,7 +4603,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return update;
     }()
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    if (this.edit && this.guide) {
+      this.guideForm = _objectSpread({}, this.guide);
+    }
+  }
 });
 
 /***/ }),
@@ -4566,6 +4630,8 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
 //
 //
 //
@@ -28937,10 +29003,20 @@ var render = function() {
                     "td",
                     { staticClass: "py-2 px-4 border border-gray-800 text-sm" },
                     [
-                      _vm._v(
-                        " \n                    " +
-                          _vm._s(guide.name) +
-                          "\n                "
+                      _c(
+                        "a",
+                        {
+                          staticClass:
+                            "text-blue-600 font-semibold hover:text-blue-700",
+                          attrs: { href: "/guides/" + guide.id }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(guide.name) +
+                              "\n                    "
+                          )
+                        ]
                       )
                     ]
                   ),

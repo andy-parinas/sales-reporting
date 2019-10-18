@@ -54,7 +54,7 @@
 <script>
 export default {
     name: 'TourGuideForm',
-    props: ['user', 'backend', 'edit', 'guides'],
+    props: ['user', 'backend', 'edit', 'guide'],
     components: {},
     data: function(){
 
@@ -70,13 +70,63 @@ export default {
     methods: {
         submit: async function(){
 
+            try {
+                
+                const data = {
+                    ...this.guideForm,
+                    api_token: this.user.api_token
+                }
+
+                const url = this.backend + '/api/guides';
+
+                const response = await axios.post(url, data);
+
+                window.location.href = '/guides/' + response.data.id;
+
+
+            } catch (error) {
+                if(error.response && error.response.data && error.response.data.errors ){
+                    this.errors = error.response.data.errors
+                    console.log(error.response);
+                }else {
+                    console.log(error);
+                }
+            }
+
         },
         update: async function(){
 
+              try {
+                
+                const data = {
+                    ...this.guideForm,
+                    api_token: this.user.api_token
+                }
+
+                const url = this.backend + '/api/guides/' + this.guide.id;
+
+                const response = await axios.patch(url, data);
+
+                window.location.href = '/guides/' + response.data.id;
+
+
+            } catch (error) {
+                if(error.response && error.response.data && error.response.data.errors ){
+                    this.errors = error.response.data.errors
+                    console.log(error.response);
+                }else {
+                    console.log(error);
+                }
+            }
         }
     },
     mounted(){
 
+        if(this.edit && this.guide){
+            this.guideForm = {
+                ...this.guide
+            }
+        }
     }
 }
 </script>

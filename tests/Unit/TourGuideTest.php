@@ -14,12 +14,12 @@ class TourGuideTest extends TestCase
     use RefreshDatabase;
 
 
-    /** @test */
-    public function has_tour_agent()
-    {
-        $guide = factory(TourGuide::class)->create();
+    // /** @test */
+    // public function has_tour_agent()
+    // {
+    //     $guide = factory(TourGuide::class)->create();
 
-        $this->assertInstanceOf(TourAgent::class, $guide->tourAgent);
-    }
+    //     $this->assertInstanceOf(TourAgent::class, $guide->tourAgent);
+    // }
 
 }

@@ -14,8 +14,10 @@
             <tbody>
                 <tr v-for="guide in guides" :key="guide.id"
                     class="bg-white even:bg-gray-100 text-sm">
-                    <td class="py-2 px-4 border border-gray-800 text-sm"> 
-                        {{ guide.name }}
+                    <td class="py-2 px-4 border border-gray-800 text-sm">
+                        <a :href="'/guides/' + guide.id" class="text-blue-600 font-semibold hover:text-blue-700">
+                            {{ guide.name }}
+                        </a>
                     </td>
 
                     <td class="py-2 px-4 border border-gray-800 text-sm"> 

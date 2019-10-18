@@ -44,9 +44,9 @@ class TourGuideController extends Controller
      * @param  \App\TourGuide  $tourGuide
      * @return \Illuminate\Http\Response
      */
-    public function show(TourGuide $tourGuide)
+    public function show(TourGuide $guide)
     {
-        //
+        return view('guides.show', compact('guide'));
     }
 
     /**
@@ -55,9 +55,10 @@ class TourGuideController extends Controller
      * @param  \App\TourGuide  $tourGuide
      * @return \Illuminate\Http\Response
      */
-    public function edit(TourGuide $tourGuide)
+    public function edit(TourGuide $guide)
     {
-        //
+        return view('guides.edit', compact('guide'));
+
     }
 
     /**
