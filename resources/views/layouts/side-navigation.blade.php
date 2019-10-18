@@ -98,7 +98,7 @@
         <div class="mt-4 border-t border-gray-700 text-gray-500 py-4">
             Utilities
         </div>
-        <a href="#" class="block py-3 flex items-center hover:text-white">
+        <a href="{{ route('users.index')}}" class="block py-3 flex items-center hover:text-white  {{ (strpos(Route::currentRouteName(), 'users') === 0) ? 'active' : '' }}">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user" 
                 class="w-5 h-5" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path fill="currentColor" d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 

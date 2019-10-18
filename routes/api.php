@@ -45,3 +45,5 @@ Route::patch('/guides/{guide}', 'Api\TourGuideController@update')->name('guides.
 
 Route::get('/deductions', 'Api\DeductionController@index');
 Route::get('/commissions', 'Api\CommissionController@index');
+
+Route::get('/users', 'Api\UserController@index');

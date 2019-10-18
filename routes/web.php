@@ -24,4 +24,6 @@ Auth::routes([
     'verify' => false, // Email Verification Routes...
 ]);
 
+Route::get('users', 'UserController@index')->name('users.index');
+
 
