@@ -4,7 +4,8 @@
             <h1 class="text-lg text-center  mt-3">WoolHouse</h1>
             <h2 class="text-sm font-light">REPORTING DASHBOARD</h2>
         </div>
-        <a href="/" class="block py-3 flex items-center hover:text-white {{ (strpos(Route::currentRouteName(), 'home') === 0) ? 'active' : '' }}">
+        <a href="/" class="block py-3 flex items-center focus:outline-none
+                    hover:text-white {{ (strpos(Route::currentRouteName(), 'home') === 0) ? 'active' : '' }}">
             <svg aria-hidden="true" focusable="false"
                 data-prefix="fas" data-icon="home" class="w-5 h-5"
                 role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
@@ -17,7 +18,8 @@
             </svg>
             <span class="ml-2">Home </span>
         </a>
-        <a href="/sales" class="block py-3 flex items-center hover:text-white {{ (strpos(Route::currentRouteName(), 'sales') === 0) ? 'active' : '' }}">
+        <a href="/sales" class="block py-3 flex items-center focus:outline-none
+                        hover:text-white {{ (strpos(Route::currentRouteName(), 'sales') === 0) ? 'active' : '' }}">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="shopping-cart" 
                 class="w-5 h-5" role="img" xmlns="http://www.w3.org/2000/svg" 
                 viewBox="0 0 576 512">
@@ -30,7 +32,7 @@
             </svg>
             <span class="ml-2">Sales Report</span>
         </a>
-        <a href="#" class="block py-3 flex items-center hover:text-white">
+        <a href="#" class="block py-3 flex items-center hover:text-white focus:outline-none">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="calendar-week" 
                 class="w-5 h-5" role="img" 
                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -46,7 +48,8 @@
             Management
         </div>
         <a href="{{ route('products.index')}} " 
-            class="block py-3 flex items-center hover:text-white {{ (strpos(Route::currentRouteName(), 'products') === 0) ? 'active' : '' }}">
+            class="block py-3 flex items-center focus:outline-none
+                    hover:text-white {{ (strpos(Route::currentRouteName(), 'products') === 0) ? 'active' : '' }}">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tags" 
                 class="w-5 h-5" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
                 <path fill="currentColor" d="M497.941 225.941L286.059 14.059A48 48 0 0 0 252.118 0H48C21.49 0 0 
@@ -59,7 +62,8 @@
             <span class="ml-2">Products</span>
         </a>
         <a href="{{ route('agents.index')}}" 
-            class="block py-3 flex items-center hover:text-white {{ (strpos(Route::currentRouteName(), 'agents') === 0) ? 'active' : '' }}">
+            class="block py-3 flex items-center focus:outline-none
+                    hover:text-white {{ (strpos(Route::currentRouteName(), 'agents') === 0) ? 'active' : '' }}">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bus" 
                 class="h-5 w-5" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                 <path fill="currentColor" d="M488 128h-8V80c0-44.8-99.2-80-224-80S32 35.2 32 80v48h-8c-13.25 0-24 
@@ -73,7 +77,8 @@
             <span class="ml-2">Tour Agents</span>
         </a>
         <a href="{{ route('guides.index')}}" 
-        class="block py-3 flex items-center hover:text-white {{ (strpos(Route::currentRouteName(), 'guides') === 0) ? 'active' : '' }}">
+        class="block py-3 flex items-center focus:outline-none
+                hover:text-white {{ (strpos(Route::currentRouteName(), 'guides') === 0) ? 'active' : '' }}">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-tie" 
                 class="w-5 h-5" role="img" xmlns="http://www.w3.org/2000/svg" 
                 viewBox="0 0 448 512">
@@ -84,7 +89,8 @@
             </svg>
             <span class="ml-2">Tour Guides</span>
         </a>
-        <a href="#" class="block py-3 flex items-center hover:text-white">
+        <a href="#" class="block py-3 flex items-center focus:outline-none
+                        hover:text-white">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="database" 
                 class="w-5 h-5" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path fill="currentColor" d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 
@@ -98,7 +104,9 @@
         <div class="mt-4 border-t border-gray-700 text-gray-500 py-4">
             Utilities
         </div>
-        <a href="{{ route('users.index')}}" class="block py-3 flex items-center hover:text-white  {{ (strpos(Route::currentRouteName(), 'users') === 0) ? 'active' : '' }}">
+        <a href="{{ route('users.index')}}" 
+            class="block py-3 flex items-center focus:outline-none
+                hover:text-white  {{ (strpos(Route::currentRouteName(), 'users') === 0) ? 'active' : '' }}">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user" 
                 class="w-5 h-5" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path fill="currentColor" d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 
@@ -107,7 +115,7 @@
             </svg>
             <span class="ml-2">Users</span>
         </a>
-        <a  class="block py-3 flex items-center hover:text-white"
+        <a  class="block py-3 flex items-center hover:text-white focus:outline-none"
             href="{{ route('logout') }}"
             onclick="event.preventDefault();document.getElementById('logout-form').submit();">
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
