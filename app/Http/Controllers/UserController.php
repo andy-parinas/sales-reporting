@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -43,6 +44,8 @@ class UserController extends Controller
     {
         $data = array_merge($this->validateData(), ['api_token' => Str::random(32)]);
 
+        $data['password'] =  Hash::make($data['password']);
+
         User::create($data);
 
         return redirect(route('users.index'));
@@ -59,6 +62,23 @@ class UserController extends Controller
         // dd(request()->all());
 
         $user->update($this->validateOnUpdate($user));
+
+        return redirect(route('users.show', ['user'=> $user->id]));
+    }
+
+    public function password(User $user)
+    {
+        return view('users.password', compact('user'));
+    }
+
+    public function passwordUpdate(User $user)
+    {
+        $data = $this->validatePasswordUpdate();
+
+        $data['password'] =  Hash::make($data['password']);
+
+        $user->update($data);
+
 
         return redirect(route('users.show', ['user'=> $user->id]));
     }
@@ -90,6 +110,13 @@ class UserController extends Controller
     }
 
     private function passwordResetValidation()
+    {
+        return request()->validate([
+            'password' => ['required', 'string', 'min:8', 'confirmed']
+        ]);
+    }
+
+    private function validatePasswordUpdate()
     {
         return request()->validate([
             'password' => ['required', 'string', 'min:8', 'confirmed']

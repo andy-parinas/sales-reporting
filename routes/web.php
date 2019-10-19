@@ -24,12 +24,8 @@ Auth::routes([
     'verify' => false, // Email Verification Routes...
 ]);
 
-// Route::get('/users', 'UserController@index')->name('users.index');
-// Route::get('/users/create', 'UserController@create')->name('users.create');
-// Route::get('/users/{user}', 'UserController@show');
-// Route::get('/users/{user}/edit', 'UserController@edit')->name('users.edit');
-// Route::post('/users', 'UserController@store')->name('users.store');
-
 Route::resource('users', 'UserController');
+Route::get('users/{user}/password', 'UserController@password')->name('users.password.reset');
+Route::patch('users/{user}/password', 'UserController@passwordUpdate')->name('users.password.update');
 
 
