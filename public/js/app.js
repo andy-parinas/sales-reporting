@@ -3946,6 +3946,124 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SummaryReportForm.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SummaryReportForm.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalSales.vue?vue&type=script&lang=js&":
 /*!*********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TotalSales.vue?vue&type=script&lang=js& ***!
@@ -26048,27 +26166,19 @@ var render = function() {
                     "button",
                     {
                       staticClass:
-                        "flex items-center w-full mt-5 py-2 px-4 text-white \r\n                                rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
+                        "flex items-center w-full mt-5 py-2 px-4 text-white \n                                rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
                       on: { click: _vm.updateProduct }
                     },
-                    [
-                      _vm._v(
-                        "\r\n                Update Product \r\n            "
-                      )
-                    ]
+                    [_vm._v("\n                Update Product \n            ")]
                   )
                 : _c(
                     "button",
                     {
                       staticClass:
-                        "flex items-center w-full mt-5 py-2 px-4 text-white\r\n                             rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
+                        "flex items-center w-full mt-5 py-2 px-4 text-white\n                             rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
                       on: { click: _vm.createProduct }
                     },
-                    [
-                      _vm._v(
-                        "\r\n                Add New Product \r\n            "
-                      )
-                    ]
+                    [_vm._v("\n                Add New Product \n            ")]
                   )
             ]),
             _vm._v(" "),
@@ -28218,6 +28328,373 @@ var staticRenderFns = [
           _c("th", { staticClass: "py-2 px-2 border border-gray-800" })
         ]
       )
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SummaryReportForm.vue?vue&type=template&id=bf6592fa&":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SummaryReportForm.vue?vue&type=template&id=bf6592fa& ***!
+  \********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [
+      _c(
+        "div",
+        { staticClass: "w-144 mx-auto flex items-center justify-center" },
+        [
+          _c("div", { staticClass: "px-4 flex justify-between mt-5" }, [
+            _c("div", { staticClass: "border border-gray-700 flex-1 mr-4" }, [
+              _c("div", { staticClass: "flex" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "border-r border-gray-700 w-32 text-center py-2 "
+                  },
+                  [
+                    _c(
+                      "label",
+                      {
+                        staticClass:
+                          "text-sm font-semibold text-gray-800 uppercase",
+                        attrs: { for: "date" }
+                      },
+                      [_vm._v("From")]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "flex-1 border-gray-700" }, [
+                  _c("input", {
+                    staticClass:
+                      "w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm",
+                    attrs: {
+                      type: "date",
+                      id: "date",
+                      placeholder: "Tour Date"
+                    }
+                  })
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "border border-gray-700 flex-1 mr-4" }, [
+              _c("div", { staticClass: "flex" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "border-r border-gray-700 w-32 text-center  py-2"
+                  },
+                  [
+                    _c(
+                      "label",
+                      {
+                        staticClass:
+                          "text-sm font-semibold text-gray-800 uppercase",
+                        attrs: { for: "date" }
+                      },
+                      [_vm._v("To")]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "flex-1border-gray-700" }, [
+                  _c("input", {
+                    staticClass:
+                      "w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm",
+                    attrs: {
+                      type: "date",
+                      id: "date",
+                      placeholder: "Tour Date"
+                    }
+                  })
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              { staticClass: "bg-blue-600 py-2 px-2 text-white rounded" },
+              [_vm._v("Go")]
+            )
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "mx-auto w-288" }, [
+        _c("table", { staticClass: "w-full mt-5" }, [
+          _c("thead", [
+            _c(
+              "tr",
+              {
+                staticClass:
+                  "text-left bg-gray-300 border border-gray-800 text-xs"
+              },
+              [
+                _c(
+                  "th",
+                  { staticClass: "py-2 px-2 border-r border-gray-800 w-24" },
+                  [
+                    _vm._v(
+                      "\n                          Date\n                      "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "th",
+                  { staticClass: "py-2 px-2 border-r border-gray-800 w-24" },
+                  [
+                    _vm._v(
+                      "\n                          GRP/Code\n                      "
+                    )
+                  ]
+                ),
+                _c(
+                  "th",
+                  { staticClass: "py-2 px-2 border-r border-gray-800 w-24" },
+                  [
+                    _vm._v(
+                      "\n                          Guide Name\n                      "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "th",
+                  { staticClass: "py-2 px-2 border-r border-gray-800 w-16" },
+                  [_vm._v("A")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "th",
+                  { staticClass: "py-2 px-2 border-r border-gray-800 w-16" },
+                  [_vm._v("C")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "th",
+                  { staticClass: "py-2 px-2 border-r border-gray-800 w-16" },
+                  [_vm._v("TC")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "th",
+                  {
+                    staticClass:
+                      "py-2 px-2 border-r border-gray-800 w-48 text-right"
+                  },
+                  [_vm._v("Sales")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "th",
+                  {
+                    staticClass:
+                      "py-2 px-2 border-r border-gray-800 w-48 text-right"
+                  },
+                  [_vm._v("Commission")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "th",
+                  {
+                    staticClass:
+                      "py-2 px-2 border-r border-gray-800 w-32 text-right"
+                  },
+                  [_vm._v("GST")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "th",
+                  {
+                    staticClass:
+                      "py-2 px-2 border-r border-gray-800 w-48 text-right"
+                  },
+                  [_vm._v("Total")]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c("tr", { staticClass: "bg-white text-xs" }, [
+              _c("td", { staticClass: "py-2 px-4 border border-gray-800" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4 border border-gray-800" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4 border border-gray-800" }, [
+                _vm._v("TOTAL")
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4 border border-gray-800" }, [
+                _vm._v("0")
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4 border border-gray-800" }, [
+                _vm._v("0")
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4 border border-gray-800" }, [
+                _vm._v("0")
+              ]),
+              _vm._v(" "),
+              _c(
+                "td",
+                { staticClass: "py-2 px-4 border border-gray-800 text-right" },
+                [_vm._v("1000")]
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                { staticClass: "py-2 px-4 border border-gray-800 text-right" },
+                [_vm._v("1000")]
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                { staticClass: "py-2 px-4 border border-gray-800 text-right" },
+                [_vm._v("1000")]
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                { staticClass: "py-2 px-4 border border-gray-800 text-right" },
+                [_vm._v("1000")]
+              )
+            ]),
+            _vm._v(" "),
+            _c("tr", { staticClass: "text-xs" }, [
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c(
+                "td",
+                {
+                  staticClass:
+                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
+                },
+                [_vm._v("Return")]
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                {
+                  staticClass:
+                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
+                },
+                [_vm._v("0")]
+              )
+            ]),
+            _vm._v(" "),
+            _c("tr", { staticClass: "bg-white text-xs" }, [
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c(
+                "td",
+                {
+                  staticClass:
+                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
+                },
+                [_vm._v("Deduction")]
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                {
+                  staticClass:
+                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
+                },
+                [_vm._v("0")]
+              )
+            ]),
+            _vm._v(" "),
+            _c("tr", { staticClass: "bg-white text-xs" }, [
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c(
+                "td",
+                {
+                  staticClass:
+                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
+                },
+                [_vm._v("Balance")]
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                {
+                  staticClass:
+                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
+                },
+                [_vm._v("0")]
+              )
+            ])
+          ])
+        ])
+      ])
     ])
   }
 ]
@@ -42222,6 +42699,7 @@ Vue.component('tour-agent-form', __webpack_require__(/*! ./components/TourAgentF
 Vue.component('tour-guide-list', __webpack_require__(/*! ./components/TourGuideList.vue */ "./resources/js/components/TourGuideList.vue")["default"]);
 Vue.component('tour-guide-form', __webpack_require__(/*! ./components/TourGuideForm.vue */ "./resources/js/components/TourGuideForm.vue")["default"]);
 Vue.component('user-list', __webpack_require__(/*! ./components/UserList.vue */ "./resources/js/components/UserList.vue")["default"]);
+Vue.component('summary-report-form', __webpack_require__(/*! ./components/SummaryReportForm.vue */ "./resources/js/components/SummaryReportForm.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -42907,6 +43385,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectedProduct_vue_vue_type_template_id_36993f8e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectedProduct_vue_vue_type_template_id_36993f8e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/SummaryReportForm.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/SummaryReportForm.vue ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _SummaryReportForm_vue_vue_type_template_id_bf6592fa___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SummaryReportForm.vue?vue&type=template&id=bf6592fa& */ "./resources/js/components/SummaryReportForm.vue?vue&type=template&id=bf6592fa&");
+/* harmony import */ var _SummaryReportForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SummaryReportForm.vue?vue&type=script&lang=js& */ "./resources/js/components/SummaryReportForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _SummaryReportForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SummaryReportForm_vue_vue_type_template_id_bf6592fa___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _SummaryReportForm_vue_vue_type_template_id_bf6592fa___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/SummaryReportForm.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/SummaryReportForm.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/SummaryReportForm.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SummaryReportForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./SummaryReportForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SummaryReportForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SummaryReportForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/SummaryReportForm.vue?vue&type=template&id=bf6592fa&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/SummaryReportForm.vue?vue&type=template&id=bf6592fa& ***!
+  \**************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SummaryReportForm_vue_vue_type_template_id_bf6592fa___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./SummaryReportForm.vue?vue&type=template&id=bf6592fa& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SummaryReportForm.vue?vue&type=template&id=bf6592fa&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SummaryReportForm_vue_vue_type_template_id_bf6592fa___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SummaryReportForm_vue_vue_type_template_id_bf6592fa___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -43827,8 +44374,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! G:\Wool House\reporting-app\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! G:\Wool House\reporting-app\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/andyp/Projects/Laravel/sales-reporting/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/andyp/Projects/Laravel/sales-reporting/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

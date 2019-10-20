@@ -14,7 +14,7 @@ class SummaryReportController extends Controller
      */
     public function index()
     {
-        //
+        return view('summaries.index');
     }
 
     /**
@@ -24,7 +24,7 @@ class SummaryReportController extends Controller
      */
     public function create()
     {
-        //
+        return view('summaries.new');
     }
 
     /**

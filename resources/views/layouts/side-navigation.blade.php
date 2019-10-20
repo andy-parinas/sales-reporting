@@ -32,7 +32,8 @@
             </svg>
             <span class="ml-2">Sales Report</span>
         </a>
-        <a href="#" class="block py-3 flex items-center hover:text-white focus:outline-none">
+        <a href="{{ route('summaries.index')}}" 
+                class="block py-3 flex items-center hover:text-white focus:outline-none {{ (strpos(Route::currentRouteName(), 'summaries') === 0) ? 'active' : '' }}">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="calendar-week" 
                 class="w-5 h-5" role="img" 
                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -42,7 +43,7 @@
                 16v48H160V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48H48C21.5 64 0 85.5 0 
                 112v48h448v-48c0-26.5-21.5-48-48-48z"></path>
             </svg>
-            <span class="ml-2">Weekly Report</span>
+            <span class="ml-2">Summary Report</span>
         </a>
         <div class="mt-4 border-t border-gray-700 text-gray-500 py-4">
             Management

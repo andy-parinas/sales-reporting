@@ -17,6 +17,7 @@ Route::resource('products', 'ProductController');
 Route::resource('agents', 'TourAgentController');
 Route::resource('sales', 'SalesReportController');
 Route::resource('guides', 'TourGuideController');
+Route::resource('summaries', 'SummaryReportController');
 
 Auth::routes([
     'register' => false, // Registration Routes...

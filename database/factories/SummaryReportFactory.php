@@ -7,6 +7,15 @@ use Faker\Generator as Faker;
 
 $factory->define(SummaryReport::class, function (Faker $faker) {
     return [
-        //
+        'report_number' => $faker->randomNumber,
+        'adult_count_total' => $faker->numberBetween(5,30),
+        'children_count_total' => $faker->numberBetween(0, 10),
+        'sales_total' => $faker->randomFloat(2),
+        'agent_commissions_total' => $faker->randomFloat(2),
+        'gst_total' => $faker->randomFloat(2),
+        'total' => $faker->randomFloat(2),
+        'return' => $faker->randomFloat(2),
+        'duvet_deduction' => $faker->randomFloat(2),
+        'balance' => $faker->randomFloat(2)
     ];
 });

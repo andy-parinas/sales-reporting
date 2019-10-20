@@ -30,6 +30,7 @@ Vue.component('tour-agent-form', require('./components/TourAgentForm.vue').defau
 Vue.component('tour-guide-list', require('./components/TourGuideList.vue').default);
 Vue.component('tour-guide-form', require('./components/TourGuideForm.vue').default);
 Vue.component('user-list', require('./components/UserList.vue').default);
+Vue.component('summary-report-form', require('./components/SummaryReportForm.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
