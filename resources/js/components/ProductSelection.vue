@@ -115,8 +115,6 @@ export default {
         },
         selectProduct: function(product, index){
 
-            console.log('Cost Type', typeof(product.cost));
-            console.log('Price Type', typeof(product.price));
             const selectedProduct = {
                 product_id: product.id,
                 name: product.name,
@@ -141,8 +139,6 @@ export default {
             this.products = response.data.data;
             this.meta = response.data.meta;
             this.links = response.data.links;
-
-            console.log(this.products);
 
             for (let index = 0; index <= 10; index++) {
                 this.productInput.push({

@@ -316,12 +316,9 @@ export default {
 
                 }else if(deduction.type === 3 && product.quantity >= 1 && product.total === 0){
 
-                    console.log('Type3', deduction.type)
-
                     if(action === 'add'){
                         this.form.sales_deductions[index].amount = this.form.sales_deductions[index].amount + product.cost;
-                        console.log('sales deductions', this.form.sales_deductions[index].amount)
-                        console.log("product cost", product.cost + 1)
+
                     }else {
                         this.form.sales_deductions[index].amount = this.form.sales_deductions[index].amount - product.cost;
                     }
