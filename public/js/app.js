@@ -2222,6 +2222,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
 
 
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -2369,6 +2371,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return changePage;
     }(),
     selectProduct: function selectProduct(product, index) {
+      console.log('Cost Type', _typeof(product.cost));
+      console.log('Price Type', _typeof(product.price));
       var selectedProduct = {
         product_id: product.id,
         name: product.name,
@@ -2401,6 +2405,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               this.products = response.data.data;
               this.meta = response.data.meta;
               this.links = response.data.links;
+              console.log(this.products);
 
               for (index = 0; index <= 10; index++) {
                 this.productInput.push({
@@ -2410,20 +2415,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               }
 
               this.loading = false;
-              _context2.next = 15;
+              _context2.next = 16;
               break;
 
-            case 12:
-              _context2.prev = 12;
+            case 13:
+              _context2.prev = 13;
               _context2.t0 = _context2["catch"](0);
               console.log(_context2.t0);
 
-            case 15:
+            case 16:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, this, [[0, 12]]);
+      }, _callee2, this, [[0, 13]]);
     }));
 
     function mounted() {
@@ -3250,16 +3255,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return loadTourGuides;
     }(),
-    // tourAgentSelect: async function()
-    // {
-    //     try {
-    //         const url = this.backend + `/api/agents/${this.form.tour_agent_id}?api_token=${this.user.api_token}`;
-    //         const response = await axios.get(url);
-    //         this.tourGuides = response.data.data.tourGuides;
-    //     } catch (error) {
-    //         console.log('Error Loading Tour Guides:', error);
-    //     }
-    // },
     computeCommission: function computeCommission() {
       var _this3 = this;
 
@@ -3292,6 +3287,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
           if (action === 'add') {
             _this4.form.sales_deductions[index].amount = _this4.form.sales_deductions[index].amount + product.cost;
+            console.log('sales deductions', _this4.form.sales_deductions[index].amount);
+            console.log("product cost", product.cost + 1);
           } else {
             _this4.form.sales_deductions[index].amount = _this4.form.sales_deductions[index].amount - product.cost;
           }
@@ -28270,67 +28267,59 @@ var render = function() {
       "tbody",
       [
         _vm._l(_vm.products, function(product, index) {
-          return _c(
-            "tr",
-            { key: product.id + Math.random(), staticClass: "text-xs" },
-            [
-              _c("td", { staticClass: "py-2 px-4 border border-gray-800" }, [
-                _vm._v(_vm._s(product.name))
-              ]),
-              _vm._v(" "),
-              _c(
-                "td",
-                { staticClass: "py-2 px-4 border border-gray-800 w-24" },
-                [_c("currency-format", { attrs: { value: product.price } })],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "td",
-                { staticClass: "py-2 px-4 border border-gray-800 w-12" },
-                [_vm._v(" " + _vm._s(product.quantity))]
-              ),
-              _vm._v(" "),
-              _c(
-                "td",
-                { staticClass: "py-2 px-4 border border-gray-800 w-12" },
-                [_c("currency-format", { attrs: { value: product.total } })],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "td",
-                { staticClass: "py-2 px-4 border border-gray-800 w-12" },
-                [_vm._v(" " + _vm._s(product.type) + " ")]
-              ),
-              _vm._v(" "),
-              _c(
-                "td",
-                {
-                  staticClass:
-                    "py-2 px-4 border border-gray-800 w-10 bg-orange-500 hover:bg-orange-600"
-                },
-                [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "text-xs text-white focus:outline-none",
-                      on: {
-                        click: function($event) {
-                          return _vm.removeProduct(index)
-                        }
+          return _c("tr", { key: index, staticClass: "text-xs" }, [
+            _c("td", { staticClass: "py-2 px-4 border border-gray-800" }, [
+              _vm._v(_vm._s(product.name))
+            ]),
+            _vm._v(" "),
+            _c(
+              "td",
+              { staticClass: "py-2 px-4 border border-gray-800 w-24" },
+              [_c("currency-format", { attrs: { value: product.price } })],
+              1
+            ),
+            _vm._v(" "),
+            _c("td", { staticClass: "py-2 px-4 border border-gray-800 w-12" }, [
+              _vm._v(" " + _vm._s(product.quantity))
+            ]),
+            _vm._v(" "),
+            _c(
+              "td",
+              { staticClass: "py-2 px-4 border border-gray-800 w-12" },
+              [_c("currency-format", { attrs: { value: product.total } })],
+              1
+            ),
+            _vm._v(" "),
+            _c("td", { staticClass: "py-2 px-4 border border-gray-800 w-12" }, [
+              _vm._v(" " + _vm._s(product.type) + " ")
+            ]),
+            _vm._v(" "),
+            _c(
+              "td",
+              {
+                staticClass:
+                  "py-2 px-4 border border-gray-800 w-10 bg-orange-500 hover:bg-orange-600"
+              },
+              [
+                _c(
+                  "button",
+                  {
+                    staticClass: "text-xs text-white focus:outline-none",
+                    on: {
+                      click: function($event) {
+                        return _vm.removeProduct(index)
                       }
-                    },
-                    [
-                      _vm._v(
-                        "\n                        Remove\n                    "
-                      )
-                    ]
-                  )
-                ]
-              )
-            ]
-          )
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n                        Remove\n                    "
+                    )
+                  ]
+                )
+              ]
+            )
+          ])
         }),
         _vm._v(" "),
         _c("tr", { staticClass: "text-xs bg-yellow-300" }, [

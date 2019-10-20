@@ -274,19 +274,6 @@ export default {
 
         },
 
-        // tourAgentSelect: async function()
-        // {
-        //     try {
-                
-        //         const url = this.backend + `/api/agents/${this.form.tour_agent_id}?api_token=${this.user.api_token}`;
-        //         const response = await axios.get(url);
-
-        //         this.tourGuides = response.data.data.tourGuides;
-
-        //     } catch (error) {
-        //         console.log('Error Loading Tour Guides:', error);
-        //     }
-        // },
         computeCommission: function()
         {
 
@@ -333,6 +320,8 @@ export default {
 
                     if(action === 'add'){
                         this.form.sales_deductions[index].amount = this.form.sales_deductions[index].amount + product.cost;
+                        console.log('sales deductions', this.form.sales_deductions[index].amount)
+                        console.log("product cost", product.cost + 1)
                     }else {
                         this.form.sales_deductions[index].amount = this.form.sales_deductions[index].amount - product.cost;
                     }

@@ -11,7 +11,7 @@
             </tr>
         </thead>
         <tbody>
-                <tr v-for="(product, index) in products" :key="product.id + Math.random()" class="text-xs">
+                <tr v-for="(product, index) in products" :key="index" class="text-xs">
                     <td class="py-2 px-4 border border-gray-800">{{ product.name }}</td>
                     <td class="py-2 px-4 border border-gray-800 w-24"> 
                         <currency-format :value="product.price" ></currency-format>
@@ -53,7 +53,7 @@ export default {
     methods: {
         removeProduct: function(index){
             this.$emit('remove', index);
-        }
+        },
     },
 }
 </script>
