@@ -8,8 +8,11 @@ class SummaryReport extends Model
 {
     protected $fillable = [
         'report_number',
+        'from_date',
+        'to_date',
         'adult_count_total',
         'children_count_total',
+        'tc_count',
         'sales_total',
         'agent_commissions_total',
         'gst_total',

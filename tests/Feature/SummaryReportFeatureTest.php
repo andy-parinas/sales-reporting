@@ -28,10 +28,12 @@ class SummaryReportFeatureTest extends TestCase
 
         $report = factory(SummaryReport::class)->raw();
 
+        // dd($report);
+
         $data = array_merge($report, ['summary_items' => $summaryItems]);
         // dd($data);
 
-        $this->post('/api/summary', $data)
+        $this->post('/api/summaries', $data)
             ->assertStatus(201);
 
         $this->assertCount(1, SummaryReport::all());

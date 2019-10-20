@@ -15,9 +15,12 @@ class CreateSummaryReportsTable extends Migration
     {
         Schema::create('summary_reports', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->date('from_date');
+            $table->date('to_date');
             $table->string('report_number');
             $table->integer('adult_count_total');
             $table->integer('children_count_total');
+            $table->integer('tc_count');
             $table->float('sales_total');
             $table->float('agent_commissions_total');
             $table->float('gst_total');

@@ -21,6 +21,12 @@ class SalesReportListResource extends JsonResource
             'tour_guide' => $this->tourGuide->name,
             'total_agent_sales' => $this->total_agent_sales,
             'total_commissions' => $this->total_commissions,
+            'gst' => $this->gst,
+            'grand_total_commission' => $this->grand_total_commission,
+            'tc_name' => $this->tc_name,
+            'adult_count' => $this->adult_count,
+            'children_count' => $this->children_count,
+            'grp_code' => $this->grp_code,
             'tour_date' => $this->tour_date
         ];
     }
