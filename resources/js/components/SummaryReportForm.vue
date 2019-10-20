@@ -10,7 +10,7 @@
                         <div class="flex-1 border-gray-700">
                             <input class="w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm" 
                                 type="date" id="date" 
-                                placeholder="Tour Date">
+                                placeholder="Tour Date" v-model="fromDate">
                         </div>
                     </div>
                 </div>
@@ -22,11 +22,11 @@
                         <div class="flex-1border-gray-700">
                             <input class="w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm"
                                 type="date" id="date" 
-                                placeholder="Tour Date"  >
+                                placeholder="Tour Date" v-model="toDate" >
                         </div>
                     </div>
                 </div>
-                <button class="bg-blue-600 py-2 px-2 text-white rounded" >Go</button>
+                <button class="bg-blue-600 py-2 px-2 text-white rounded" @click="getSalesReport" >Go</button>
             </div>
         </div>
         <div class="mx-auto w-288">
@@ -105,7 +105,35 @@
 
 <script>
 export default {
+    name: 'SummaryReportForm',
+    props: ['user', 'backend'],
+    data: function(){
+        return {
+            fromDate: '',
+            toDate: ''
+        }
+    },
+    methods: {
+        getSalesReport: async function(){
+            try {
+                
+                const url = this.backend + '/api/sales/date?api_token=' + this.user.api_token + '&from=' + this.fromDate + '&to=' + this.toDate;
 
+                const response = await axios.get(url);
+
+                console.log(response);
+
+            } catch (error) {
+                
+
+                if(error.response && error.response.data && error.response.data.errors ){
+                    this.errors = error.response.data.errors
+                }else {
+                    console.log(error);
+                }
+            }
+        }
+    }
 }
 </script>
 

@@ -268,6 +268,30 @@ class SalesReportFeatureTest extends TestCase
     }
 
 
+    /** @test */
+    public function can_list_sales_report_with_date_range()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        factory(SalesReport::class, 2)->create(['tour_date' => "2019-10-19"]);
+        factory(SalesReport::class, 2)->create(['tour_date' => "2019-10-20"]);
+
+        $fromDate = "2019-10-19";
+        $toDate = "2019-10-20";
+
+        $url = '/api/sales/date?api_token=' . $user->api_token . '&from=' . $fromDate . '&to=' . $toDate;
+
+        $response = $this->get($url);
+        
+        $data = json_decode($response->content())->data;
+
+        $this->assertCount(4, $data);
+
+    }
+
+
     private function createSalesReportData()
     {
 

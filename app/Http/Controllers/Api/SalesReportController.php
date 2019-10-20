@@ -59,6 +59,25 @@ class SalesReportController extends Controller
         
     }
     
+    public function getSelectedDates(Request $request)
+    {
+        
+        if($request->has('from') && $request->has('to')){
+
+            $from = date($request['from']);
+            $to = date($request['to']);
+
+            $reports = SalesReport::whereBetween("tour_date", [$from, $to])->get();
+
+            return SalesReportListResource::collection($reports);
+
+        }else {
+
+            return response([], Response::HTTP_NOT_FOUND);
+
+        }
+
+    }
 
     public function store(SalesReportRequest $request)
     {

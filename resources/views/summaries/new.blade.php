@@ -10,5 +10,5 @@
                 class="uppercase text-sm font-semibold bg-blue-700 py-2 px-4 rounded text-white mr-2 hover:bg-blue-600">Cancel</a>
         </div>
     </div>
-    <summary-report-form></summary-report-form>
+    <summary-report-form :user="{{ auth()->user() }}" backend="{{ env('APP_URL')}}"></summary-report-form>
 @endsection

@@ -18,6 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/sales', 'Api\SalesReportController@index');
+Route::get('sales/date', 'Api\SalesReportController@getSelectedDates');
 Route::post('/sales', 'Api\SalesReportController@store');
 Route::patch('/sales/{sale}', 'Api\SalesReportController@update');
 Route::delete('/sales/{sale}', 'Api\SalesReportController@destroy')->name('sales.api.destroy');
