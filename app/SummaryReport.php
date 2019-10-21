@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class SummaryReport extends Model
 {
     protected $fillable = [
+        'title',
         'report_number',
         'from_date',
         'to_date',

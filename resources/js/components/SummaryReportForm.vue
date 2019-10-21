@@ -30,6 +30,18 @@
             </div>
         </div>
         <div class="mx-auto w-288">
+            <div class="border border-gray-700 mt-10 mb-5 bg-green-200">
+                <div class="flex">
+                    <div class="border-r py-1  border-gray-700 w-32 text-center">
+                        <label  class="text-sm font-semibold text-gray-800 uppercase" for="agent">Report Title</label>
+                    </div>
+                    <div  class="flex-1 border-gray-700" >
+                        <input class="w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm bg-transparent"
+                            type="text" id="date" placeholder="Product Name" 
+                            v-model="summaryReport.title">
+                    </div>
+                </div>
+            </div>
             <table class="w-full mt-5">
                 <thead>
                     <tr class="text-left bg-gray-300 border border-gray-800 text-xs">
@@ -38,15 +50,15 @@
                         </th>
                         <th class="py-2 px-2 border-r border-gray-800 w-32">
                             GRP/Code
-                        </th><th class="py-2 px-2 border-r border-gray-800 w-32">
+                        </th><th class="py-2 px-2 border-r border-gray-800 w-40">
                             Guide Name
                         </th>
                         <th class="py-2 px-2 border-r border-gray-800 w-16">A</th>
                         <th class="py-2 px-2 border-r border-gray-800 w-16">C</th>
                         <th class="py-2 px-2 border-r border-gray-800 w-16">TC</th>
-                        <th class="py-2 px-2 border-r border-gray-800 w-32 text-right">Sales</th>
-                        <th class="py-2 px-2 border-r border-gray-800 w-32 text-right">Commission</th>
-                        <th class="py-2 px-2 border-r border-gray-800 w-32 text-right">GST</th>
+                        <th class="py-2 px-2 border-r border-gray-800 w-24 text-right">Sales</th>
+                        <th class="py-2 px-2 border-r border-gray-800 w-24 text-right">Commission</th>
+                        <th class="py-2 px-2 border-r border-gray-800 w-24 text-right">GST</th>
                         <th class="py-2 px-2 border-r border-gray-800 w-32 text-right">Total</th>
                     </tr>
                 </thead>
@@ -86,7 +98,11 @@
                         <td class="py-2 px-4"></td>
                         <td class="py-2 px-4"></td>
                         <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">Return</td>
-                        <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">0</td>
+                        <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">
+                            <input type="text" class="w-full bg-transparent px-2 text-right"
+                                placeholder="0"
+                                v-model.number="summaryReport.return">
+                        </td>
                     </tr>
                      <tr  class="bg-white text-xs">
                         <td class="py-2 px-4"></td>
@@ -98,7 +114,11 @@
                         <td class="py-2 px-4"></td>
                         <td class="py-2 px-4"></td>
                         <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">Deduction</td>
-                        <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">0</td>
+                        <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">
+                            <input type="text" class="w-full bg-transparent px-2 text-right"
+                                placeholder="0"
+                                v-model.number="summaryReport.duvet_deduction">
+                        </td>
                     </tr>
                     <tr  class="bg-white text-xs">
                         <td class="py-2 px-4"></td>
@@ -110,7 +130,11 @@
                         <td class="py-2 px-4"></td>
                         <td class="py-2 px-4"></td>
                         <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">Balance</td>
-                        <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">0</td>
+                        <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">
+                             <input type="text" class="w-full bg-transparent px-2 text-right"
+                                placeholder="0" disabled
+                                v-model.number="summaryReport.balance">
+                        </td>
                     </tr>
                     <tr  class="bg-white text-xs">
                         <td class="py-2 px-4"></td>
@@ -143,6 +167,7 @@ export default {
         return {
             summary_items: [],
             summaryReport: {
+                title: '',
                 report_number: this.createReportNumber(),
                 from_date: '',
                 to_date: '',
@@ -159,6 +184,14 @@ export default {
                 balance: 0
             }
         }
+    },
+    watch: {
+        'summaryReport.return': function(newvalue, oldValue){
+            this.summaryReport.balance = (this.summaryReport.total - (newvalue + this.summaryReport.duvet_deduction)).toFixed(2);
+        },
+         'summaryReport.duvet_deduction': function(newvalue, oldValue){
+            this.summaryReport.balance = (this.summaryReport.total - (newvalue + this.summaryReport.return)).toFixed(2);
+        }  
     },
     methods: { 
 
@@ -219,6 +252,7 @@ export default {
                     this.summaryReport.agent_commissions_total = this.summaryReport.agent_commissions_total + item.total_commissions;
                     this.summaryReport.gst_total = this.summaryReport.gst_total + item.gst;
                     this.summaryReport.total = this.summaryReport.total + item.grand_total_commission;
+                    this.summaryReport.balance = this.summaryReport.total - (this.summaryReport.return + this.summaryReport.duvet_deduction);
                 });
 
                 console.log(this.summaryReport.summary_items);

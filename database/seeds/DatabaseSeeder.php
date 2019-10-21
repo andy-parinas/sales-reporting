@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
 
             if($type === 1){
                 factory(Commission::class)->create([
-                    'name' => 'Code1',
+                    'name' => 'Carpet Agent Comm',
                     'commission_type' => $type,
                     'amount' => 0.46
                 ]);
@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
 
             if($type === 2){
                 factory(Commission::class)->create([
-                    'name' => 'Code2',
+                    'name' => 'Item Agent Comm',
                     'commission_type' => $type,
                     'amount' => 0.41
                 ]);

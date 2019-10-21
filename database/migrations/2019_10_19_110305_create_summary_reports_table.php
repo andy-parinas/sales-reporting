@@ -15,6 +15,7 @@ class CreateSummaryReportsTable extends Migration
     {
         Schema::create('summary_reports', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('title');
             $table->date('from_date');
             $table->date('to_date');
             $table->string('report_number');

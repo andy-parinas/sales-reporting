@@ -17,12 +17,20 @@
     </div>
     <div class="mx-auto w-288">
 
-        <div class="border border-gray-700 flex-1 mt-10 mb-5 w-144 bg-green-200">
+        <div class="border border-gray-700 flex-1 mt-10 mb-5 w-168 bg-green-200">
+            <div class="flex">
+                <div class="border-b border-r border-gray-700 w-48 text-center">
+                    <div  class="text-sm font-semibold text-gray-800 uppercase py-1" for="agent">Title</div>
+                </div>
+                <div  class="flex-1 border-b border-gray-700 py-1 pl-10 text-sm text-gray-800" >
+                    {{ $summary->title}}
+                </div>
+            </div>
             <div class="flex">
                 <div class="border-b border-r border-gray-700 w-48 text-center">
                     <div  class="text-sm font-semibold text-gray-800 uppercase py-1" for="agent">Report Number </div>
                 </div>
-                <div  class="flex-1 border-b border-gray-700 py-1 pl-10 " >
+                <div  class="flex-1 border-b border-gray-700 py-1 pl-10 text-sm text-gray-800 " >
                     {{ $summary->report_number}}
                 </div>
             </div>

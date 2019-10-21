@@ -7,6 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(SummaryReport::class, function (Faker $faker) {
     return [
+        'title' =>$faker->words(3,true),
         'from_date' =>$faker->date('d/m/Y'),
         'to_date' => $faker->date('d/m/Y'),
         'report_number' => $faker->randomNumber,

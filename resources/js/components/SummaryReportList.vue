@@ -9,10 +9,19 @@
                 <h3 class="text-gray-800">Please check your internet connection or report to IT</h3>
             </div>
         </div>
-         <div v-else class="my-10 px-5 w-224 mx-auto">
+         <div v-else class="my-10 px-5 w-288 mx-auto">
              <table class="w-full mt-5">
                 <thead>
                     <tr class="text-left bg-gray-300 border border-gray-800">
+                        <th class="py-2 px-2 border-r border-gray-800 w-56">
+                            <button class="text-gray-800 font-bold flex w-full focus:outline-none hover:text-gray-700"
+                                :class="sortDir == 'desc' ? 'items-start' : 'items-end'"
+                                @click="sort('title')">
+                                <span class="mr-1">Report Title</span>
+                                <sort-up v-if="sortCol==='title' && sortDir==='asc'" ></sort-up>
+                                <sort-down v-else-if="sortCol==='title' && sortDir==='desc'"></sort-down>
+                            </button>
+                        </th>
                         <th class="py-2 px-2 border-r border-gray-800 w-48">
                             <button class="text-gray-800 font-bold flex w-full focus:outline-none hover:text-gray-700"
                                 :class="sortDir == 'desc' ? 'items-start' : 'items-end'"
@@ -69,8 +78,9 @@
                 <tbody>
                     <tr v-for="summary in summaries" :key="summary.id" class="bg-white even:bg-gray-100 text-sm" >
                         <td class="py-2 px-4 border border-gray-800"> 
-                            <a :href="'/summaries/' + summary.id" class="text-blue-700 font-semibold hover:text-blue-800"> {{ summary.report_number}} </a>
+                            <a :href="'/summaries/' + summary.id" class="text-blue-700 font-semibold hover:text-blue-800"> {{ summary.title}} </a>
                         </td>
+                        <td class="py-2 px-4 border border-gray-800"> {{ summary.report_number }} </td>
                         <td class="py-2 px-4 border border-gray-800"> {{ summary.from_date }} </td>
                         <td class="py-2 px-4 border border-gray-800"> {{ summary.to_date }} </td>
                         <td class="py-2 px-4 border border-gray-800 text-right"> {{ summary.total }} </td>

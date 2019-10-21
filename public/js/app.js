@@ -4094,6 +4094,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'SummaryReportForm',
   props: ['user', 'backend'],
@@ -4101,6 +4125,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     return {
       summary_items: [],
       summaryReport: {
+        title: '',
         report_number: this.createReportNumber(),
         from_date: '',
         to_date: '',
@@ -4117,6 +4142,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         balance: 0
       }
     };
+  },
+  watch: {
+    'summaryReport.return': function summaryReportReturn(newvalue, oldValue) {
+      this.summaryReport.balance = (this.summaryReport.total - (newvalue + this.summaryReport.duvet_deduction)).toFixed(2);
+    },
+    'summaryReport.duvet_deduction': function summaryReportDuvet_deduction(newvalue, oldValue) {
+      this.summaryReport.balance = (this.summaryReport.total - (newvalue + this.summaryReport["return"])).toFixed(2);
+    }
   },
   methods: {
     createReportNumber: function createReportNumber() {
@@ -4196,6 +4229,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           _this.summaryReport.agent_commissions_total = _this.summaryReport.agent_commissions_total + item.total_commissions;
           _this.summaryReport.gst_total = _this.summaryReport.gst_total + item.gst;
           _this.summaryReport.total = _this.summaryReport.total + item.grand_total_commission;
+          _this.summaryReport.balance = _this.summaryReport.total - (_this.summaryReport["return"] + _this.summaryReport.duvet_deduction);
         });
         console.log(this.summaryReport.summary_items);
       }
@@ -4275,6 +4309,16 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -28807,8 +28851,47 @@ var render = function() {
     ),
     _vm._v(" "),
     _c("div", { staticClass: "mx-auto w-288" }, [
+      _c(
+        "div",
+        { staticClass: "border border-gray-700 mt-10 mb-5 bg-green-200" },
+        [
+          _c("div", { staticClass: "flex" }, [
+            _vm._m(2),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex-1 border-gray-700" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.summaryReport.title,
+                    expression: "summaryReport.title"
+                  }
+                ],
+                staticClass:
+                  "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm bg-transparent",
+                attrs: {
+                  type: "text",
+                  id: "date",
+                  placeholder: "Product Name"
+                },
+                domProps: { value: _vm.summaryReport.title },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.summaryReport, "title", $event.target.value)
+                  }
+                }
+              })
+            ])
+          ])
+        ]
+      ),
+      _vm._v(" "),
       _c("table", { staticClass: "w-full mt-5" }, [
-        _vm._m(2),
+        _vm._m(3),
         _vm._v(" "),
         _c(
           "tbody",
@@ -28943,11 +29026,203 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _vm._m(3),
+            _c("tr", { staticClass: "text-xs" }, [
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c(
+                "td",
+                {
+                  staticClass:
+                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
+                },
+                [_vm._v("Return")]
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                {
+                  staticClass:
+                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
+                },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model.number",
+                        value: _vm.summaryReport.return,
+                        expression: "summaryReport.return",
+                        modifiers: { number: true }
+                      }
+                    ],
+                    staticClass: "w-full bg-transparent px-2 text-right",
+                    attrs: { type: "text", placeholder: "0" },
+                    domProps: { value: _vm.summaryReport.return },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.summaryReport,
+                          "return",
+                          _vm._n($event.target.value)
+                        )
+                      },
+                      blur: function($event) {
+                        return _vm.$forceUpdate()
+                      }
+                    }
+                  })
+                ]
+              )
+            ]),
             _vm._v(" "),
-            _vm._m(4),
+            _c("tr", { staticClass: "bg-white text-xs" }, [
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c(
+                "td",
+                {
+                  staticClass:
+                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
+                },
+                [_vm._v("Deduction")]
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                {
+                  staticClass:
+                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
+                },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model.number",
+                        value: _vm.summaryReport.duvet_deduction,
+                        expression: "summaryReport.duvet_deduction",
+                        modifiers: { number: true }
+                      }
+                    ],
+                    staticClass: "w-full bg-transparent px-2 text-right",
+                    attrs: { type: "text", placeholder: "0" },
+                    domProps: { value: _vm.summaryReport.duvet_deduction },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.summaryReport,
+                          "duvet_deduction",
+                          _vm._n($event.target.value)
+                        )
+                      },
+                      blur: function($event) {
+                        return _vm.$forceUpdate()
+                      }
+                    }
+                  })
+                ]
+              )
+            ]),
             _vm._v(" "),
-            _vm._m(5),
+            _c("tr", { staticClass: "bg-white text-xs" }, [
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "py-2 px-4" }),
+              _vm._v(" "),
+              _c(
+                "td",
+                {
+                  staticClass:
+                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
+                },
+                [_vm._v("Balance")]
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                {
+                  staticClass:
+                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
+                },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model.number",
+                        value: _vm.summaryReport.balance,
+                        expression: "summaryReport.balance",
+                        modifiers: { number: true }
+                      }
+                    ],
+                    staticClass: "w-full bg-transparent px-2 text-right",
+                    attrs: { type: "text", placeholder: "0", disabled: "" },
+                    domProps: { value: _vm.summaryReport.balance },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.summaryReport,
+                          "balance",
+                          _vm._n($event.target.value)
+                        )
+                      },
+                      blur: function($event) {
+                        return _vm.$forceUpdate()
+                      }
+                    }
+                  })
+                ]
+              )
+            ]),
             _vm._v(" "),
             _c("tr", { staticClass: "bg-white text-xs" }, [
               _c("td", { staticClass: "py-2 px-4" }),
@@ -29032,6 +29307,25 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "border-r py-1  border-gray-700 w-32 text-center" },
+      [
+        _c(
+          "label",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase",
+            attrs: { for: "agent" }
+          },
+          [_vm._v("Report Title")]
+        )
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("thead", [
       _c(
         "tr",
@@ -29046,7 +29340,7 @@ var staticRenderFns = [
               "\n                          GRP/Code\n                      "
             )
           ]),
-          _c("th", { staticClass: "py-2 px-2 border-r border-gray-800 w-32" }, [
+          _c("th", { staticClass: "py-2 px-2 border-r border-gray-800 w-40" }, [
             _vm._v(
               "\n                          Guide Name\n                      "
             )
@@ -29067,7 +29361,7 @@ var staticRenderFns = [
           _c(
             "th",
             {
-              staticClass: "py-2 px-2 border-r border-gray-800 w-32 text-right"
+              staticClass: "py-2 px-2 border-r border-gray-800 w-24 text-right"
             },
             [_vm._v("Sales")]
           ),
@@ -29075,7 +29369,7 @@ var staticRenderFns = [
           _c(
             "th",
             {
-              staticClass: "py-2 px-2 border-r border-gray-800 w-32 text-right"
+              staticClass: "py-2 px-2 border-r border-gray-800 w-24 text-right"
             },
             [_vm._v("Commission")]
           ),
@@ -29083,7 +29377,7 @@ var staticRenderFns = [
           _c(
             "th",
             {
-              staticClass: "py-2 px-2 border-r border-gray-800 w-32 text-right"
+              staticClass: "py-2 px-2 border-r border-gray-800 w-24 text-right"
             },
             [_vm._v("GST")]
           ),
@@ -29096,126 +29390,6 @@ var staticRenderFns = [
             [_vm._v("Total")]
           )
         ]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("tr", { staticClass: "text-xs" }, [
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c(
-        "td",
-        {
-          staticClass:
-            "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
-        },
-        [_vm._v("Return")]
-      ),
-      _vm._v(" "),
-      _c(
-        "td",
-        {
-          staticClass:
-            "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
-        },
-        [_vm._v("0")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("tr", { staticClass: "bg-white text-xs" }, [
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c(
-        "td",
-        {
-          staticClass:
-            "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
-        },
-        [_vm._v("Deduction")]
-      ),
-      _vm._v(" "),
-      _c(
-        "td",
-        {
-          staticClass:
-            "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
-        },
-        [_vm._v("0")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("tr", { staticClass: "bg-white text-xs" }, [
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c("td", { staticClass: "py-2 px-4" }),
-      _vm._v(" "),
-      _c(
-        "td",
-        {
-          staticClass:
-            "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
-        },
-        [_vm._v("Balance")]
-      ),
-      _vm._v(" "),
-      _c(
-        "td",
-        {
-          staticClass:
-            "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
-        },
-        [_vm._v("0")]
       )
     ])
   }
@@ -29255,13 +29429,46 @@ var render = function() {
           { staticClass: "w-full h-96 flex items-center justify-center" },
           [_vm._m(0)]
         )
-      : _c("div", { staticClass: "my-10 px-5 w-224 mx-auto" }, [
+      : _c("div", { staticClass: "my-10 px-5 w-288 mx-auto" }, [
           _c("table", { staticClass: "w-full mt-5" }, [
             _c("thead", [
               _c(
                 "tr",
                 { staticClass: "text-left bg-gray-300 border border-gray-800" },
                 [
+                  _c(
+                    "th",
+                    { staticClass: "py-2 px-2 border-r border-gray-800 w-56" },
+                    [
+                      _c(
+                        "button",
+                        {
+                          staticClass:
+                            "text-gray-800 font-bold flex w-full focus:outline-none hover:text-gray-700",
+                          class:
+                            _vm.sortDir == "desc" ? "items-start" : "items-end",
+                          on: {
+                            click: function($event) {
+                              return _vm.sort("title")
+                            }
+                          }
+                        },
+                        [
+                          _c("span", { staticClass: "mr-1" }, [
+                            _vm._v("Report Title")
+                          ]),
+                          _vm._v(" "),
+                          _vm.sortCol === "title" && _vm.sortDir === "asc"
+                            ? _c("sort-up")
+                            : _vm.sortCol === "title" && _vm.sortDir === "desc"
+                            ? _c("sort-down")
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
                   _c(
                     "th",
                     { staticClass: "py-2 px-2 border-r border-gray-800 w-48" },
@@ -29458,9 +29665,15 @@ var render = function() {
                               "text-blue-700 font-semibold hover:text-blue-800",
                             attrs: { href: "/summaries/" + summary.id }
                           },
-                          [_vm._v(" " + _vm._s(summary.report_number) + " ")]
+                          [_vm._v(" " + _vm._s(summary.title) + " ")]
                         )
                       ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      { staticClass: "py-2 px-4 border border-gray-800" },
+                      [_vm._v(" " + _vm._s(summary.report_number) + " ")]
                     ),
                     _vm._v(" "),
                     _c(
