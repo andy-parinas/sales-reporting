@@ -1,6 +1,7 @@
 <template>
   <div>
 
+        <!-- IF Form is on Edit Mode -->
         <div v-if="edit"  class="mx-auto w-288">
             <div class="border border-gray-700 flex-1 mt-10 mb-5 w-168">
                 <div class="flex">
@@ -38,40 +39,47 @@
         </div>
 
 
-
-        <div v-else 
-            class="w-144 mx-auto flex items-center justify-center">
-            <div class="px-4 flex justify-between mt-5">
-                <div class="border border-gray-700 flex-1 mr-4">
-                    <div class="flex">
-                        <div class="border-r border-gray-700 w-32 text-center py-2 ">
-                            <label class="text-sm font-semibold text-gray-800 uppercase" for="date">From</label>
-                        </div>
-                        <div class="flex-1 border-gray-700" :class="errors && errors.from_date ? 'bg-red-200' : ''">
-                            <input class="w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm bg-transparent" 
-                                type="date" id="date" 
-                                placeholder="Tour Date" v-model="summaryReport.from_date">
-                        </div>
-                    </div>
-                </div>
-                <div class="border border-gray-700 flex-1 mr-4">
-                    <div class="flex">
-                        <div class="border-r border-gray-700 w-32 text-center  py-2">
-                            <label class="text-sm font-semibold text-gray-800 uppercase" for="date">To</label>
-                        </div>
-                        <div class="flex-1border-gray-700" :class="errors && errors.to_date ? 'bg-red-200' : ''">
-                            <input class="w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm bg-transparent"
-                                type="date" id="date" 
-                                placeholder="Tour Date" v-model="summaryReport.to_date" >
+        <!-- IF Form is on Create Mode -->
+        <div v-else class="w-144 mx-auto" >
+            <div class="flex items-center justify-center">
+                <div class="px-4 flex justify-between mt-5">
+                    <div class="border border-gray-700 flex-1 mr-4">
+                        <div class="flex">
+                            <div class="border-r border-gray-700 w-32 text-center py-2 ">
+                                <label class="text-sm font-semibold text-gray-800 uppercase" for="date">From</label>
+                            </div>
+                            <div class="flex-1 border-gray-700" :class="errors && errors.from_date ? 'bg-red-200' : ''">
+                                <input class="w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm bg-transparent" 
+                                    type="date" id="date" 
+                                    placeholder="Tour Date" v-model="summaryReport.from_date">
+                            </div>
                         </div>
                     </div>
+                    <div class="border border-gray-700 flex-1 mr-4">
+                        <div class="flex">
+                            <div class="border-r border-gray-700 w-32 text-center  py-2">
+                                <label class="text-sm font-semibold text-gray-800 uppercase" for="date">To</label>
+                            </div>
+                            <div class="flex-1border-gray-700" :class="errors && errors.to_date ? 'bg-red-200' : ''">
+                                <input class="w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm bg-transparent"
+                                    type="date" id="date" 
+                                    placeholder="Tour Date" v-model="summaryReport.to_date" >
+                            </div>
+                        </div>
+                    </div>
+                    <button class="bg-blue-600 py-2 px-2 text-white rounded" @click="getSalesReport" >Go</button>
                 </div>
-                <button class="bg-blue-600 py-2 px-2 text-white rounded" @click="getSalesReport" >Go</button>
+            </div>
+            <div v-if="noResults" class="mt-2 mb-3  flex items-center justify-center">
+                <h1 class="text-red-700 font-semibold text-lg mr-3">No Results Found</h1>
+                <h3 class="text-gray-800">Please select another date range</h3>
+            </div>
+            <div  v-if="errors" class="mt-2 mb-3  flex items-center justify-center">
+                <h1 class="text-red-700 font-semibold text-lg mr-3">Error Connecting</h1>
+                <h3 class="text-gray-800">Please check your internet or report to I.T.</h3>
             </div>
         </div>
-
         <div class="mx-auto w-288">
-
             <div v-if="!edit" class="border border-gray-700 mt-10 mb-5 " :class="errors && errors.title ? 'bg-red-200' : 'bg-green-200'"> 
                 <div class="flex">
                     <div class="border-r py-1  border-gray-700 w-32 text-center">
@@ -230,7 +238,8 @@ export default {
                 duvet_deduction: 0,
                 balance: 0
             },
-            errors: null
+            errors: null,
+            noResults: false
         }
     },
     watch: {
@@ -259,6 +268,9 @@ export default {
         },
         getSalesReport: async function(){
             try {
+
+                this.noResults = false;
+                this.errors = null;
                 
                 const url = this.backend + '/api/sales/date?api_token=' + this.user.api_token + 
                     '&from=' + this.summaryReport.from_date + '&to=' + this.summaryReport.to_date;
@@ -271,13 +283,19 @@ export default {
 
                 this.computeTotal();
 
-                console.log(this.summaryReport.summary_items);
+                if(this.summary_items.length === 0){
+                    this.noResults = true;
+                }else {
+                    this.noResults = false;
+                }
 
             } catch (error) {
                 
                 if(error.response && error.response.data && error.response.data.errors ){
                     this.errors = error.response.data.errors
+                    console.log(this.errors);
                 }else {
+                    this.errors = 'Unknown Error';
                     console.log(error);
                 }
             }
