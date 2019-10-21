@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             }
             
 
-            factory(Product::class, 12)->create(['product_type_id' => $productType->id]);
+            // factory(Product::class, 12)->create(['product_type_id' => $productType->id]); //Comment out for production seed
 
         });
 
@@ -86,11 +86,16 @@ class DatabaseSeeder extends Seeder
 
         });
 
-        factory(User::class, 5)->create();
+        factory(User::class)->create([
+            'name' => 'Administrator',
+            'email' => 'admin@salesreport.com'
+        ]);
 
-        factory(TourAgent::class, 10)->create();
+        // factory(User::class, 5)->create(); //comment out for production seed
 
-        factory(TourGuide::class, 15)->create();
+        // factory(TourAgent::class, 10)->create(); // Comment out for production seed
+
+        // factory(TourGuide::class, 15)->create(); // Comment out for production seed
 
 
     }
