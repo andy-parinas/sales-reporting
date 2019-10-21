@@ -53,3 +53,4 @@ Route::delete('/users/{user}', 'Api\UserController@destroy')->name('users.api.de
 Route::get('/summaries', 'Api\SummaryReportController@index');
 Route::post('/summaries', 'Api\SummaryReportController@store');
 Route::delete('/summaries/{summary}', 'Api\SummaryReportController@destroy')->name('summaries.api.destroy');
+Route::patch('/summaries/{summary}', 'Api\SummaryReportController@update')->name('summaries.api.update');

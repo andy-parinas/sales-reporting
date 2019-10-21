@@ -4118,9 +4118,56 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'SummaryReportForm',
-  props: ['user', 'backend'],
+  props: ['user', 'backend', 'edit', 'summary', 'items'],
   data: function data() {
     return {
       summary_items: [],
@@ -4284,7 +4331,65 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return createReport;
+    }(),
+    updateReport: function () {
+      var _updateReport = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        var data, url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                data = _objectSpread({}, this.summaryReport, {
+                  api_token: this.user.api_token
+                });
+                url = this.backend + '/api/summaries/' + this.summary.id;
+                _context3.next = 5;
+                return axios.patch(url, data);
+
+              case 5:
+                response = _context3.sent;
+                window.location.href = '/summaries/' + response.data.id;
+                _context3.next = 12;
+                break;
+
+              case 9:
+                _context3.prev = 9;
+                _context3.t0 = _context3["catch"](0);
+
+                if (_context3.t0.response && _context3.t0.response.data && _context3.t0.response.data.errors) {
+                  this.errors = _context3.t0.response.data.errors;
+                  console.log(this.errors);
+                } else {
+                  console.log(_context3.t0);
+                }
+
+              case 12:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[0, 9]]);
+      }));
+
+      function updateReport() {
+        return _updateReport.apply(this, arguments);
+      }
+
+      return updateReport;
     }()
+  },
+  mounted: function mounted() {
+    var _this2 = this;
+
+    if (this.edit) {
+      this.items.forEach(function (item) {
+        _this2.summary_items.push(item.sales_report);
+      });
+      this.summaryReport = _objectSpread({}, this.summary);
+    }
   }
 });
 
@@ -28765,160 +28870,280 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c(
-      "div",
-      { staticClass: "w-144 mx-auto flex items-center justify-center" },
-      [
-        _c("div", { staticClass: "px-4 flex justify-between mt-5" }, [
-          _c("div", { staticClass: "border border-gray-700 flex-1 mr-4" }, [
-            _c("div", { staticClass: "flex" }, [
-              _vm._m(0),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "flex-1 border-gray-700",
-                  class: _vm.errors && _vm.errors.from_date ? "bg-red-200" : ""
-                },
-                [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.summaryReport.from_date,
-                        expression: "summaryReport.from_date"
-                      }
-                    ],
-                    staticClass:
-                      "w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm bg-transparent",
-                    attrs: {
-                      type: "date",
-                      id: "date",
-                      placeholder: "Tour Date"
-                    },
-                    domProps: { value: _vm.summaryReport.from_date },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.summaryReport,
-                          "from_date",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ]
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "border border-gray-700 flex-1 mr-4" }, [
-            _c("div", { staticClass: "flex" }, [
-              _vm._m(1),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "flex-1border-gray-700",
-                  class: _vm.errors && _vm.errors.to_date ? "bg-red-200" : ""
-                },
-                [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.summaryReport.to_date,
-                        expression: "summaryReport.to_date"
-                      }
-                    ],
-                    staticClass:
-                      "w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm bg-transparent",
-                    attrs: {
-                      type: "date",
-                      id: "date",
-                      placeholder: "Tour Date"
-                    },
-                    domProps: { value: _vm.summaryReport.to_date },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.summaryReport,
-                          "to_date",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ]
-              )
-            ])
-          ]),
-          _vm._v(" "),
+    _vm.edit
+      ? _c("div", { staticClass: "mx-auto w-288" }, [
           _c(
-            "button",
-            {
-              staticClass: "bg-blue-600 py-2 px-2 text-white rounded",
-              on: { click: _vm.getSalesReport }
-            },
-            [_vm._v("Go")]
+            "div",
+            { staticClass: "border border-gray-700 flex-1 mt-10 mb-5 w-168" },
+            [
+              _c("div", { staticClass: "flex" }, [
+                _vm._m(0),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "flex-1 border-b border-gray-700 py-1 pl-10 text-sm text-gray-800"
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.summaryReport.title,
+                          expression: "summaryReport.title"
+                        }
+                      ],
+                      staticClass:
+                        "w-full focus:outline-none py-1  pl-1 text-gray-800 text-sm bg-transparent",
+                      attrs: {
+                        type: "text",
+                        id: "date",
+                        placeholder: "Product Name"
+                      },
+                      domProps: { value: _vm.summaryReport.title },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.summaryReport,
+                            "title",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    })
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "flex  bg-gray-200" }, [
+                _vm._m(1),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "flex-1 border-b border-gray-700 py-1 pl-10 text-sm text-gray-800 "
+                  },
+                  [
+                    _vm._v(
+                      "\n                      " +
+                        _vm._s(_vm.summaryReport.report_number) +
+                        "\n                  "
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "flex  bg-gray-200" }, [
+                _vm._m(2),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "flex-1 border-gray-700 flex items-center" },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "flex-1 py-1 pl-10 border-r border-gray-700 focus:outline-none  text-gray-800 text-sm"
+                      },
+                      [
+                        _vm._v(
+                          "\n                          " +
+                            _vm._s(_vm.summaryReport.from_date) +
+                            "\n                      "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "flex-1 py-1 pl-10 focus:outline-none  text-gray-800 text-sm"
+                      },
+                      [
+                        _vm._v(
+                          "\n                          " +
+                            _vm._s(_vm.summaryReport.to_date) +
+                            "\n                      "
+                        )
+                      ]
+                    )
+                  ]
+                )
+              ])
+            ]
           )
         ])
-      ]
-    ),
+      : _c(
+          "div",
+          { staticClass: "w-144 mx-auto flex items-center justify-center" },
+          [
+            _c("div", { staticClass: "px-4 flex justify-between mt-5" }, [
+              _c("div", { staticClass: "border border-gray-700 flex-1 mr-4" }, [
+                _c("div", { staticClass: "flex" }, [
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "flex-1 border-gray-700",
+                      class:
+                        _vm.errors && _vm.errors.from_date ? "bg-red-200" : ""
+                    },
+                    [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.summaryReport.from_date,
+                            expression: "summaryReport.from_date"
+                          }
+                        ],
+                        staticClass:
+                          "w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm bg-transparent",
+                        attrs: {
+                          type: "date",
+                          id: "date",
+                          placeholder: "Tour Date"
+                        },
+                        domProps: { value: _vm.summaryReport.from_date },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.summaryReport,
+                              "from_date",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "border border-gray-700 flex-1 mr-4" }, [
+                _c("div", { staticClass: "flex" }, [
+                  _vm._m(4),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "flex-1border-gray-700",
+                      class:
+                        _vm.errors && _vm.errors.to_date ? "bg-red-200" : ""
+                    },
+                    [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.summaryReport.to_date,
+                            expression: "summaryReport.to_date"
+                          }
+                        ],
+                        staticClass:
+                          "w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm bg-transparent",
+                        attrs: {
+                          type: "date",
+                          id: "date",
+                          placeholder: "Tour Date"
+                        },
+                        domProps: { value: _vm.summaryReport.to_date },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.summaryReport,
+                              "to_date",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "bg-blue-600 py-2 px-2 text-white rounded",
+                  on: { click: _vm.getSalesReport }
+                },
+                [_vm._v("Go")]
+              )
+            ])
+          ]
+        ),
     _vm._v(" "),
     _c("div", { staticClass: "mx-auto w-288" }, [
-      _c(
-        "div",
-        {
-          staticClass: "border border-gray-700 mt-10 mb-5 ",
-          class: _vm.errors && _vm.errors.title ? "bg-red-200" : "bg-green-200"
-        },
-        [
-          _c("div", { staticClass: "flex" }, [
-            _vm._m(2),
-            _vm._v(" "),
-            _c("div", { staticClass: "flex-1 border-gray-700" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.summaryReport.title,
-                    expression: "summaryReport.title"
-                  }
-                ],
-                staticClass:
-                  "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm bg-transparent",
-                attrs: {
-                  type: "text",
-                  id: "date",
-                  placeholder: "Product Name"
-                },
-                domProps: { value: _vm.summaryReport.title },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+      !_vm.edit
+        ? _c(
+            "div",
+            {
+              staticClass: "border border-gray-700 mt-10 mb-5 ",
+              class:
+                _vm.errors && _vm.errors.title ? "bg-red-200" : "bg-green-200"
+            },
+            [
+              _c("div", { staticClass: "flex" }, [
+                _vm._m(5),
+                _vm._v(" "),
+                _c("div", { staticClass: "flex-1 border-gray-700" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.summaryReport.title,
+                        expression: "summaryReport.title"
+                      }
+                    ],
+                    staticClass:
+                      "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm bg-transparent",
+                    attrs: {
+                      type: "text",
+                      id: "date",
+                      placeholder: "Product Name"
+                    },
+                    domProps: { value: _vm.summaryReport.title },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.summaryReport,
+                          "title",
+                          $event.target.value
+                        )
+                      }
                     }
-                    _vm.$set(_vm.summaryReport, "title", $event.target.value)
-                  }
-                }
-              })
-            ])
-          ])
-        ]
-      ),
+                  })
+                ])
+              ])
+            ]
+          )
+        : _vm._e(),
       _vm._v(" "),
       _c("table", { staticClass: "w-full mt-5" }, [
-        _vm._m(3),
+        _vm._m(6),
         _vm._v(" "),
         _c(
           "tbody",
@@ -29269,19 +29494,33 @@ var render = function() {
               _c("td", { staticClass: "py-2 px-4" }),
               _vm._v(" "),
               _c("td", { staticClass: "py-2 px-4", attrs: { colspan: "2" } }, [
-                _c(
-                  "button",
-                  {
-                    staticClass:
-                      "flex items-center w-full mt-5 py-2 px-4 text-white bg-indigo-600\n                                      rounded-full justify-center focus:outline-none hover:bg-indigo-700",
-                    on: { click: _vm.createReport }
-                  },
-                  [
-                    _vm._v(
-                      " \n                              Submit \n                          "
+                _vm.edit
+                  ? _c(
+                      "button",
+                      {
+                        staticClass:
+                          "flex items-center w-full mt-5 py-2 px-4 text-white bg-indigo-600\n                                      rounded-full justify-center focus:outline-none hover:bg-indigo-700",
+                        on: { click: _vm.updateReport }
+                      },
+                      [
+                        _vm._v(
+                          " \n                              Update \n                          "
+                        )
+                      ]
                     )
-                  ]
-                )
+                  : _c(
+                      "button",
+                      {
+                        staticClass:
+                          "flex items-center w-full mt-5 py-2 px-4 text-white bg-indigo-600\n                                      rounded-full justify-center focus:outline-none hover:bg-indigo-700",
+                        on: { click: _vm.createReport }
+                      },
+                      [
+                        _vm._v(
+                          " \n                              Submit \n                          "
+                        )
+                      ]
+                    )
               ])
             ])
           ],
@@ -29292,6 +29531,66 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass:
+          "border-b border-r border-gray-700 w-48 text-center  bg-gray-200"
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase py-1",
+            attrs: { for: "agent" }
+          },
+          [_vm._v("Title")]
+        )
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "border-b border-r border-gray-700 w-48 text-center" },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase py-1",
+            attrs: { for: "agent" }
+          },
+          [_vm._v("Report Number ")]
+        )
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "border-r border-gray-700 w-48 text-center" },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase py-1",
+            attrs: { for: "pax" }
+          },
+          [_vm._v("From / To")]
+        )
+      ]
+    )
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

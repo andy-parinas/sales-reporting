@@ -41,7 +41,7 @@ class SummaryReportController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Using API for Store
     }
 
     /**
@@ -65,9 +65,12 @@ class SummaryReportController extends Controller
      * @param  \App\SummaryReport  $summaryReport
      * @return \Illuminate\Http\Response
      */
-    public function edit(SummaryReport $summaryReport)
+    public function edit(SummaryReport $summary)
     {
-        //
+        $items = $summary->summaryReportItems;
+        // $items = "none";
+
+        return view('summaries.edit', compact('summary', 'items'));
     }
 
     /**
@@ -79,7 +82,7 @@ class SummaryReportController extends Controller
      */
     public function update(Request $request, SummaryReport $summaryReport)
     {
-        //
+        //Using API for update
     }
 
     /**

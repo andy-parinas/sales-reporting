@@ -81,6 +81,14 @@ class SummaryReportController extends Controller
         return response([], Response::HTTP_OK);
     }
 
+
+    public function update(SummaryReport $summary)
+    {
+        $summary->update($this->validateSummaryData());
+
+        return response($summary, Response::HTTP_OK);
+    }
+
     private function validateSummaryData()
     {
         return request()->validate([

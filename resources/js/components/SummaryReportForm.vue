@@ -1,6 +1,46 @@
 <template>
   <div>
-        <div class="w-144 mx-auto flex items-center justify-center">
+
+        <div v-if="edit"  class="mx-auto w-288">
+            <div class="border border-gray-700 flex-1 mt-10 mb-5 w-168">
+                <div class="flex">
+                    <div class="border-b border-r border-gray-700 w-48 text-center  bg-gray-200">
+                        <div  class="text-sm font-semibold text-gray-800 uppercase py-1" for="agent">Title</div>
+                    </div>
+                    <div  class="flex-1 border-b border-gray-700 py-1 pl-10 text-sm text-gray-800" >
+                        <input class="w-full focus:outline-none py-1  pl-1 text-gray-800 text-sm bg-transparent"
+                                type="text" id="date" placeholder="Product Name" 
+                                v-model="summaryReport.title">
+                    </div>
+                </div>
+                <div class="flex  bg-gray-200">
+                    <div class="border-b border-r border-gray-700 w-48 text-center">
+                        <div  class="text-sm font-semibold text-gray-800 uppercase py-1" for="agent">Report Number </div>
+                    </div>
+                    <div  class="flex-1 border-b border-gray-700 py-1 pl-10 text-sm text-gray-800 " >
+                        {{ summaryReport.report_number}}
+                    </div>
+                </div>
+                <div class="flex  bg-gray-200">
+                    <div class="border-r border-gray-700 w-48 text-center">
+                        <div  class="text-sm font-semibold text-gray-800 uppercase py-1" for="pax">From / To</div>
+                    </div>
+                    <div  class="flex-1 border-gray-700 flex items-center">
+                        <div class="flex-1 py-1 pl-10 border-r border-gray-700 focus:outline-none  text-gray-800 text-sm">
+                            {{ summaryReport.from_date}}
+                        </div>
+                        <div class="flex-1 py-1 pl-10 focus:outline-none  text-gray-800 text-sm">
+                            {{ summaryReport.to_date }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div v-else 
+            class="w-144 mx-auto flex items-center justify-center">
             <div class="px-4 flex justify-between mt-5">
                 <div class="border border-gray-700 flex-1 mr-4">
                     <div class="flex">
@@ -29,8 +69,10 @@
                 <button class="bg-blue-600 py-2 px-2 text-white rounded" @click="getSalesReport" >Go</button>
             </div>
         </div>
+
         <div class="mx-auto w-288">
-            <div class="border border-gray-700 mt-10 mb-5 " :class="errors && errors.title ? 'bg-red-200' : 'bg-green-200'"> 
+
+            <div v-if="!edit" class="border border-gray-700 mt-10 mb-5 " :class="errors && errors.title ? 'bg-red-200' : 'bg-green-200'"> 
                 <div class="flex">
                     <div class="border-r py-1  border-gray-700 w-32 text-center">
                         <label  class="text-sm font-semibold text-gray-800 uppercase" for="agent">Report Title</label>
@@ -146,7 +188,12 @@
                         <td class="py-2 px-4"></td>
                         <td class="py-2 px-4"></td>
                         <td class="py-2 px-4" colspan="2">
-                            <button class="flex items-center w-full mt-5 py-2 px-4 text-white bg-indigo-600
+                            <button v-if="edit" class="flex items-center w-full mt-5 py-2 px-4 text-white bg-indigo-600
+                                        rounded-full justify-center focus:outline-none hover:bg-indigo-700"
+                                        @click="updateReport"> 
+                                Update 
+                            </button>
+                             <button v-else class="flex items-center w-full mt-5 py-2 px-4 text-white bg-indigo-600
                                         rounded-full justify-center focus:outline-none hover:bg-indigo-700"
                                         @click="createReport"> 
                                 Submit 
@@ -162,7 +209,7 @@
 <script>
 export default {
     name: 'SummaryReportForm',
-    props: ['user', 'backend'],
+    props: ['user', 'backend', 'edit', 'summary', 'items'],
     data: function(){
         return {
             summary_items: [],
@@ -286,6 +333,47 @@ export default {
                     console.log(error);
                 }
             }
+        },
+
+        updateReport: async function(){
+            
+            try {
+
+                 const data = {
+                    ...this.summaryReport,
+                    api_token: this.user.api_token
+                }
+                
+                const url = this.backend + '/api/summaries/' + this.summary.id;
+
+                const response = await axios.patch(url, data);
+
+                window.location.href = '/summaries/' + response.data.id;
+
+            } catch (error) {
+
+                if(error.response && error.response.data && error.response.data.errors ){
+                    this.errors = error.response.data.errors
+                    console.log(this.errors);
+                }else {
+                    console.log(error);
+                }
+            }
+        }
+    },
+
+    mounted(){
+
+        if(this.edit){
+
+            this.items.forEach(item => {
+                this.summary_items.push(item.sales_report);
+            });
+
+            this.summaryReport = {
+                ...this.summary
+            }
+
         }
     }
 }
