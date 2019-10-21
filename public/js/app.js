@@ -4357,6 +4357,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 
@@ -29448,7 +29450,17 @@ var render = function() {
                     _c(
                       "td",
                       { staticClass: "py-2 px-4 border border-gray-800" },
-                      [_vm._v(" " + _vm._s(summary.report_number) + " ")]
+                      [
+                        _c(
+                          "a",
+                          {
+                            staticClass:
+                              "text-blue-700 font-semibold hover:text-blue-800",
+                            attrs: { href: "/summaries/" + summary.id }
+                          },
+                          [_vm._v(" " + _vm._s(summary.report_number) + " ")]
+                        )
+                      ]
                     ),
                     _vm._v(" "),
                     _c(

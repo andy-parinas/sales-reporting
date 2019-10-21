@@ -11,6 +11,8 @@ class SummaryReportItem extends Model
         'sales_report_id'
     ];
 
+    protected $with = ['salesReport'];
+
     public function summaryReport()
     {
         return $this->belongsTo(SummaryReport::class);

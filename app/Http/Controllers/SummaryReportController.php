@@ -50,9 +50,13 @@ class SummaryReportController extends Controller
      * @param  \App\SummaryReport  $summaryReport
      * @return \Illuminate\Http\Response
      */
-    public function show(SummaryReport $summaryReport)
+    public function show(SummaryReport $summary)
     {
-        //
+
+        $items = $summary->summaryReportItems;
+        
+        return view('summaries.show', compact('summary', 'items'));
+
     }
 
     /**
