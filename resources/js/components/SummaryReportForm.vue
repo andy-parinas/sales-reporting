@@ -7,8 +7,8 @@
                         <div class="border-r border-gray-700 w-32 text-center py-2 ">
                             <label class="text-sm font-semibold text-gray-800 uppercase" for="date">From</label>
                         </div>
-                        <div class="flex-1 border-gray-700">
-                            <input class="w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm" 
+                        <div class="flex-1 border-gray-700" :class="errors && errors.from_date ? 'bg-red-200' : ''">
+                            <input class="w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm bg-transparent" 
                                 type="date" id="date" 
                                 placeholder="Tour Date" v-model="summaryReport.from_date">
                         </div>
@@ -19,8 +19,8 @@
                         <div class="border-r border-gray-700 w-32 text-center  py-2">
                             <label class="text-sm font-semibold text-gray-800 uppercase" for="date">To</label>
                         </div>
-                        <div class="flex-1border-gray-700">
-                            <input class="w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm"
+                        <div class="flex-1border-gray-700" :class="errors && errors.to_date ? 'bg-red-200' : ''">
+                            <input class="w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm bg-transparent"
                                 type="date" id="date" 
                                 placeholder="Tour Date" v-model="summaryReport.to_date" >
                         </div>
@@ -30,7 +30,7 @@
             </div>
         </div>
         <div class="mx-auto w-288">
-            <div class="border border-gray-700 mt-10 mb-5 bg-green-200">
+            <div class="border border-gray-700 mt-10 mb-5 " :class="errors && errors.title ? 'bg-red-200' : 'bg-green-200'"> 
                 <div class="flex">
                     <div class="border-r py-1  border-gray-700 w-32 text-center">
                         <label  class="text-sm font-semibold text-gray-800 uppercase" for="agent">Report Title</label>
@@ -182,7 +182,8 @@ export default {
                 return: 0,
                 duvet_deduction: 0,
                 balance: 0
-            }
+            },
+            errors: null
         }
     },
     watch: {
@@ -272,7 +273,7 @@ export default {
 
                 const response = await axios.post(url, data);
 
-                console.log(response);
+                window.location.href = '/summaries/' + response.data.id;
 
             } catch (error) {
 
@@ -280,6 +281,7 @@ export default {
 
                 if(error.response && error.response.data && error.response.data.errors ){
                     this.errors = error.response.data.errors
+                    console.log(this.errors);
                 }else {
                     console.log(error);
                 }

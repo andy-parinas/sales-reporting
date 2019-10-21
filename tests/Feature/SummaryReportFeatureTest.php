@@ -58,4 +58,27 @@ class SummaryReportFeatureTest extends TestCase
         $this->assertCount(1, $data);
         
     }
+
+    /** @test */
+    public function summary_report_fields_are_required()
+    {
+        $fields = collect(['report_number', 'title', 'from_date', 'to_date', 
+        'adult_count_total', 'children_count_total', 'tc_count', 'sales_total', 'agent_commissions_total', 'gst_total',
+        'total', 'balance']);
+
+
+        $fields->each(function($field){
+            $user = factory(User::class)->create();
+            $data = array_merge(factory(SummaryReport::class)->raw(), [$field => '']);
+
+            $this->post('/api/summaries', array_merge($data, ['api_token' => $user->api_token]))
+                ->assertSessionHasErrors($field);
+
+            $this->assertCount(0, SalesReport::all());
+
+        });
+
+    }
+
+
 }

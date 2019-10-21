@@ -4140,7 +4140,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         "return": 0,
         duvet_deduction: 0,
         balance: 0
-      }
+      },
+      errors: null
     };
   },
   watch: {
@@ -4254,7 +4255,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 6:
                 response = _context2.sent;
-                console.log(response);
+                window.location.href = '/summaries/' + response.data.id;
                 _context2.next = 14;
                 break;
 
@@ -4265,6 +4266,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 if (_context2.t0.response && _context2.t0.response.data && _context2.t0.response.data.errors) {
                   this.errors = _context2.t0.response.data.errors;
+                  console.log(this.errors);
                 } else {
                   console.log(_context2.t0);
                 }
@@ -28772,34 +28774,45 @@ var render = function() {
             _c("div", { staticClass: "flex" }, [
               _vm._m(0),
               _vm._v(" "),
-              _c("div", { staticClass: "flex-1 border-gray-700" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.summaryReport.from_date,
-                      expression: "summaryReport.from_date"
-                    }
-                  ],
-                  staticClass:
-                    "w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm",
-                  attrs: { type: "date", id: "date", placeholder: "Tour Date" },
-                  domProps: { value: _vm.summaryReport.from_date },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+              _c(
+                "div",
+                {
+                  staticClass: "flex-1 border-gray-700",
+                  class: _vm.errors && _vm.errors.from_date ? "bg-red-200" : ""
+                },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.summaryReport.from_date,
+                        expression: "summaryReport.from_date"
                       }
-                      _vm.$set(
-                        _vm.summaryReport,
-                        "from_date",
-                        $event.target.value
-                      )
+                    ],
+                    staticClass:
+                      "w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm bg-transparent",
+                    attrs: {
+                      type: "date",
+                      id: "date",
+                      placeholder: "Tour Date"
+                    },
+                    domProps: { value: _vm.summaryReport.from_date },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.summaryReport,
+                          "from_date",
+                          $event.target.value
+                        )
+                      }
                     }
-                  }
-                })
-              ])
+                  })
+                ]
+              )
             ])
           ]),
           _vm._v(" "),
@@ -28807,34 +28820,45 @@ var render = function() {
             _c("div", { staticClass: "flex" }, [
               _vm._m(1),
               _vm._v(" "),
-              _c("div", { staticClass: "flex-1border-gray-700" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.summaryReport.to_date,
-                      expression: "summaryReport.to_date"
-                    }
-                  ],
-                  staticClass:
-                    "w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm",
-                  attrs: { type: "date", id: "date", placeholder: "Tour Date" },
-                  domProps: { value: _vm.summaryReport.to_date },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+              _c(
+                "div",
+                {
+                  staticClass: "flex-1border-gray-700",
+                  class: _vm.errors && _vm.errors.to_date ? "bg-red-200" : ""
+                },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.summaryReport.to_date,
+                        expression: "summaryReport.to_date"
                       }
-                      _vm.$set(
-                        _vm.summaryReport,
-                        "to_date",
-                        $event.target.value
-                      )
+                    ],
+                    staticClass:
+                      "w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm bg-transparent",
+                    attrs: {
+                      type: "date",
+                      id: "date",
+                      placeholder: "Tour Date"
+                    },
+                    domProps: { value: _vm.summaryReport.to_date },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.summaryReport,
+                          "to_date",
+                          $event.target.value
+                        )
+                      }
                     }
-                  }
-                })
-              ])
+                  })
+                ]
+              )
             ])
           ]),
           _vm._v(" "),
@@ -28853,7 +28877,10 @@ var render = function() {
     _c("div", { staticClass: "mx-auto w-288" }, [
       _c(
         "div",
-        { staticClass: "border border-gray-700 mt-10 mb-5 bg-green-200" },
+        {
+          staticClass: "border border-gray-700 mt-10 mb-5 ",
+          class: _vm.errors && _vm.errors.title ? "bg-red-200" : "bg-green-200"
+        },
         [
           _c("div", { staticClass: "flex" }, [
             _vm._m(2),

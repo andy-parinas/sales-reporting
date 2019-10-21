@@ -49,7 +49,7 @@ class SummaryReportController extends Controller
 
     public function store()
     {
-        $data = request()->all();
+        $data = $this->validateSummaryData();
 
         // dd($data);
         DB::beginTransaction();
@@ -58,7 +58,7 @@ class SummaryReportController extends Controller
             
             $summary = SummaryReport::create($data);
 
-            $summary->summaryReportItems()->createMany($data['summary_items']);
+            $summary->summaryReportItems()->createMany(request('summary_items'));
 
             DB::commit();
 
@@ -71,6 +71,26 @@ class SummaryReportController extends Controller
             return response($e, Response::HTTP_BAD_REQUEST);
         }
 
+    }
+
+    private function validateSummaryData()
+    {
+        return request()->validate([
+            'title' => 'required',
+            'report_number'=> 'required',
+            'from_date'=> 'required',
+            'to_date'=> 'required',
+            'adult_count_total'=> 'required',
+            'children_count_total'=> 'required',
+            'tc_count'=> 'required',
+            'sales_total'=> 'required',
+            'agent_commissions_total'=> 'required',
+            'gst_total'=> 'required',
+            'total'=> 'required',
+            'return'=> '',
+            'duvet_deduction'=> '',
+            'balance'=> 'required'
+        ]);
     }
 
 }
