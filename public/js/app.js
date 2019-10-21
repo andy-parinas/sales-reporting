@@ -3009,6 +3009,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -3028,6 +3032,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       errors: null,
+      success: false,
+      submitting: false,
       commissionReference: [],
       deductionReference: [],
       tourAgents: [],
@@ -3300,8 +3306,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
        */
       this.form.selected_products.push(product);
       this.form.total_sales = this.form.total_sales + product.total;
-      console.log('Total Product', product.total);
-      console.log('Total Sales', this.form.total_sales);
 
       if (product.code === 1) {
         this.code1Total = this.code1Total + product.total;
@@ -3342,44 +3346,46 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                this.creating = true;
-                _context5.prev = 1;
+                this.submitting = true;
+                this.errors = null;
+                _context5.prev = 2;
                 data = _objectSpread({}, this.form, {
                   api_token: this.user.api_token
                 });
 
                 if (!this.edit) {
-                  _context5.next = 11;
+                  _context5.next = 13;
                   break;
                 }
 
-                _context5.next = 6;
+                _context5.next = 7;
                 return axios.patch(this.backend + '/api/sales/' + this.report.id, data);
 
-              case 6:
+              case 7:
                 response = _context5.sent;
+                this.submitting = false;
+                this.success = true;
                 window.location.href = '/sales/' + response.data.id;
-                console.log(response);
-                _context5.next = 16;
+                _context5.next = 19;
                 break;
-
-              case 11:
-                _context5.next = 13;
-                return axios.post(this.backend + '/api/sales', data);
 
               case 13:
+                _context5.next = 15;
+                return axios.post(this.backend + '/api/sales', data);
+
+              case 15:
                 _response = _context5.sent;
-                this.creating = false;
+                this.submitting = false;
+                this.success = true;
                 window.location.href = '/sales/' + _response.data.id;
 
-              case 16:
-                _context5.next = 23;
+              case 19:
+                _context5.next = 26;
                 break;
 
-              case 18:
-                _context5.prev = 18;
-                _context5.t0 = _context5["catch"](1);
-                console.log(_context5.t0.response.data);
+              case 21:
+                _context5.prev = 21;
+                _context5.t0 = _context5["catch"](2);
 
                 if (_context5.t0.response && _context5.t0.response.data && _context5.t0.response.data.errors) {
                   this.errors = _context5.t0.response.data.errors;
@@ -3388,14 +3394,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   console.log(_context5.t0);
                 }
 
-                this.creating = false;
+                this.submitting = false;
+                this.success = false;
 
-              case 23:
+              case 26:
               case "end":
                 return _context5.stop();
             }
           }
-        }, _callee5, this, [[1, 18]]);
+        }, _callee5, this, [[2, 21]]);
       }));
 
       function submit() {
@@ -28065,7 +28072,11 @@ var render = function() {
               {
                 staticClass:
                   "flex items-center w-full mt-5 py-2 px-4 text-white rounded-full justify-center focus:outline-none",
-                class: _vm.errors ? "bg-red-600" : "bg-indigo-600",
+                class: _vm.errors
+                  ? "bg-red-600"
+                  : _vm.success
+                  ? "bg-green-600"
+                  : "bg-indigo-600",
                 on: { click: _vm.submit }
               },
               [
@@ -28073,13 +28084,13 @@ var render = function() {
                   "div",
                   { staticClass: "text-white w-5 h-5", attrs: { title: "2" } },
                   [
-                    _vm.creating
+                    _vm.submitting
                       ? _c("div", [_c("circle-loader")], 1)
                       : _vm._e()
                   ]
                 ),
                 _vm._v(" "),
-                _vm.creating
+                _vm.submitting
                   ? _c("div", [
                       _vm.edit
                         ? _c("span", [_vm._v("Updating Report")])
@@ -28094,6 +28105,12 @@ var render = function() {
                         : _c("span", [
                             _vm._v("Error Creating Report! Try Again")
                           ])
+                    ])
+                  : _vm.success
+                  ? _c("div", [
+                      _vm.edit
+                        ? _c("span", [_vm._v("Successfully Updated Report")])
+                        : _c("span", [_vm._v("Successfully Created Report")])
                     ])
                   : _c("div", [
                       _vm.edit

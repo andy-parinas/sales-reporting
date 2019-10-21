@@ -107,19 +107,23 @@
 
                 <button 
                     class="flex items-center w-full mt-5 py-2 px-4 text-white rounded-full justify-center focus:outline-none" 
-                    :class="errors ? 'bg-red-600' : 'bg-indigo-600'"    @click="submit">
+                    :class="errors ? 'bg-red-600' : success ? 'bg-green-600' : 'bg-indigo-600'"    @click="submit">
                     <div class="text-white w-5 h-5" title="2">
-                       <div v-if="creating" >
+                       <div v-if="submitting" >
                            <circle-loader></circle-loader>
                        </div>
                     </div>
-                    <div v-if="creating" >
+                    <div v-if="submitting" >
                          <span v-if="edit">Updating Report</span>
                         <span v-else>Creating Report</span>
                     </div>
                     <div v-else-if="errors" > 
                         <span v-if="edit">Error Updating Report! Try Again</span>
                         <span v-else>Error Creating Report! Try Again</span>
+                    </div>
+                     <div v-else-if="success" > 
+                        <span v-if="edit">Successfully Updated Report</span>
+                        <span v-else>Successfully Created Report</span>
                     </div>
                     <div v-else>
                         <span v-if="edit">Update Report</span>
@@ -147,6 +151,8 @@ export default {
     data: function(){
         return {
             errors: null,
+            success: false,
+            submitting: false,
             commissionReference: [],
             deductionReference: [],
             tourAgents: [],
@@ -349,9 +355,6 @@ export default {
 
             this.form.total_sales = this.form.total_sales + product.total;
 
-            console.log('Total Product', product.total);
-            console.log('Total Sales', this.form.total_sales);
-
             if(product.code === 1) {
                 this.code1Total = this.code1Total + product.total;
                 this.code1Count = this.code1Count + product.quantity;
@@ -399,10 +402,12 @@ export default {
         submit: async function()
         {
 
-             this.creating = true;
+             this.submitting = true;
+             this.errors = null;
 
             try {
                 
+
                 const data = {
                     ...this.form,
                     api_token: this.user.api_token
@@ -410,19 +415,22 @@ export default {
 
                 if(this.edit){
                     const response = await axios.patch(this.backend + '/api/sales/' + this.report.id, data)
+
+                    
+                    this.submitting = false;
+                    this.success = true
                     window.location.href = '/sales/' + response.data.id;
-                    console.log(response);
 
                 }else {
                     const response = await axios.post(this.backend + '/api/sales', data)
-                    this.creating = false;
 
+                    this.submitting = false;
+                    this.success = true
                     window.location.href = '/sales/' + response.data.id;
                 }
 
             } catch (error) {
                 
-                console.log(error.response.data);
 
                 if(error.response && error.response.data && error.response.data.errors ){
                     this.errors = error.response.data.errors
@@ -431,7 +439,8 @@ export default {
                     console.log(error);
                 }
 
-                this.creating = false;
+                this.submitting = false;
+                this.success = false;
             }
 
         }
