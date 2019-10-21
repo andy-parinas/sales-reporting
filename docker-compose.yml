@@ -9,7 +9,7 @@ services:
       context: ./
       dockerfile: docker/app.dockerfile
     volumes: 
-      - ./:/var/www
+      - app-volume:/var/www
     environment: 
       - "DB_HOST=database"
   
@@ -20,7 +20,7 @@ services:
       context: ./
       dockerfile: docker/web.dockerfile
     volumes: 
-      - ./:/var/www
+      - app-volume:/var/www
     ports: 
       - 80:80
 
@@ -40,3 +40,4 @@ services:
 
 volumes: 
   dbdata:
+  app-volume:

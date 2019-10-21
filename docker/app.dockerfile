@@ -1,25 +1,19 @@
 FROM php:7.2-fpm
 
-COPY composer.lock composer.json /var/www/
+# COPY composer.lock composer.json /var/www/
 
-COPY database /var/www/database
+# COPY database /var/www/database
+
+COPY . /var/wwww
 
 WORKDIR /var/www
 
 RUN apt-get update && apt-get -y install git && apt-get -y install zip
 
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php -r "if (hash_file('SHA384', 'composer-setup.php') === 'a5c698ffe4b8e849a443b120cd5ba38043260d5c4023dbf93e1558871f1f07f58274fc6f4c93bcfd858c6bd0775cd8d1') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
-    && php composer-setup.php \
-    && php -r "unlink('composer-setup.php');" \
-    && php composer.phar install --no-dev --no-scripts \
-    && rm composer.phar
+RUN curl -sS https://getcomposer.org/installer -o composer-setup.php \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
-# COPY . /var/www
-
-# RUN chown -R www-data:www-data \
-#         /var/www/storage \
-#         /var/www/bootstrap/cache
+RUN chown -R www-data:www-data /var/www
 
 RUN  apt-get install -y libmcrypt-dev \
         libmagickwand-dev --no-install-recommends \
@@ -29,4 +23,15 @@ RUN  apt-get install -y libmcrypt-dev \
 
 COPY .env.prod .env
 
-# RUN php artisan optimize
+RUN composer install
+RUN php artisan key:generate
+RUN php artisan optimize
+
+
+# php artisan migrate - RUN this manualy
+# php artisan db:seed - RUN this manualy
+
+
+
+# Need to correct the copying og .env.prod to .env
+# Chown -R www-data:www-data /var/www/
