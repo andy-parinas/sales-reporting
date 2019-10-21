@@ -50,4 +50,5 @@ Route::get('/commissions', 'Api\CommissionController@index');
 Route::get('/users', 'Api\UserController@index');
 Route::delete('/users/{user}', 'Api\UserController@destroy')->name('users.api.destroy');
 
+Route::get('/summaries', 'Api\SummaryReportController@index');
 Route::post('/summaries', 'Api\SummaryReportController@store');
