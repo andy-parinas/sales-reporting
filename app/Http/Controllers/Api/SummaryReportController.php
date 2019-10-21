@@ -73,6 +73,14 @@ class SummaryReportController extends Controller
 
     }
 
+
+    public function destroy(SummaryReport $summary)
+    {
+        $summary->delete();
+
+        return response([], Response::HTTP_OK);
+    }
+
     private function validateSummaryData()
     {
         return request()->validate([
