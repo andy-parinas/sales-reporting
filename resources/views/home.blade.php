@@ -26,7 +26,7 @@
            <h2 class="text-gray-800 font-bold text-lg" > Create Sales Report</h2>
         </div>
     </a>
-    <div class="p-10 border border-gray-400 rounded w-64 m-5">
+    <a href="{{ route('summaries.create') }}" class="p-10 border border-gray-400 rounded w-64 m-5">
         <div class="w-32 h-32 mx-auto text-white bg-blue-700 p-8 rounded-full">
                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="scroll" 
                 class="w-full h-full" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
@@ -36,10 +36,10 @@
             </svg>
         </div>
         <div class="text-center mt-5">
-            <h2 class="text-gray-800 font-bold text-lg" > Create Weekly Report</h2>
+            <h2 class="text-gray-800 font-bold text-lg" > Create Summary Report</h2>
         </div>
-    </div>
-    <div class="p-10 border border-gray-400 rounded w-64 m-5">
+    </a>
+    <a href="{{ route('products.create') }} " class="p-10 border border-gray-400 rounded w-64 m-5">
         <div class="w-32 h-32 mx-auto text-white bg-orange-700 p-8 rounded-full">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="shopping-basket" 
                 class="w-full h-full" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
@@ -55,6 +55,6 @@
         <div class="text-center mt-5">
             <h2 class="text-gray-800 font-bold text-lg" > Add New Product</h2>
         </div>
-    </div>
+    </a>
 </div>
 @endsection
