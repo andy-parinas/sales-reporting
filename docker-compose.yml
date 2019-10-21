@@ -20,7 +20,7 @@ services:
       context: ./
       dockerfile: docker/web.dockerfile
     volumes: 
-      - app
+      - ./:/var/www
     ports: 
       - 80:80
 
