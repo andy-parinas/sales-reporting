@@ -20,7 +20,17 @@ class ProductController extends Controller
     {
  
         if(request()->search !== null){
-            return new ProductCollection(Product::search(request()->search)->paginate(10));
+            // return new ProductCollection(Product::search(request()->search)->paginate(10));
+            $search = '%' . request()->search .'%';
+
+            $products = Product::where('name', 'like', $search)
+                                ->orWhere('description', 'like',  $search)
+                                ->paginate(10);
+
+            // dd($products);
+            
+            return new ProductCollection($products);
+
         }
 
         return new ProductCollection(Product::paginate(10));

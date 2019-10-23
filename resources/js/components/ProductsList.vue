@@ -4,12 +4,13 @@
             <bar-loader color="#a0aec0"></bar-loader>
         </div>
          <div v-else class="my-10 px-5 w-288 mx-auto">
-                <form method="POST" @submit.prevent="searchProducts">
+                <form method="POST" @submit.prevent="searchProduct">
                     <div class="flex items-center border border-gray-700 rounded">
                             <label for="search" class="pl-2 font-bold text-gray-800 mr-2">Find</label>
                             <input class="py-2 px-4 flex-1 focus:outline-none"
                                 id="search" type="text" placeholder="Product Name" v-model="search">
-                            <button class="border border-blue-700 bg-blue-700 py-2 px-4 text-white">
+                            <button type="submit"
+                                class="border border-blue-700 bg-blue-700 py-2 px-4 text-white hover:bg-blue-600 active:bg-blue-700">
                                 Search
                             </button>
                     </div>
@@ -80,7 +81,8 @@ export default {
         return {
             loading: true,
             products: [],
-            search: ''
+            search: '',
+            errors: null
         }
     },
     methods: {
@@ -89,7 +91,11 @@ export default {
         },
         changePage: async function(page){
              try {
-                const url = this.backend + '/api/products?api_token=' + this.user.api_token + '&page=' + page;
+                const url = this.backend + '/api/products?api_token=' + this.user.api_token 
+                            + '&page=' + page
+                            + '&search=' + this.search;
+
+
                 const response = await axios.get(url);
                 this.products = response.data.data;
                 this.meta = response.data.meta;
@@ -97,6 +103,20 @@ export default {
            } catch (error) {
                console.log(error);
            }
+        },
+        searchProduct: async function(){
+            try {
+                const url = this.backend + '/api/products?api_token=' + this.user.api_token
+                            + '&search=' + this.search;
+
+                const response = await axios.get(url);
+
+                this.products = response.data.data;
+                this.meta = response.data.meta;
+
+            } catch (error) {
+                console.log(error);
+            }
         }
     },
     async mounted(){

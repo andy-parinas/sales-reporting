@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Product;
+use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -107,6 +108,25 @@ class ProductFeatureTest extends TestCase
 
     }
 
+    /** @test */
+    public function can_search_product_via_api()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        factory(Product::class, 5)->create(); //Haystack
+        factory(Product::class)->create(['name' => 'Foo Bar']);
+
+        
+        $response = $this->get('/api/products?api_token=' . $user->api_token . '&search=Foo' );
+
+        $result = json_decode($response->content())->data[0];
+
+        $this->assertEquals('Foo Bar', $result->name);
+
+
+    }
 
 
 }
