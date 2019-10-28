@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCommissionsTable extends Migration
+class CreateTourTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateCommissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('commissions', function (Blueprint $table) {
+        Schema::create('tour_types', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('description')->nullable(true);
+            $table->text('description')->nullable(true);
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateCommissionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('commissions');
+        Schema::dropIfExists('tour_types');
     }
 }

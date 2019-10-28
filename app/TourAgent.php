@@ -14,4 +14,10 @@ class TourAgent extends Model
         'phone'
     ];
 
+
+    public function tourCommissions()
+    {
+        return $this->hasMany(TourCommission::class);
+    }
+
 }
