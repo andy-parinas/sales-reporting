@@ -14,16 +14,22 @@ class TourAgentFeatureTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function agents_can_be_listed()
+    public function agents_can_be_listed_via_api()
     {
 
         // $this->withoutExceptionHandling();
-        
-        factory(TourAgent::class)->create();
 
-        $this->get('/agents')
-            ->assertOk()
-            ->assertViewHas('agents');
+        $user = factory(User::class)->create();
+        
+        factory(TourAgent::class)->create(['name' => 'Foo Bar']);
+
+        $response = $this->get('/api/agents?api_token=' . $user->api_token);
+
+        $data = json_decode($response->content())->data;
+        $meta = json_decode($response->content())->meta;
+
+        $this->assertEquals('Foo Bar', $data[0]->name);
+        $this->assertObjectHasAttribute('meta',json_decode($response->content()) );
 
 
     }
@@ -32,6 +38,10 @@ class TourAgentFeatureTest extends TestCase
     public function agent_can_be_fetched()
     {
         $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        $this->actingAs($user);
 
         $agent = factory(TourAgent::class)->create();
 
@@ -44,15 +54,16 @@ class TourAgentFeatureTest extends TestCase
 
 
     /** @test */
-    public function agent_can_be_created()
+    public function agent_can_be_created_via_api()
     {
 
         $this->withoutExceptionHandling();
 
         $data = factory(TourAgent::class)->raw();
+        $user = factory(User::class)->create();
 
-        $this->post('/agents', $data)
-            ->assertRedirect('/agents/' . TourAgent::first()->id);
+        $this->post('/api/agents', array_merge($data, ['api_token' => $user->api_token]))
+            ->assertStatus(201);
 
         $this->assertCount(1, TourAgent::all());
 
@@ -89,12 +100,14 @@ class TourAgentFeatureTest extends TestCase
     }
 
     /** @test */
-    public function agent_can_be_delete()
+    public function agent_can_be_deleted_via_api()
     {
+        $user = factory(User::class)->create();
+
         $agent = factory(TourAgent::class)->create();
 
-        $this->delete('/agents/' . $agent->id)
-            ->assertRedirect('/agents');
+        $this->delete('/api/agents/' . $agent->id . '?api_token=' . $user->api_token)
+            ->assertStatus(200);
 
         $this->assertCount(0, TourAgent::all());
 

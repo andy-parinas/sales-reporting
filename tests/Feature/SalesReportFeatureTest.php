@@ -301,7 +301,7 @@ class SalesReportFeatureTest extends TestCase
 
 
         $tourAgent = factory(TourAgent::class)->create();
-        $tourGuide = factory(TourGuide::class)->create(['tour_agent_id' => $tourAgent->id]);
+        $tourGuide = factory(TourGuide::class)->create();
 
         $product1 = factory(Product::class)->create();
         $product2 = factory(Product::class)->create();

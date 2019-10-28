@@ -105,32 +105,26 @@ class ProductApiTest extends TestCase
         
     }
 
-    // /** @test */
-    // public function user_can_search_product_via_api()
-    // {
-    //     $user = factory(User::class)->create();
+   /** @test */
+   public function can_search_product_via_api()
+   {
+       $this->withoutExceptionHandling();
 
-    //     //Hay Stack
-    //     factory(Product::class,15)->create();
+       $user = factory(User::class)->create();
 
-    //     //Needle
-    //     $product =factory(Product::class)->create(['name' => 'FooBar']);
+       factory(Product::class, 5)->create(); //Haystack
+       factory(Product::class)->create(['name' => 'Foo Bar']);
 
-    //     $url = '/api/products?api_token=' . $user->api_token . '&search=FooBar';
+       
+       $response = $this->get('/api/products?api_token=' . $user->api_token . '&search=Foo' );
 
-    //     $response = $this->get($url);
+       $result = json_decode($response->content())->data[0];
 
-    //     $response->assertJson([
-    //         'data' => [
-    //            [ 'name' => 'FooBar',
-    //             'description' => $product->description,
-    //             'price' => $product->price,
-    //             'product_type_id' => $product->product_type_id,
-    //             'product_type' => $product->productType->name]
-    //         ]
-    //     ]);
+       $this->assertEquals('Foo Bar', $result->name);
 
-    // }
+
+   }
+
 
     /** @test */
     public function can_create_product_via_api()
