@@ -19,10 +19,13 @@
     <div class="mt-10 w-144 mx-auto">
         @include('agents._agent-info')
     </div>
+    
+    <div class="mx-auto w-288 mt-5">
+        <h1 class="mb-2 text-lg font-light" >Commisions Matrix</h1>
+        {{-- @dump($tourCommissions) --}}
+        @foreach ($tourCommissions as $tourCommission)
+            <p> {{ $tourCommission->amount }}  | {{ $tourCommission->tour_agent_id }} | {{ $tourCommission->commission->name }} | {{ $tourCommission->tourType->name}} </p>
+        @endforeach
+    </div>
 @endsection
 
-{{-- 
-<div class="w-144">
-        <h1 class="mb-2 text-lg font-light" >Tour Guide List</h1>
-        <tour-guide-list  :user="{{ auth()->user() }}" backend="{{ env('APP_URL')}}"></tour-guide-list>
-    </div> --}}

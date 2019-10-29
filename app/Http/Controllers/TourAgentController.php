@@ -58,7 +58,9 @@ class TourAgentController extends Controller
      */
     public function show(TourAgent $agent)
     {
-        return view('agents.show', compact('agent'));
+        $tourCommissions = $agent->tourCommissions;
+
+        return view('agents.show', compact('agent', 'tourCommissions'));
     }
 
     /**

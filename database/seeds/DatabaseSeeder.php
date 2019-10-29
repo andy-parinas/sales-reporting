@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
             }
             
 
-            // factory(Product::class, 12)->create(['product_type_id' => $productType->id]); //Comment out for production seed
+            factory(Product::class, 12)->create(['product_type_id' => $productType->id]); //Comment out for production seed
 
         });
 
@@ -76,7 +76,7 @@ class DatabaseSeeder extends Seeder
                             'tour_agent_id' => $agent->id,
                             'tour_type_id' => $tourType->id,
                             'commission_type_id' => $commissionType->id,
-                            'commision_id' => $commission->id,
+                            'commission_id' => $commission->id,
                             'amount' => $comm[1]
                         ]);
                     }

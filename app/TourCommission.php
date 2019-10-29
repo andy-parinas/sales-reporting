@@ -15,7 +15,7 @@ class TourCommission extends Model
         'amount'
     ];
 
-    protected $with = ['commission'];
+    protected $with = ['commission', 'commissionType', 'tourType'];
 
 
     public function tourAgent()
