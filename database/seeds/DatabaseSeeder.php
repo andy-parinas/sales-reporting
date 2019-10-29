@@ -1,11 +1,14 @@
 <?php
 
 use App\Commission;
+use App\CommissionType;
 use App\Deduction;
 use App\Product;
 use App\ProductType;
 use App\TourAgent;
+use App\TourCommission;
 use App\TourGuide;
+use App\TourType;
 use App\User;
 use Illuminate\Database\Seeder;
 
@@ -34,41 +37,58 @@ class DatabaseSeeder extends Seeder
 
         });
 
-        collect([1,2,3,4])->each(function($type){
 
-            if($type === 1){
-                factory(Commission::class)->create([
-                    'name' => 'Carpet Agent Comm',
-                    'commission_type' => $type,
-                    'amount' => 0.46
-                ]);
-            };
+        $commissionType1 = factory(CommissionType::class)->create([
+            'name' => 'High Value',
+            'code' => 1
+        ]);
 
-            if($type === 2){
-                factory(Commission::class)->create([
-                    'name' => 'Item Agent Comm',
-                    'commission_type' => $type,
-                    'amount' => 0.41
-                ]);
-            };
+        $commissionType2 = factory(CommissionType::class)->create([
+            'name' => 'Regular Value',
+            'code' => 2
+        ]);
 
-            if($type === 3){
-                factory(Commission::class)->create([
-                    'name' => 'Guide',
-                    'commission_type' => $type,
-                    'amount' => 0.07
-                ]);
-            };
+        $tourType1 = factory(TourType::class)->create([
+            'name' => 'Package'
+        ]);
 
-            if($type === 4){
-                factory(Commission::class)->create([
-                    'name' => 'Manager',
-                    'commission_type' => $type,
-                    'amount' => 0.01
-                ]);
-            };
+        $tourType2 = factory(TourType::class)->create([
+            'name' => 'Honeymoon'
+        ]);
+
+        $commissionTypes = collect([$commissionType1, $commissionType2]);
+        $tourTypes = collect([$tourType1, $tourType2]);
+        
+        factory(TourAgent::class, 10)->create(); // Comment out for production seed
+
+
+
+        collect([['TA', 0.50], ['T/G', 0.10], ['Manager', 0.07], ['G.Company', 0.01], ['Extra', 0.10], ['Prepaid', 0.04] ])->each(function($comm) use ($commissionTypes, $tourTypes) {
+            
+            $commission = factory(Commission::class)->create(['name' => $comm[0]]);
+
+            foreach (TourAgent::all() as $agent) {
+                
+                foreach ($tourTypes as $tourType) {
+                   
+                    foreach ($commissionTypes as $commissionType) {
+                        factory(TourCommission::class)->create([
+                            'tour_agent_id' => $agent->id,
+                            'tour_type_id' => $tourType->id,
+                            'commission_type_id' => $commissionType->id,
+                            'commision_id' => $commission->id,
+                            'amount' => $comm[1]
+                        ]);
+                    }
+
+                }
+
+
+
+            }
 
         });
+
 
         collect(['Guide Incentive', 'Delivery', 'Service'])->each(function($type){
 
@@ -93,9 +113,7 @@ class DatabaseSeeder extends Seeder
 
         // factory(User::class, 5)->create(); //comment out for production seed
 
-        // factory(TourAgent::class, 10)->create(); // Comment out for production seed
-
-        // factory(TourGuide::class, 15)->create(); // Comment out for production seed
+        factory(TourGuide::class, 15)->create(); // Comment out for production seed
 
 
     }
