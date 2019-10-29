@@ -10,6 +10,7 @@ use App\SalesDeduction;
 use App\SalesReport;
 use App\SelectedProduct;
 use App\TourAgent;
+use App\TourCommission;
 use App\TourGuide;
 use App\User;
 use Tests\TestCase;
@@ -307,10 +308,10 @@ class SalesReportFeatureTest extends TestCase
         $product2 = factory(Product::class)->create();
         $product3 = factory(Product::class)->create();
 
-        $commission1 = factory(Commission::class)->create();
-        $commission2 = factory(Commission::class)->create();
-        $commission3 = factory(Commission::class)->create();
-        $commission4 = factory(Commission::class)->create();
+        $tourCommission1 = factory(TourCommission::class)->create(['tour_agent_id' => $tourAgent->id]);
+        $tourCommission2 = factory(TourCommission::class)->create(['tour_agent_id' => $tourAgent->id]);
+        $tourCommission3 = factory(TourCommission::class)->create(['tour_agent_id' => $tourAgent->id]);
+        $tourCommission4 = factory(TourCommission::class)->create(['tour_agent_id' => $tourAgent->id]);
 
         $deduction1 = factory(Deduction::class)->create();
         $deduction2 = factory(Deduction::class)->create();
@@ -372,19 +373,19 @@ class SalesReportFeatureTest extends TestCase
             ],
             'sales_commissions' => [
                 [
-                    'commission_id' => $commission1->id,
+                    'tour_commission_id' => $tourCommission1->id,
                     'amount' => $this->faker->randomFloat(2)
                 ],
                 [
-                    'commission_id' => $commission2->id,
+                    'tour_commission_id' => $tourCommission2->id,
                     'amount' => $this->faker->randomFloat(2)
                 ],
                 [
-                    'commission_id' => $commission3->id,
+                    'tour_commission_id' => $tourCommission3->id,
                     'amount' => $this->faker->randomFloat(2)
                 ],
                 [
-                    'commission_id' => $commission4->id,
+                    'tour_commission_id' => $tourCommission4->id,
                     'amount' => $this->faker->randomFloat(2)
                 ],
 
