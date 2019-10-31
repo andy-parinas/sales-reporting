@@ -22,10 +22,11 @@
     
     <div class="mx-auto w-288 mt-5">
         <h1 class="mb-2 text-lg font-light" >Commisions Matrix</h1>
-        {{-- @dump($tourCommissions) --}}
+        {{-- @dump($tourCommissions)
         @foreach ($tourCommissions as $tourCommission)
             <p> {{ $tourCommission->amount }}  | {{ $tourCommission->tour_agent_id }} | {{ $tourCommission->commission->name }} | {{ $tourCommission->tourType->name}} </p>
-        @endforeach
+        @endforeach --}}
+        <tour-commission-list :user="{{ auth()->user() }}"  backend="{{ env('APP_URL')}}" :tour-commissions="{{ $tourCommissions }}" ></tour-commission-list>
     </div>
 @endsection
 

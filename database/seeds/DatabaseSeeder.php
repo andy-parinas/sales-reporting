@@ -93,7 +93,7 @@ class DatabaseSeeder extends Seeder
         collect(['Guide Incentive', 'Delivery', 'Service'])->each(function($type){
 
             if($type === 'Service'){
-                factory(Deduction::class)->create(['name' => $type, 'type' => 3]);
+                factory(Deduction::class)->create(['name' => $type, 'type' => 3, 'amount' => 0]);
             }
             
             if($type === 'Guide Incentive') {

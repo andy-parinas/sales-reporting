@@ -5126,6 +5126,150 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TourCommissionList.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TourCommissionList.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui/loader/BarLoader */ "./resources/js/components/ui/loader/BarLoader.vue");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'TourCommissionList',
+  props: ['tour-commissions', 'user', 'backend'],
+  components: {
+    BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      commissions: [],
+      tourTypes: [],
+      commissionTypes: [],
+      loading: true
+    };
+  },
+  methods: {
+    filterTourCommissions: function filterTourCommissions(tourTypeId, commissionTypeId, commissionId) {
+      return this.tourCommissions.filter(function (tourCommission) {
+        return tourCommission.commission_type_id === commissionTypeId && tourCommission.tour_type_id === tourTypeId && tourCommission.commission_id === commissionId;
+      });
+    },
+    getTourCommissionAmount: function getTourCommissionAmount(tourTypeId, commissionTypeId, commissionId) {
+      var commissions = this.tourCommissions.filter(function (tourCommission) {
+        return tourCommission.commission_type_id === commissionTypeId && tourCommission.tour_type_id === tourTypeId && tourCommission.commission_id === commissionId;
+      });
+
+      if (commissions.length > 0) {
+        return (commissions[0].amount * 100).toFixed(2);
+      } else {
+        return 0.00;
+      }
+    }
+  },
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      var tourTypeUrl, commissionTypeUrl, commissionUrl, tourTypeResponse, commissionTypeResponse, commissionResponse;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              tourTypeUrl = this.backend + '/api/tour-types?api_token=' + this.user.api_token;
+              commissionTypeUrl = this.backend + '/api/commission-types?api_token=' + this.user.api_token;
+              commissionUrl = this.backend + '/api/commissions?api_token=' + this.user.api_token;
+              _context.next = 6;
+              return axios.get(tourTypeUrl);
+
+            case 6:
+              tourTypeResponse = _context.sent;
+              _context.next = 9;
+              return axios.get(commissionTypeUrl);
+
+            case 9:
+              commissionTypeResponse = _context.sent;
+              _context.next = 12;
+              return axios.get(commissionUrl);
+
+            case 12:
+              commissionResponse = _context.sent;
+              this.commissions = commissionResponse.data;
+              this.tourTypes = tourTypeResponse.data;
+              this.commissionTypes = commissionTypeResponse.data;
+              this.loading = false;
+              _context.next = 22;
+              break;
+
+            case 19:
+              _context.prev = 19;
+              _context.t0 = _context["catch"](0);
+              console.log(_context.t0);
+
+            case 22:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this, [[0, 19]]);
+    }));
+
+    function mounted() {
+      return _mounted.apply(this, arguments);
+    }
+
+    return mounted;
+  }()
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TourGuideForm.vue?vue&type=script&lang=js&":
 /*!************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TourGuideForm.vue?vue&type=script&lang=js& ***!
@@ -26759,19 +26903,27 @@ var render = function() {
                     "button",
                     {
                       staticClass:
-                        "flex items-center w-full mt-5 py-2 px-4 text-white \n                                rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
+                        "flex items-center w-full mt-5 py-2 px-4 text-white \r\n                                rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
                       on: { click: _vm.updateProduct }
                     },
-                    [_vm._v("\n                Update Product \n            ")]
+                    [
+                      _vm._v(
+                        "\r\n                Update Product \r\n            "
+                      )
+                    ]
                   )
                 : _c(
                     "button",
                     {
                       staticClass:
-                        "flex items-center w-full mt-5 py-2 px-4 text-white\n                             rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
+                        "flex items-center w-full mt-5 py-2 px-4 text-white\r\n                             rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
                       on: { click: _vm.createProduct }
                     },
-                    [_vm._v("\n                Add New Product \n            ")]
+                    [
+                      _vm._v(
+                        "\r\n                Add New Product \r\n            "
+                      )
+                    ]
                   )
             ]),
             _vm._v(" "),
@@ -30895,6 +31047,136 @@ var staticRenderFns = [
     ])
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TourCommissionList.vue?vue&type=template&id=6af821cc&":
+/*!*********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TourCommissionList.vue?vue&type=template&id=6af821cc& ***!
+  \*********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _vm.loading
+      ? _c(
+          "div",
+          { staticClass: "w-full h-96 flex items-center justify-center" },
+          [_c("bar-loader", { attrs: { color: "#a0aec0" } })],
+          1
+        )
+      : _c(
+          "div",
+          _vm._l(_vm.tourTypes, function(tourType) {
+            return _c("div", { key: tourType.id, staticClass: "mt-5" }, [
+              _c("h1", { staticClass: "text-gray-800 font-light text-lg" }, [
+                _vm._v(" " + _vm._s(tourType.name) + " ")
+              ]),
+              _vm._v(" "),
+              _c("table", { staticClass: "w-full" }, [
+                _c("thead", [
+                  _c(
+                    "tr",
+                    {
+                      staticClass: "bg-gray-300 border border-gray-800 text-sm"
+                    },
+                    [
+                      _c(
+                        "td",
+                        {
+                          staticClass: "py-2 px-2 border border-gray-800 w-56"
+                        },
+                        [_vm._v(" Commission Type ")]
+                      ),
+                      _vm._v(" "),
+                      _vm._l(_vm.commissions, function(commission) {
+                        return _c(
+                          "td",
+                          {
+                            key: commission.id,
+                            staticClass: "py-2 px-2 border border-gray-800 w-16"
+                          },
+                          [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(commission.name) +
+                                "\n                        "
+                            )
+                          ]
+                        )
+                      })
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  _vm._l(_vm.commissionTypes, function(commissionType) {
+                    return _c(
+                      "tr",
+                      {
+                        key: commissionType.id,
+                        staticClass: "bg-white even:bg-gray-100 text-sm"
+                      },
+                      [
+                        _c(
+                          "td",
+                          {
+                            staticClass:
+                              "py-2 px-4 border border-gray-800 text-sm"
+                          },
+                          [_vm._v(" " + _vm._s(commissionType.name) + " ")]
+                        ),
+                        _vm._v(" "),
+                        _vm._l(_vm.commissions, function(commission) {
+                          return _c(
+                            "td",
+                            {
+                              key: commission.id,
+                              staticClass:
+                                "py-2 px-4 border border-gray-800 text-sm"
+                            },
+                            [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(
+                                    _vm.getTourCommissionAmount(
+                                      tourType.id,
+                                      commissionType.id,
+                                      commission.id
+                                    )
+                                  ) +
+                                  "\n                        "
+                              )
+                            ]
+                          )
+                        })
+                      ],
+                      2
+                    )
+                  }),
+                  0
+                )
+              ])
+            ])
+          }),
+          0
+        )
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -44172,6 +44454,7 @@ Vue.component('tour-guide-form', __webpack_require__(/*! ./components/TourGuideF
 Vue.component('user-list', __webpack_require__(/*! ./components/UserList.vue */ "./resources/js/components/UserList.vue")["default"]);
 Vue.component('summary-report-form', __webpack_require__(/*! ./components/SummaryReportForm.vue */ "./resources/js/components/SummaryReportForm.vue")["default"]);
 Vue.component('summary-report-list', __webpack_require__(/*! ./components/SummaryReportList.vue */ "./resources/js/components/SummaryReportList.vue")["default"]);
+Vue.component('tour-commission-list', __webpack_require__(/*! ./components/TourCommissionList.vue */ "./resources/js/components/TourCommissionList.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -45207,6 +45490,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/TourCommissionList.vue":
+/*!********************************************************!*\
+  !*** ./resources/js/components/TourCommissionList.vue ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TourCommissionList_vue_vue_type_template_id_6af821cc___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TourCommissionList.vue?vue&type=template&id=6af821cc& */ "./resources/js/components/TourCommissionList.vue?vue&type=template&id=6af821cc&");
+/* harmony import */ var _TourCommissionList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TourCommissionList.vue?vue&type=script&lang=js& */ "./resources/js/components/TourCommissionList.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TourCommissionList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TourCommissionList_vue_vue_type_template_id_6af821cc___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TourCommissionList_vue_vue_type_template_id_6af821cc___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/TourCommissionList.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/TourCommissionList.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/TourCommissionList.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TourCommissionList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./TourCommissionList.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TourCommissionList.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TourCommissionList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/TourCommissionList.vue?vue&type=template&id=6af821cc&":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/components/TourCommissionList.vue?vue&type=template&id=6af821cc& ***!
+  \***************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourCommissionList_vue_vue_type_template_id_6af821cc___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./TourCommissionList.vue?vue&type=template&id=6af821cc& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TourCommissionList.vue?vue&type=template&id=6af821cc&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourCommissionList_vue_vue_type_template_id_6af821cc___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourCommissionList_vue_vue_type_template_id_6af821cc___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/TourGuideForm.vue":
 /*!***************************************************!*\
   !*** ./resources/js/components/TourGuideForm.vue ***!
@@ -45915,8 +46267,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/andy/Projects/Laravel/sales-reporting/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/andy/Projects/Laravel/sales-reporting/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! G:\Wool House\reporting-app\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! G:\Wool House\reporting-app\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

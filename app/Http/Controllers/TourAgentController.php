@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Commission;
 use App\TourAgent;
 use Illuminate\Http\Request;
 
@@ -59,8 +60,9 @@ class TourAgentController extends Controller
     public function show(TourAgent $agent)
     {
         $tourCommissions = $agent->tourCommissions;
+        $commissions = Commission::all();
 
-        return view('agents.show', compact('agent', 'tourCommissions'));
+        return view('agents.show', compact('agent', 'tourCommissions', 'commissions'));
     }
 
     /**
