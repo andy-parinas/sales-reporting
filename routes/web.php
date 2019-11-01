@@ -18,6 +18,7 @@ Route::resource('agents', 'TourAgentController');
 Route::resource('sales', 'SalesReportController');
 Route::resource('guides', 'TourGuideController');
 Route::resource('summaries', 'SummaryReportController');
+Route::resource('commissions', 'TourCommissionController');
 
 Auth::routes([
     'register' => false, // Registration Routes...

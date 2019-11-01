@@ -9,11 +9,11 @@
                 <table class="w-full">
                     <thead>
                         <tr class="bg-gray-300 border border-gray-800 text-sm">
-                            <td class="py-2 px-2 border border-gray-800 w-56"> Commission Type </td>
-                            <td v-for="commission in commissions" :key="commission.id"
+                            <th class="py-2 px-2 border border-gray-800 w-56"> Commission Type </th>
+                            <th v-for="commission in commissions" :key="commission.id"
                                 class="py-2 px-2 border border-gray-800 w-16" >
                                 {{ commission.name }}
-                            </td>
+                            </th>
                             <!-- <td class="py-2 px-2 border border-gray-800 w-32"></td> -->
                         </tr>
                     </thead>

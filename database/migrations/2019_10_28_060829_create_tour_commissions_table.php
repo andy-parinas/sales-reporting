@@ -19,7 +19,7 @@ class CreateTourCommissionsTable extends Migration
             $table->unsignedBigInteger('tour_type_id');
             $table->unsignedBigInteger('commission_type_id');
             $table->unsignedBigInteger('commission_id');
-            $table->float('amount');
+            $table->float('amount')->default(0);
             $table->timestamps();
         });
     }
