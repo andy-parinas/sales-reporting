@@ -24,25 +24,6 @@ export default {
     name: 'TourcommissionDashboard',
     props: ['user', 'backend'],
     components: { TourTypeComponent, CommissionTypeComponent, CommissionComponent },
-    data: function() {
-        return {
-            tourTypes: [],
-            commissionTypes: [],
-            commissions: []
-        }
-    },
-    async mounted(){
-
-        try {
-            
-
-
-
-        } catch (error) {
-            console.log(error);
-
-        }
-    }
 }
 </script>
 
