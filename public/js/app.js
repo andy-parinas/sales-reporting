@@ -6054,6 +6054,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ui/loader/BarLoader */ "./resources/js/components/ui/loader/BarLoader.vue");
+/* harmony import */ var _TourTypeForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TourTypeForm */ "./resources/js/components/commissions/TourTypeForm.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -6090,19 +6091,64 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TourTypeComponent',
   props: ['user', 'backend'],
   components: {
-    BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"]
+    BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"],
+    TourTypeForm: _TourTypeForm__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   data: function data() {
     return {
       tourTypes: [],
       loading: true,
-      errors: false
+      errors: false,
+      selectedTypeIndex: null,
+      selectedType: null,
+      successMessage: null
     };
+  },
+  methods: {
+    tourTypeSelected: function tourTypeSelected(index) {
+      this.selectedType = this.tourTypes[this.selectedTypeIndex];
+      this.$refs.tourTypeForm.tourTypeSelected(this.selectedType, index);
+    },
+    clearSelection: function clearSelection() {
+      this.selectedTypeIndex = null;
+      this.selectedType = null;
+    },
+    tourTypeInsert: function tourTypeInsert(data) {
+      this.tourTypes.push(data);
+      this.successMessage = 'Tour Type Successfully Created';
+    },
+    tourTypeUpdate: function tourTypeUpdate(data, index) {
+      this.tourTypes[index].name = data.name;
+      this.tourTypes[index].description = data.description;
+      this.successMessage = 'Tour Type Successfully Updated';
+    },
+    tourTypeDelete: function tourTypeDelete(index) {
+      this.tourTypes.splice(index, 1);
+      this.clearSelection();
+      this.successMessage = 'Tour Type Successfully Deleted';
+    },
+    clearMessage: function clearMessage() {
+      this.successMessage = null;
+    }
   },
   mounted: function () {
     var _mounted = _asyncToGenerator(
@@ -6147,6 +6193,281 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
     return mounted;
   }()
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/TourTypeForm.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/commissions/TourTypeForm.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'TourTypeForm',
+  props: ['user', 'backend'],
+  data: function data() {
+    return {
+      selectedId: null,
+      selectedIndex: null,
+      form: {
+        name: '',
+        description: ''
+      },
+      selected: false,
+      errors: null,
+      errorMessage: null
+    };
+  },
+  methods: {
+    tourTypeSelected: function tourTypeSelected(tourType, selectedIndex) {
+      this.form.name = tourType.name;
+      this.form.description = tourType.description;
+      this.selectedId = tourType.id;
+      this.selected = true;
+      this.selectedIndex = selectedIndex;
+    },
+    createTourType: function () {
+      var _createTourType = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var url, data, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                url = this.backend + '/api/tour-types';
+                data = _objectSpread({}, this.form, {
+                  api_token: this.user.api_token
+                });
+                _context.next = 5;
+                return axios.post(url, data);
+
+              case 5:
+                response = _context.sent;
+                this.$emit('tourTypeAdded', response.data);
+                this.clearfields();
+                this.errors = null;
+                _context.next = 14;
+                break;
+
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context["catch"](0);
+
+                if (_context.t0.response && _context.t0.response.data && _context.t0.response.data.errors) {
+                  this.errors = _context.t0.response.data.errors;
+                  this.errorMessage = "Errors Check required field";
+                  console.log(this.errors);
+                } else {
+                  this.errorMessage = "Error Creating Tour Type. Please check with your System Administrator";
+                  console.log(_context.t0);
+                }
+
+              case 14:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[0, 11]]);
+      }));
+
+      function createTourType() {
+        return _createTourType.apply(this, arguments);
+      }
+
+      return createTourType;
+    }(),
+    updateTourType: function () {
+      var _updateTourType = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var url, data, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                url = this.backend + '/api/tour-types/' + this.selectedId;
+                data = _objectSpread({}, this.form, {
+                  api_token: this.user.api_token
+                });
+                _context2.next = 5;
+                return axios.patch(url, data);
+
+              case 5:
+                response = _context2.sent;
+                this.$emit('tourTypeUpdated', response.data, this.selectedIndex);
+                _context2.next = 13;
+                break;
+
+              case 9:
+                _context2.prev = 9;
+                _context2.t0 = _context2["catch"](0);
+
+                if (_context2.t0.response && _context2.t0.response.data && _context2.t0.response.data.errors) {
+                  this.errors = _context2.t0.response.data.errors;
+                  console.log(this.errors.response);
+                } else {
+                  this.errors = _context2.t0;
+                  console.log(_context2.t0);
+                }
+
+                this.errorMessage = "Error Updating Tour Type. Please check with your System Administrator";
+
+              case 13:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 9]]);
+      }));
+
+      function updateTourType() {
+        return _updateTourType.apply(this, arguments);
+      }
+
+      return updateTourType;
+    }(),
+    deleteTourType: function () {
+      var _deleteTourType = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        var url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                url = this.backend + '/api/tour-types/' + this.selectedId + '?api_token=' + this.user.api_token;
+                _context3.next = 4;
+                return axios["delete"](url);
+
+              case 4:
+                response = _context3.sent;
+                this.$emit('tourTypeDeleted', this.selectedIndex);
+                this.clearfields();
+                _context3.next = 13;
+                break;
+
+              case 9:
+                _context3.prev = 9;
+                _context3.t0 = _context3["catch"](0);
+
+                if (_context3.t0.response && _context3.t0.response.data && _context3.t0.response.data.errors) {
+                  this.errors = _context3.t0.response.data.errors;
+                  console.log(this.errors.response);
+                } else {
+                  this.errors = _context3.t0;
+                  console.log(_context3.t0);
+                }
+
+                this.errorMessage = "Error Deleting Tour Type. Please check with your System Administrator";
+
+              case 13:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[0, 9]]);
+      }));
+
+      function deleteTourType() {
+        return _deleteTourType.apply(this, arguments);
+      }
+
+      return deleteTourType;
+    }(),
+    cancel: function cancel() {
+      this.$emit('cancel');
+      this.clearfields();
+    },
+    clearfields: function clearfields() {
+      this.selected = false;
+      this.form.name = '';
+      this.form.description = '';
+      this.errors = null;
+    }
+  }
 });
 
 /***/ }),
@@ -32435,54 +32756,118 @@ var render = function() {
           [_c("bar-loader", { attrs: { color: "#a0aec0" } })],
           1
         )
-      : _c("div", [
-          _c("table", { staticClass: "w-full" }, [
-            _vm._m(0),
+      : _c(
+          "div",
+          [
+            _c("table", { staticClass: "w-full" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.tourTypes, function(tourType, index) {
+                  return _c(
+                    "tr",
+                    {
+                      key: tourType.id,
+                      staticClass: "bg-white even:bg-gray-100 text-sm"
+                    },
+                    [
+                      _c(
+                        "td",
+                        {
+                          staticClass:
+                            "py-2 px-4 border border-gray-800 text-sm"
+                        },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.selectedTypeIndex,
+                                expression: "selectedTypeIndex"
+                              }
+                            ],
+                            attrs: {
+                              type: "radio",
+                              id: tourType.id,
+                              name: "selection"
+                            },
+                            domProps: {
+                              value: index,
+                              checked: _vm._q(_vm.selectedTypeIndex, index)
+                            },
+                            on: {
+                              change: [
+                                function($event) {
+                                  _vm.selectedTypeIndex = index
+                                },
+                                function($event) {
+                                  return _vm.tourTypeSelected(index)
+                                }
+                              ]
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("label", { attrs: { for: tourType.id } }, [
+                            _vm._v(_vm._s(tourType.name) + "  ")
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        {
+                          staticClass:
+                            "py-2 px-4 border border-gray-800 text-sm"
+                        },
+                        [
+                          _vm._v(
+                            " \n                            " +
+                              _vm._s(tourType.description) +
+                              " \n                        "
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                }),
+                0
+              )
+            ]),
             _vm._v(" "),
-            _c(
-              "tbody",
-              _vm._l(_vm.tourTypes, function(tourType) {
-                return _c(
-                  "tr",
-                  {
-                    key: tourType.id,
-                    staticClass: "bg-white even:bg-gray-100 text-sm"
-                  },
-                  [
-                    _c(
-                      "td",
-                      {
-                        staticClass: "py-2 px-4 border border-gray-800 text-sm"
-                      },
-                      [
-                        _vm._v(
-                          " \n                            " +
-                            _vm._s(tourType.name) +
-                            " \n                        "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      {
-                        staticClass: "py-2 px-4 border border-gray-800 text-sm"
-                      },
-                      [
-                        _vm._v(
-                          " \n                            " +
-                            _vm._s(tourType.description) +
-                            " \n                        "
-                        )
-                      ]
-                    )
-                  ]
-                )
-              }),
-              0
-            )
-          ])
-        ])
+            _vm.successMessage
+              ? _c("div", [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "px-4 py-2 border-green-500 bg-green-700 text-white font-semibold rounded my-2 flex items-center justify-between text-sm"
+                    },
+                    [
+                      _c("div", [_vm._v(_vm._s(_vm.successMessage))]),
+                      _vm._v(" "),
+                      _c("button", { on: { click: _vm.clearMessage } }, [
+                        _vm._v("X")
+                      ])
+                    ]
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c("tour-type-form", {
+              ref: "tourTypeForm",
+              attrs: { user: _vm.user, backend: _vm.backend },
+              on: {
+                tourTypeAdded: _vm.tourTypeInsert,
+                tourTypeUpdated: _vm.tourTypeUpdate,
+                tourTypeDeleted: _vm.tourTypeDelete,
+                cancel: _vm.clearSelection
+              }
+            })
+          ],
+          1
+        )
   ])
 }
 var staticRenderFns = [
@@ -32501,6 +32886,204 @@ var staticRenderFns = [
         ])
       ])
     ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/TourTypeForm.vue?vue&type=template&id=4988ec48&":
+/*!***************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/commissions/TourTypeForm.vue?vue&type=template&id=4988ec48& ***!
+  \***************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "mt-5 mb-2" }, [
+      _c("h1", { staticClass: "font-light" }, [
+        _vm.selected
+          ? _c("span", [_vm._v("Update/Delete Tour Type")])
+          : _c("span", [_vm._v("Add New Tour Type")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "border border-gray-700" }, [
+        _c("div", { staticClass: "flex" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "flex-1 border-b border-gray-700",
+              class: _vm.errors && _vm.errors.name ? "bg-red-200" : ""
+            },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.form.name,
+                    expression: "form.name"
+                  }
+                ],
+                staticClass:
+                  "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm bg-transparent",
+                attrs: { type: "text", placeholder: "Product Type Name" },
+                domProps: { value: _vm.form.name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.form, "name", $event.target.value)
+                  }
+                }
+              })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "flex" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex-1 border-gray-700" }, [
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.form.description,
+                  expression: "form.description"
+                }
+              ],
+              staticClass:
+                "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm",
+              attrs: {
+                placeholder: "Tour Type Description",
+                name: "description",
+                id: "description",
+                rows: "2"
+              },
+              domProps: { value: _vm.form.description },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.form, "description", $event.target.value)
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.errors !== null
+        ? _c("div", [
+            _c("h3", { staticClass: "text-red-700 text-sm font-semibold" })
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.selected === true
+        ? _c("div", [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center \n                    focus:outline-none bg-blue-600 text-sm hover:bg-blue-700",
+                on: { click: _vm.updateTourType }
+              },
+              [_vm._v("\n                Update Tour Type\n            ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center \n                    focus:outline-none bg-red-600 text-sm hover:bg-red-700",
+                on: { click: _vm.deleteTourType }
+              },
+              [_vm._v("\n                Delete Tour Type\n            ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center \n                            focus:outline-none bg-gray-600 text-sm hover:bg-gray-700",
+                on: { click: _vm.cancel }
+              },
+              [_vm._v("\n                Cancel\n            ")]
+            )
+          ])
+        : _c("div", [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center \n                            focus:outline-none bg-blue-600 text-sm hover:bg-blue-700",
+                on: { click: _vm.createTourType }
+              },
+              [_vm._v("\n            Add Tour Type\n            ")]
+            )
+          ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "border-b border-r py-2  border-gray-700 w-32 text-center"
+      },
+      [
+        _c(
+          "label",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase",
+            attrs: { for: "agent" }
+          },
+          [
+            _vm._v("\n                        Type Name "),
+            _c("sup", { staticClass: "text-red-600 font-bold" }, [_vm._v("*")])
+          ]
+        )
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "border-r py-2  border-gray-700 w-32 text-center" },
+      [
+        _c(
+          "label",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase",
+            attrs: { for: "guide" }
+          },
+          [_vm._v("Description")]
+        )
+      ]
+    )
   }
 ]
 render._withStripped = true
@@ -46765,6 +47348,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeComponent_vue_vue_type_template_id_16a964ae___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeComponent_vue_vue_type_template_id_16a964ae___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/TourTypeForm.vue":
+/*!**************************************************************!*\
+  !*** ./resources/js/components/commissions/TourTypeForm.vue ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TourTypeForm_vue_vue_type_template_id_4988ec48___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TourTypeForm.vue?vue&type=template&id=4988ec48& */ "./resources/js/components/commissions/TourTypeForm.vue?vue&type=template&id=4988ec48&");
+/* harmony import */ var _TourTypeForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TourTypeForm.vue?vue&type=script&lang=js& */ "./resources/js/components/commissions/TourTypeForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TourTypeForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TourTypeForm_vue_vue_type_template_id_4988ec48___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TourTypeForm_vue_vue_type_template_id_4988ec48___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/commissions/TourTypeForm.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/TourTypeForm.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/components/commissions/TourTypeForm.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./TourTypeForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/TourTypeForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/TourTypeForm.vue?vue&type=template&id=4988ec48&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/components/commissions/TourTypeForm.vue?vue&type=template&id=4988ec48& ***!
+  \*********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeForm_vue_vue_type_template_id_4988ec48___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./TourTypeForm.vue?vue&type=template&id=4988ec48& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/TourTypeForm.vue?vue&type=template&id=4988ec48&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeForm_vue_vue_type_template_id_4988ec48___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeForm_vue_vue_type_template_id_4988ec48___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

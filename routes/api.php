@@ -56,5 +56,9 @@ Route::patch('/summaries/{summary}', 'Api\SummaryReportController@update')->name
 
 
 Route::get('/tour-types', 'Api\TourTypeController@index');
+Route::post('/tour-types', 'Api\TourTypeController@store');
+Route::delete('/tour-types/{type}', 'Api\TourTypeController@destroy');
+Route::patch('/tour-types/{type}', 'Api\TourTypeController@update');
+
 Route::get('/commission-types', 'Api\CommissionTypeController@index');
 Route::get('/commissions', 'Api\CommissionController@index');
