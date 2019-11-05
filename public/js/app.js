@@ -5837,6 +5837,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ui/loader/BarLoader */ "./resources/js/components/ui/loader/BarLoader.vue");
+/* harmony import */ var _CommissionForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CommissionForm */ "./resources/js/components/commissions/CommissionForm.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -5873,19 +5874,54 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'CommissionComponent',
   props: ['user', 'backend'],
   components: {
-    BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"]
+    BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"],
+    CommissionForm: _CommissionForm__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   data: function data() {
     return {
       commissions: [],
       loading: true,
-      errors: false
+      errors: false,
+      selectedCommissionIndex: null,
+      selectedCommission: null
     };
+  },
+  methods: {
+    commissionSelected: function commissionSelected(index) {
+      this.selectedCommission = this.commissions[index];
+      this.$refs.commissionForm.commissionSelected(this.selectedCommission, index);
+    },
+    commissionInsert: function commissionInsert(commission) {
+      this.commissions.push(commission);
+    },
+    commissionUpdate: function commissionUpdate(commission, index) {
+      this.commissions[index].name = commission.name;
+      this.commissions[index].description = commission.description;
+    },
+    commissionRemove: function commissionRemove(index) {
+      this.commissions.splice(index, 1);
+      this.selectedCommission = null;
+    },
+    clearSelection: function clearSelection() {
+      this.selectedCommissionIndex = null;
+      this.selectedCommission = null;
+    }
   },
   mounted: function () {
     var _mounted = _asyncToGenerator(
@@ -5930,6 +5966,313 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
     return mounted;
   }()
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/CommissionForm.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/commissions/CommissionForm.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ui/loader/CircleLoader */ "./resources/js/components/ui/loader/CircleLoader.vue");
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'CommissionForm',
+  props: ['user', 'backend'],
+  components: {
+    CircleLoader: _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      commissionId: null,
+      form: {
+        name: '',
+        description: ''
+      },
+      selected: false,
+      errors: null,
+      selectedIndex: null,
+      inserting: false,
+      deleting: false,
+      updating: false
+    };
+  },
+  methods: {
+    commissionSelected: function commissionSelected(commission, selectedIndex) {
+      this.form.name = commission.name;
+      this.form.description = commission.description;
+      this.commissionId = commission.id;
+      this.selected = true;
+      this.selectedIndex = selectedIndex;
+      this.errors = null;
+    },
+    updateCommission: function () {
+      var _updateCommission = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var url, data, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                url = this.backend + '/api/commissions/' + this.commissionId;
+                data = _objectSpread({}, this.form, {
+                  api_token: this.user.api_token
+                });
+                this.updating = true;
+                _context.next = 6;
+                return axios.patch(url, data);
+
+              case 6:
+                response = _context.sent;
+                this.$emit('commissionUpdated', response.data, this.selectedIndex);
+                this.updating = false;
+                _context.next = 15;
+                break;
+
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context["catch"](0);
+
+                if (_context.t0.response && _context.t0.response.data && _context.t0.response.data.errors) {
+                  this.errors = _context.t0.response.data.errors;
+                  this.errorMessage = "Errors Check required field";
+                  console.log(this.errors);
+                } else {
+                  this.errorMessage = "Error Creating Tour Type. Please check with your System Administrator";
+                  console.log(_context.t0);
+                }
+
+                this.updating = false;
+
+              case 15:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[0, 11]]);
+      }));
+
+      function updateCommission() {
+        return _updateCommission.apply(this, arguments);
+      }
+
+      return updateCommission;
+    }(),
+    deleteCommission: function () {
+      var _deleteCommission = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                url = this.backend + '/api/commissions/' + this.commissionId + '?api_token=' + this.user.api_token;
+                this.deleting = true;
+                _context2.next = 5;
+                return axios["delete"](url);
+
+              case 5:
+                response = _context2.sent;
+                this.$emit('commissionDeleted', this.selectedIndex);
+                this.clearFields();
+                this.selected = null;
+                this.deleting = false;
+                _context2.next = 16;
+                break;
+
+              case 12:
+                _context2.prev = 12;
+                _context2.t0 = _context2["catch"](0);
+
+                if (_context2.t0.response && _context2.t0.response.data && _context2.t0.response.data.errors) {
+                  this.errors = _context2.t0.response.data.errors;
+                  this.errorMessage = "Errors Check required field";
+                  console.log(this.errors);
+                } else {
+                  this.errorMessage = "Error Creating Tour Type. Please check with your System Administrator";
+                  console.log(_context2.t0);
+                }
+
+                this.deleting = false;
+
+              case 16:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 12]]);
+      }));
+
+      function deleteCommission() {
+        return _deleteCommission.apply(this, arguments);
+      }
+
+      return deleteCommission;
+    }(),
+    createCommission: function () {
+      var _createCommission = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        var url, data, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                url = this.backend + '/api/commissions';
+                data = _objectSpread({}, this.form, {
+                  api_token: this.user.api_token
+                });
+                this.inserting = true;
+                _context3.next = 6;
+                return axios.post(url, data);
+
+              case 6:
+                response = _context3.sent;
+                this.$emit('commissionCreated', response.data);
+                this.clearFields();
+                this.inserting = false;
+                _context3.next = 16;
+                break;
+
+              case 12:
+                _context3.prev = 12;
+                _context3.t0 = _context3["catch"](0);
+
+                if (_context3.t0.response && _context3.t0.response.data && _context3.t0.response.data.errors) {
+                  this.errors = _context3.t0.response.data.errors;
+                  this.errorMessage = "Errors Check required field";
+                  console.log(this.errors);
+                } else {
+                  this.errorMessage = "Error Creating Tour Type. Please check with your System Administrator";
+                  console.log(_context3.t0);
+                }
+
+                this.inserting = false;
+
+              case 16:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[0, 12]]);
+      }));
+
+      function createCommission() {
+        return _createCommission.apply(this, arguments);
+      }
+
+      return createCommission;
+    }(),
+    cancel: function cancel() {
+      this.selected = false;
+      this.clearFields();
+      this.$emit('cancel');
+    },
+    clearFields: function clearFields() {
+      this.form.name = '';
+      this.form.description = '';
+      this.errors = null;
+    }
+  }
 });
 
 /***/ }),
@@ -32556,54 +32899,102 @@ var render = function() {
           [_c("bar-loader", { attrs: { color: "#a0aec0" } })],
           1
         )
-      : _c("div", [
-          _c("table", { staticClass: "w-full" }, [
-            _vm._m(0),
+      : _c(
+          "div",
+          [
+            _c("table", { staticClass: "w-full" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.commissions, function(commission, index) {
+                  return _c(
+                    "tr",
+                    {
+                      key: commission.id,
+                      staticClass: "bg-white even:bg-gray-100 text-sm"
+                    },
+                    [
+                      _c(
+                        "td",
+                        {
+                          staticClass:
+                            "py-2 px-4 border border-gray-800 text-sm"
+                        },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.selectedCommissionIndex,
+                                expression: "selectedCommissionIndex"
+                              }
+                            ],
+                            attrs: {
+                              type: "radio",
+                              id: commission.id,
+                              name: "commissionSelection"
+                            },
+                            domProps: {
+                              value: index,
+                              checked: _vm._q(
+                                _vm.selectedCommissionIndex,
+                                index
+                              )
+                            },
+                            on: {
+                              change: [
+                                function($event) {
+                                  _vm.selectedCommissionIndex = index
+                                },
+                                function($event) {
+                                  return _vm.commissionSelected(index)
+                                }
+                              ]
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("label", { attrs: { for: commission.id } }, [
+                            _vm._v(_vm._s(commission.name))
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        {
+                          staticClass:
+                            "py-2 px-4 border border-gray-800 text-sm"
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(commission.description) +
+                              "\n                    "
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                }),
+                0
+              )
+            ]),
             _vm._v(" "),
-            _c(
-              "tbody",
-              _vm._l(_vm.commissions, function(commission) {
-                return _c(
-                  "tr",
-                  {
-                    key: commission.id,
-                    staticClass: "bg-white even:bg-gray-100 text-sm"
-                  },
-                  [
-                    _c(
-                      "td",
-                      {
-                        staticClass: "py-2 px-4 border border-gray-800 text-sm"
-                      },
-                      [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(commission.name) +
-                            "\n                    "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      {
-                        staticClass: "py-2 px-4 border border-gray-800 text-sm"
-                      },
-                      [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(commission.description) +
-                            "\n                    "
-                        )
-                      ]
-                    )
-                  ]
-                )
-              }),
-              0
-            )
-          ])
-        ])
+            _c("commission-form", {
+              ref: "commissionForm",
+              attrs: { user: _vm.user, backend: _vm.backend },
+              on: {
+                commissionCreated: _vm.commissionInsert,
+                commissionDeleted: _vm.commissionRemove,
+                commissionUpdated: _vm.commissionUpdate,
+                cancel: _vm.clearSelection
+              }
+            })
+          ],
+          1
+        )
   ])
 }
 var staticRenderFns = [
@@ -32622,6 +33013,249 @@ var staticRenderFns = [
         ])
       ])
     ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/CommissionForm.vue?vue&type=template&id=18404001&":
+/*!*****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/commissions/CommissionForm.vue?vue&type=template&id=18404001& ***!
+  \*****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "mt-5 mb-2" }, [
+      _c("h1", { staticClass: "font-semibold text-blue-800" }, [
+        _vm.selected
+          ? _c("span", [_vm._v("Update/Delete Commissions")])
+          : _c("span", [_vm._v("Add New Commission")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "border border-gray-700" }, [
+        _c("div", { staticClass: "flex" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "flex-1 border-b border-gray-700",
+              class: _vm.errors && _vm.errors.name ? "bg-red-200" : ""
+            },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.form.name,
+                    expression: "form.name"
+                  }
+                ],
+                staticClass:
+                  "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm bg-transparent",
+                attrs: { type: "text", placeholder: "Commission Name" },
+                domProps: { value: _vm.form.name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.form, "name", $event.target.value)
+                  }
+                }
+              })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "flex" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex-1 border-gray-700" }, [
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.form.description,
+                  expression: "form.description"
+                }
+              ],
+              staticClass:
+                "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm",
+              attrs: {
+                placeholder: "Commission Description",
+                name: "description",
+                id: "description",
+                rows: "2"
+              },
+              domProps: { value: _vm.form.description },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.form, "description", $event.target.value)
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.errors !== null
+        ? _c("div", [
+            _c("h3", { staticClass: "text-red-700 text-sm font-semibold" })
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.selected === true
+        ? _c("div", [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center \n                    focus:outline-none bg-blue-600 text-sm hover:bg-blue-700",
+                on: { click: _vm.updateCommission }
+              },
+              [
+                _vm.updating
+                  ? _c(
+                      "div",
+                      { staticClass: "flex items-center justify-center" },
+                      [
+                        _c("h3", { staticClass: "mr-1" }, [
+                          _vm._v("Updating Commission")
+                        ]),
+                        _vm._v(" "),
+                        _c("circle-loader")
+                      ],
+                      1
+                    )
+                  : _c("div", [_vm._v(" Update Commission")])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center \n                    focus:outline-none bg-red-600 text-sm hover:bg-red-700",
+                on: { click: _vm.deleteCommission }
+              },
+              [
+                _vm.deleting
+                  ? _c(
+                      "div",
+                      { staticClass: "flex items-center justify-center" },
+                      [
+                        _c("h3", { staticClass: "mr-1" }, [
+                          _vm._v("Deleting Commission")
+                        ]),
+                        _vm._v(" "),
+                        _c("circle-loader")
+                      ],
+                      1
+                    )
+                  : _c("div", [_vm._v("Delete Commission")])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center \n                            focus:outline-none bg-gray-600 text-sm hover:bg-gray-700",
+                on: { click: _vm.cancel }
+              },
+              [_vm._v("\n                Cancel\n            ")]
+            )
+          ])
+        : _c("div", [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center \n                            focus:outline-none bg-blue-600 text-sm hover:bg-blue-700",
+                on: { click: _vm.createCommission }
+              },
+              [
+                _vm.inserting
+                  ? _c(
+                      "div",
+                      { staticClass: "flex items-center justify-center" },
+                      [
+                        _c("h3", { staticClass: "mr-1" }, [
+                          _vm._v("Creating Commission")
+                        ]),
+                        _vm._v(" "),
+                        _c("circle-loader")
+                      ],
+                      1
+                    )
+                  : _c("div", [_vm._v("Add Commission")])
+              ]
+            )
+          ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "border-b border-r py-2  border-gray-700 w-32 text-center"
+      },
+      [
+        _c(
+          "label",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase",
+            attrs: { for: "agent" }
+          },
+          [
+            _vm._v("\n                        Name "),
+            _c("sup", { staticClass: "text-red-600 font-bold" }, [_vm._v("*")])
+          ]
+        )
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "border-r py-2  border-gray-700 w-32 text-center" },
+      [
+        _c(
+          "label",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase",
+            attrs: { for: "guide" }
+          },
+          [_vm._v("Description")]
+        )
+      ]
+    )
   }
 ]
 render._withStripped = true
@@ -47210,6 +47844,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionComponent_vue_vue_type_template_id_c37f34e0___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionComponent_vue_vue_type_template_id_c37f34e0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/CommissionForm.vue":
+/*!****************************************************************!*\
+  !*** ./resources/js/components/commissions/CommissionForm.vue ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CommissionForm_vue_vue_type_template_id_18404001___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CommissionForm.vue?vue&type=template&id=18404001& */ "./resources/js/components/commissions/CommissionForm.vue?vue&type=template&id=18404001&");
+/* harmony import */ var _CommissionForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CommissionForm.vue?vue&type=script&lang=js& */ "./resources/js/components/commissions/CommissionForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CommissionForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CommissionForm_vue_vue_type_template_id_18404001___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CommissionForm_vue_vue_type_template_id_18404001___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/commissions/CommissionForm.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/CommissionForm.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/commissions/CommissionForm.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./CommissionForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/CommissionForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/CommissionForm.vue?vue&type=template&id=18404001&":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/components/commissions/CommissionForm.vue?vue&type=template&id=18404001& ***!
+  \***********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionForm_vue_vue_type_template_id_18404001___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./CommissionForm.vue?vue&type=template&id=18404001& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/CommissionForm.vue?vue&type=template&id=18404001&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionForm_vue_vue_type_template_id_18404001___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionForm_vue_vue_type_template_id_18404001___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

@@ -31,7 +31,7 @@
             <div v-if="errors !== null">
                 <h3 class="text-red-700 text-sm font-semibold" > </h3>
             </div>
-             <div  v-if="selected === true" >
+            <div  v-if="selected === true" >
                 <button class="flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center 
                         focus:outline-none bg-blue-600 text-sm hover:bg-blue-700"
                     @click="updateTourType">

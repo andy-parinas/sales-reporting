@@ -13,17 +13,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="commission in commissions" :key="commission.id"
+                    <tr v-for="(commission, index) in commissions" :key="commission.id"
                         class="bg-white even:bg-gray-100 text-sm">
                         <td class="py-2 px-4 border border-gray-800 text-sm">
-                            {{ commission.name }}
+                            <input type="radio" :id="commission.id" name="commissionSelection" :value="index"  v-model="selectedCommissionIndex"
+                                @change="commissionSelected(index)" >
+                             <label :for="commission.id">{{ commission.name }}</label>
+                            
                         </td>
                         <td class="py-2 px-4 border border-gray-800 text-sm">
                             {{ commission.description }}
                         </td>
                     </tr>
                 </tbody>    
-            </table>    
+            </table>  
+
+            <commission-form :user="user"  :backend="backend" ref="commissionForm"
+                @commissionCreated="commissionInsert"
+                @commissionDeleted="commissionRemove"
+                @commissionUpdated="commissionUpdate"
+                @cancel="clearSelection"></commission-form>
+
        </div>
     </div>
 </template>
@@ -31,19 +41,51 @@
 <script>
 
 import BarLoader from '../ui/loader/BarLoader';
+import CommissionForm from './CommissionForm';
 
 export default {
     name: 'CommissionComponent',
     props: ['user', 'backend'],
-    components:{ BarLoader},
+    components:{ BarLoader, CommissionForm},
     data: function(){
 
         return {
             commissions: [],
             loading: true,
-            errors: false
+            errors: false,
+            selectedCommissionIndex: null,
+            selectedCommission: null
         }
 
+    },
+    methods: {
+
+        commissionSelected: function(index){
+            this.selectedCommission = this.commissions[index];
+            this.$refs.commissionForm.commissionSelected(this.selectedCommission, index);
+        },
+
+        commissionInsert: function(commission){
+            this.commissions.push(commission);
+        },
+
+        commissionUpdate: function(commission, index){
+
+            this.commissions[index].name = commission.name;
+            this.commissions[index].description = commission.description;
+
+        },
+
+        commissionRemove: function(index){
+
+            this.commissions.splice(index, 1);
+            this.selectedCommission = null;
+        },
+
+        clearSelection: function(){
+            this.selectedCommissionIndex = null;
+            this.selectedCommission = null;
+        }
     },
     async mounted(){
         try {

@@ -62,3 +62,6 @@ Route::patch('/tour-types/{type}', 'Api\TourTypeController@update');
 
 Route::get('/commission-types', 'Api\CommissionTypeController@index');
 Route::get('/commissions', 'Api\CommissionController@index');
+Route::post('/commissions', 'Api\CommissionController@store');
+Route::delete('/commissions/{commission}', 'Api\CommissionController@destroy');
+Route::patch('/commissions/{commission}', 'Api\CommissionController@update');
