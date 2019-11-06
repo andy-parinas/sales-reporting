@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 class="text-lg font-semibold" >Commissions</h1>
+        <!-- <h1 class="text-lg font-semibold" >Commissions</h1> -->
         <div v-if="loading" class="w-full h-32 flex items-center justify-center">
             <bar-loader color="#a0aec0"></bar-loader>
         </div>

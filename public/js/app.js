@@ -5154,6 +5154,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -5164,6 +5184,16 @@ __webpack_require__.r(__webpack_exports__);
     TourTypeComponent: _commissions_TourTypeComponent__WEBPACK_IMPORTED_MODULE_0__["default"],
     CommissionTypeComponent: _commissions_CommissionTypeComponent__WEBPACK_IMPORTED_MODULE_1__["default"],
     CommissionComponent: _commissions_CommissionComponent__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  data: function data() {
+    return {
+      selectedView: 'TOUR_TYPE'
+    };
+  },
+  methods: {
+    toggle: function toggle(view) {
+      this.selectedView = view;
+    }
   }
 });
 
@@ -32101,41 +32131,111 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "px-4 flex justify-between mt-5 items-start" }, [
+  return _c("div", { staticClass: "mx-auto w-256 mt-10" }, [
+    _c("div", { staticClass: "flex items-end justify-start" }, [
       _c(
-        "div",
-        { staticClass: " w-64 mr-4 w-" },
-        [
-          _c("commission-type-component", {
-            attrs: { user: _vm.user, backend: _vm.backend }
-          })
-        ],
-        1
+        "button",
+        {
+          staticClass:
+            "border-t border-l border-r border-gray-700 text-sm py-2 px-4 focus:outline-none rounded-t mr-1",
+          class:
+            _vm.selectedView === "TOUR_TYPE"
+              ? "bg-white text-black font-semibold"
+              : "bg-gray-700 text-white",
+          on: {
+            click: function($event) {
+              return _vm.toggle("TOUR_TYPE")
+            }
+          }
+        },
+        [_vm._v(" \n          Tour Types \n        ")]
       ),
       _vm._v(" "),
       _c(
-        "div",
-        { staticClass: "flex-1 mr-4 flex-" },
-        [
-          _c("tour-type-component", {
-            attrs: { user: _vm.user, backend: _vm.backend }
-          })
-        ],
-        1
+        "button",
+        {
+          staticClass:
+            "border-t border-l border-r border-gray-700 ext-sm py-2 px-4 focus:outline-none rounded-t mr-1",
+          class:
+            _vm.selectedView === "COMMISSION"
+              ? "bg-white text-black font-semibold"
+              : "bg-gray-700 text-white",
+          on: {
+            click: function($event) {
+              return _vm.toggle("COMMISSION")
+            }
+          }
+        },
+        [_vm._v(" \n          Commissions \n        ")]
       ),
       _vm._v(" "),
       _c(
-        "div",
-        { staticClass: "flex-1" },
-        [
-          _c("commission-component", {
-            attrs: { user: _vm.user, backend: _vm.backend }
-          })
-        ],
-        1
-      )
-    ])
+        "button",
+        {
+          staticClass:
+            "border-t border-l border-r border-gray-700 text-sm py-2 px-4 focus:outline-none rounded-t",
+          class:
+            _vm.selectedView === "COMMISSION_TYPE"
+              ? "bg-white text-black font-semibold"
+              : "bg-gray-700 text-white",
+          on: {
+            click: function($event) {
+              return _vm.toggle("COMMISSION_TYPE")
+            }
+          }
+        },
+        [_vm._v(" \n          Commission Types \n        ")]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "flex-1 border-b border-gray-700" })
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "border-l border-r border-b border-gray-600 pt-8" },
+      [
+        _c("div", { staticClass: "px-4 mx-8 mb-16 items-start" }, [
+          _vm.selectedView === "COMMISSION_TYPE"
+            ? _c(
+                "div",
+                { staticClass: " w-64 mr-4 w-" },
+                [
+                  _c("commission-type-component", {
+                    attrs: { user: _vm.user, backend: _vm.backend }
+                  })
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.selectedView === "TOUR_TYPE"
+            ? _c(
+                "div",
+                { staticClass: "flex-1 mr-4 flex-" },
+                [
+                  _c("tour-type-component", {
+                    attrs: { user: _vm.user, backend: _vm.backend }
+                  })
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.selectedView === "COMMISSION"
+            ? _c(
+                "div",
+                { staticClass: "flex-1" },
+                [
+                  _c("commission-component", {
+                    attrs: { user: _vm.user, backend: _vm.backend }
+                  })
+                ],
+                1
+              )
+            : _vm._e()
+        ])
+      ]
+    )
   ])
 }
 var staticRenderFns = []
@@ -32890,8 +32990,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("h1", { staticClass: "text-lg font-semibold" }, [_vm._v("Commissions")]),
-    _vm._v(" "),
     _vm.loading
       ? _c(
           "div",
@@ -33280,10 +33378,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("h1", { staticClass: "text-lg font-semibold" }, [
-      _vm._v("Commission Types")
-    ]),
-    _vm._v(" "),
     _vm.loading
       ? _c(
           "div",
@@ -33381,8 +33475,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("h1", { staticClass: "text-lg font-semibold" }, [_vm._v("Tour Types")]),
-    _vm._v(" "),
     _vm.loading
       ? _c(
           "div",
