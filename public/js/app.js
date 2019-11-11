@@ -5211,6 +5211,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui/loader/BarLoader */ "./resources/js/components/ui/loader/BarLoader.vue");
+/* harmony import */ var _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui/loader/CircleLoader */ "./resources/js/components/ui/loader/CircleLoader.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -5252,19 +5253,64 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TourCommissionList',
-  props: ['tour-commissions', 'user', 'backend'],
+  props: ['tour-commissions', 'user', 'backend', 'agent-id'],
   components: {
-    BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"]
+    BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"],
+    CircleLoader: _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   data: function data() {
     return {
       commissions: [],
       tourTypes: [],
       commissionTypes: [],
-      loading: true
+      loading: true,
+      input: {},
+      changedTourCommissions: [],
+      editX: null,
+      editY: null,
+      savingMessage: null,
+      successMessage: null,
+      errorMessage: null
     };
   },
   methods: {
@@ -5283,54 +5329,212 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       } else {
         return 0.00;
       }
+    },
+    onTourCommissionChanged: function onTourCommissionChanged(tourTypeId, commissionTypeId, commissionId) {
+      var data = {
+        tourTypeId: tourTypeId,
+        commissionTypeId: commissionTypeId,
+        commissionId: commissionId
+      };
+      this.changedTourCommissions.push(data);
+    },
+    saveTourCommission: function saveTourCommission(tourTypeId, commissionTypeId) {
+      var _this = this;
+
+      this.changedTourCommissions.map(
+      /*#__PURE__*/
+      function () {
+        var _ref = _asyncToGenerator(
+        /*#__PURE__*/
+        _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(tc) {
+          var tourCommission, url, data, res, _url, _data, _res;
+
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  tourCommission = _this.filterTourCommissions(tc.tourTypeId, tc.commissionTypeId, tc.commissionId)[0];
+
+                  if (!tourCommission) {
+                    _context.next = 18;
+                    break;
+                  }
+
+                  url = _this.backend + '/api/tour-commissions/' + tourCommission.id;
+                  data = {
+                    amount: _this.input[tc.tourTypeId][tc.commissionTypeId][tc.commissionId] / 100,
+                    api_token: _this.user.api_token
+                  };
+                  _context.prev = 4;
+
+                  _this.sendSavingMessage("Updating TourCommissions");
+
+                  _context.next = 8;
+                  return axios.patch(url, data);
+
+                case 8:
+                  res = _context.sent;
+
+                  _this.sendSuccessMessage('Tour Commission successfully updated');
+
+                  _context.next = 16;
+                  break;
+
+                case 12:
+                  _context.prev = 12;
+                  _context.t0 = _context["catch"](4);
+
+                  _this.sendErrorMessage('Error updating Tour Commission, make sure fields are correct. Otherwise report to System Administrator');
+
+                  console.log("Error updating tour commision", err);
+
+                case 16:
+                  _context.next = 32;
+                  break;
+
+                case 18:
+                  _url = _this.backend + '/api/tour-commissions/';
+                  _data = {
+                    tour_agent_id: _this.agentId,
+                    tour_type_id: tc.tourTypeId,
+                    commission_type_id: tc.commissionTypeId,
+                    commission_id: tc.commissionId,
+                    amount: _this.input[tc.tourTypeId][tc.commissionTypeId][tc.commissionId] / 100,
+                    api_token: _this.user.api_token
+                  };
+                  _context.prev = 20;
+
+                  _this.sendSavingMessage("Creating TourCommissions");
+
+                  _context.next = 24;
+                  return axios.post(_url, _data);
+
+                case 24:
+                  _res = _context.sent;
+
+                  _this.sendSuccessMessage('Tour Commission successfully created');
+
+                  _context.next = 32;
+                  break;
+
+                case 28:
+                  _context.prev = 28;
+                  _context.t1 = _context["catch"](20);
+
+                  _this.sendErrorMessage('Error Creating Tour Commission, make sure fields are correct. Otherwise report to System Administrator');
+
+                  console.log("Error Creating tour commision", err);
+
+                case 32:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee, null, [[4, 12], [20, 28]]);
+        }));
+
+        return function (_x) {
+          return _ref.apply(this, arguments);
+        };
+      }()); // //simulate success or failed. Clear the changeCommission array
+      // this.changedTourCommissions.splice(0, this.changedTourCommissions.length);
+
+      console.log(this.changedTourCommissions);
+    },
+    editRow: function editRow(tourTypeIndex, commissionTypeIndex) {
+      this.changedTourCommissions.splice(0, this.changedTourCommissions.length);
+      this.editX = tourTypeIndex;
+      this.editY = commissionTypeIndex;
+    },
+    cancelEdit: function cancelEdit() {
+      this.changedTourCommissions.splice(0, this.changedTourCommissions.length);
+      this.editX = null;
+      this.editY = null;
+    },
+    initializedInput: function initializedInput() {
+      var _this2 = this;
+
+      this.tourTypes.map(function (tourType) {
+        var tourTypeObject = {};
+
+        _this2.commissionTypes.map(function (commissionType) {
+          var commissionTypeObject = {};
+
+          _this2.commissions.map(function (commission) {
+            commissionTypeObject[commission.id] = _this2.getTourCommissionAmount(tourType.id, commissionType.id, commission.id);
+          });
+
+          tourTypeObject[commissionType.id] = commissionTypeObject;
+        });
+
+        _this2.input[tourType.id] = tourTypeObject;
+      });
+      console.log(this.input);
+    },
+    sendSuccessMessage: function sendSuccessMessage(message) {
+      this.savingMessage = null;
+      this.errorMessage = null;
+      this.successMessage = message;
+    },
+    sendErrorMessage: function sendErrorMessage(message) {
+      this.savingMessage = null;
+      this.successMessage = null;
+      this.errorMessage = message;
+    },
+    sendSavingMessage: function sendSavingMessage(message) {
+      this.savingMessage = message;
+      this.errorMessage = null;
+      this.successMessage = null;
     }
   },
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
       var tourTypeUrl, commissionTypeUrl, commissionUrl, tourTypeResponse, commissionTypeResponse, commissionResponse;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
         while (1) {
-          switch (_context.prev = _context.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
-              _context.prev = 0;
+              _context2.prev = 0;
               tourTypeUrl = this.backend + '/api/tour-types?api_token=' + this.user.api_token;
               commissionTypeUrl = this.backend + '/api/commission-types?api_token=' + this.user.api_token;
               commissionUrl = this.backend + '/api/commissions?api_token=' + this.user.api_token;
-              _context.next = 6;
+              _context2.next = 6;
               return axios.get(tourTypeUrl);
 
             case 6:
-              tourTypeResponse = _context.sent;
-              _context.next = 9;
+              tourTypeResponse = _context2.sent;
+              _context2.next = 9;
               return axios.get(commissionTypeUrl);
 
             case 9:
-              commissionTypeResponse = _context.sent;
-              _context.next = 12;
+              commissionTypeResponse = _context2.sent;
+              _context2.next = 12;
               return axios.get(commissionUrl);
 
             case 12:
-              commissionResponse = _context.sent;
+              commissionResponse = _context2.sent;
               this.commissions = commissionResponse.data;
               this.tourTypes = tourTypeResponse.data;
               this.commissionTypes = commissionTypeResponse.data;
               this.loading = false;
-              _context.next = 22;
+              this.initializedInput();
+              console.log(this.tourCommissions);
+              _context2.next = 24;
               break;
 
-            case 19:
-              _context.prev = 19;
-              _context.t0 = _context["catch"](0);
-              console.log(_context.t0);
+            case 21:
+              _context2.prev = 21;
+              _context2.t0 = _context2["catch"](0);
+              console.log(_context2.t0);
 
-            case 22:
+            case 24:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
         }
-      }, _callee, this, [[0, 19]]);
+      }, _callee2, this, [[0, 21]]);
     }));
 
     function mounted() {
@@ -32270,101 +32474,306 @@ var render = function() {
         )
       : _c(
           "div",
-          _vm._l(_vm.tourTypes, function(tourType) {
-            return _c("div", { key: tourType.id, staticClass: "mt-5" }, [
-              _c("h1", { staticClass: "text-gray-800 font-light text-lg" }, [
-                _vm._v(" " + _vm._s(tourType.name) + " ")
-              ]),
-              _vm._v(" "),
-              _c("table", { staticClass: "w-full" }, [
-                _c("thead", [
-                  _c(
-                    "tr",
-                    {
-                      staticClass: "bg-gray-300 border border-gray-800 text-sm"
-                    },
-                    [
-                      _c(
-                        "th",
-                        {
-                          staticClass: "py-2 px-2 border border-gray-800 w-56"
-                        },
-                        [_vm._v(" Commission Type ")]
-                      ),
-                      _vm._v(" "),
-                      _vm._l(_vm.commissions, function(commission) {
-                        return _c(
-                          "th",
-                          {
-                            key: commission.id,
-                            staticClass: "py-2 px-2 border border-gray-800 w-16"
-                          },
-                          [
-                            _vm._v(
-                              "\n                            " +
-                                _vm._s(commission.name) +
-                                "\n                        "
-                            )
-                          ]
-                        )
-                      })
-                    ],
-                    2
-                  )
+          [
+            _vm.savingMessage
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "bg-blue-700 text-white py-2 px-2 rounded flex items-center"
+                  },
+                  [
+                    _c("h1", { staticClass: "mr-4" }, [
+                      _vm._v(_vm._s(_vm.savingMessage) + " ")
+                    ]),
+                    _vm._v(" "),
+                    _c("circle-loader", { attrs: { color: "#FFFFFF" } })
+                  ],
+                  1
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.successMessage
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "bg-green-700 text-white py-2 px-2 rounded flex items-center justify-between"
+                  },
+                  [
+                    _c("h1", { staticClass: "mr-4" }, [
+                      _vm._v(" " + _vm._s(_vm.successMessage) + "  ")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        on: {
+                          click: function($event) {
+                            _vm.successMessage = null
+                          }
+                        }
+                      },
+                      [_vm._v("X")]
+                    )
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.errorMessage
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "bg-red-700 text-white py-2 px-2 rounded flex items-center justify-between"
+                  },
+                  [
+                    _c("h1", { staticClass: "mr-4" }, [
+                      _vm._v(" " + _vm._s(_vm.errorMessage) + "  ")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        on: {
+                          click: function($event) {
+                            _vm.errorMessage = null
+                          }
+                        }
+                      },
+                      [_vm._v("X")]
+                    )
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm._l(_vm.tourTypes, function(tourType, tourTypeIndex) {
+              return _c("div", { key: tourType.id, staticClass: "mt-5" }, [
+                _c("h1", { staticClass: "text-gray-800 font-light text-lg" }, [
+                  _vm._v(" " + _vm._s(tourType.name) + " ")
                 ]),
                 _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.commissionTypes, function(commissionType) {
-                    return _c(
+                _c("table", { staticClass: "w-full" }, [
+                  _c("thead", [
+                    _c(
                       "tr",
                       {
-                        key: commissionType.id,
-                        staticClass: "bg-white even:bg-gray-100 text-sm"
+                        staticClass:
+                          "bg-gray-300 border border-gray-800 text-sm"
                       },
                       [
                         _c(
-                          "td",
+                          "th",
                           {
-                            staticClass:
-                              "py-2 px-4 border border-gray-800 text-sm"
+                            staticClass: "py-2 px-2 border border-gray-800 w-40"
                           },
-                          [_vm._v(" " + _vm._s(commissionType.name) + " ")]
+                          [_vm._v(" Commission Type ")]
                         ),
                         _vm._v(" "),
                         _vm._l(_vm.commissions, function(commission) {
                           return _c(
-                            "td",
+                            "th",
                             {
                               key: commission.id,
                               staticClass:
-                                "py-2 px-4 border border-gray-800 text-sm"
+                                "py-2 px-2 border border-gray-800 w-12"
                             },
                             [
                               _vm._v(
                                 "\n                            " +
-                                  _vm._s(
-                                    _vm.getTourCommissionAmount(
-                                      tourType.id,
-                                      commissionType.id,
-                                      commission.id
-                                    )
-                                  ) +
+                                  _vm._s(commission.name) +
                                   "\n                        "
                               )
                             ]
                           )
-                        })
+                        }),
+                        _vm._v(" "),
+                        _c("th", { staticClass: "w-16" })
                       ],
                       2
                     )
-                  }),
-                  0
-                )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.commissionTypes, function(
+                      commissionType,
+                      commissionTypeIndex
+                    ) {
+                      return _c(
+                        "tr",
+                        {
+                          key: commissionType.id,
+                          staticClass: "text-sm",
+                          class:
+                            _vm.editX === tourTypeIndex &&
+                            _vm.editY === commissionTypeIndex
+                              ? "bg-yellow-100"
+                              : "bg-white even:bg-gray-100"
+                        },
+                        [
+                          _c(
+                            "td",
+                            {
+                              staticClass:
+                                "py-2 px-4 border border-gray-800 text-sm"
+                            },
+                            [_vm._v(" " + _vm._s(commissionType.name) + "   ")]
+                          ),
+                          _vm._v(" "),
+                          _vm._l(_vm.commissions, function(commission) {
+                            return _c(
+                              "td",
+                              {
+                                key: commission.id,
+                                staticClass:
+                                  "border border-gray-800 text-sm text-right"
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model.number",
+                                      value:
+                                        _vm.input[tourType.id][
+                                          commissionType.id
+                                        ][commission.id],
+                                      expression:
+                                        "input[tourType.id][commissionType.id][commission.id]",
+                                      modifiers: { number: true }
+                                    }
+                                  ],
+                                  staticClass:
+                                    "bg-transparent outline-none text-xs text-right py-2 px-1 w-16",
+                                  class:
+                                    _vm.editX === tourTypeIndex &&
+                                    _vm.editY === commissionTypeIndex
+                                      ? "text-gray-900 font-semibold"
+                                      : "text-gray-700",
+                                  attrs: {
+                                    type: "text",
+                                    disabled: !(
+                                      _vm.editX === tourTypeIndex &&
+                                      _vm.editY === commissionTypeIndex
+                                    )
+                                  },
+                                  domProps: {
+                                    value:
+                                      _vm.input[tourType.id][commissionType.id][
+                                        commission.id
+                                      ]
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      return _vm.onTourCommissionChanged(
+                                        tourType.id,
+                                        commissionType.id,
+                                        commission.id
+                                      )
+                                    },
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.input[tourType.id][
+                                          commissionType.id
+                                        ],
+                                        commission.id,
+                                        _vm._n($event.target.value)
+                                      )
+                                    },
+                                    blur: function($event) {
+                                      return _vm.$forceUpdate()
+                                    }
+                                  }
+                                })
+                              ]
+                            )
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            {
+                              staticClass:
+                                "border border-gray-800 text-sm px-1 w-32"
+                            },
+                            [
+                              _c("div", { staticClass: "w-full  flex" }, [
+                                _vm.editX === tourTypeIndex &&
+                                _vm.editY === commissionTypeIndex
+                                  ? _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "text-white text-xs bg-blue-500 py-1 px-2 w-full rounded focus:outline-none mr-1",
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.saveTourCommission(
+                                              tourType.id,
+                                              commissionType.id
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                    Save\n                            "
+                                        )
+                                      ]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _vm.editX === tourTypeIndex &&
+                                _vm.editY === commissionTypeIndex
+                                  ? _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "text-white text-xs bg-gray-600 py-1 px-2 w-full rounded focus:outline-none",
+                                        on: { click: _vm.cancelEdit }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                Cancel\n                            "
+                                        )
+                                      ]
+                                    )
+                                  : _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "text-white text-xs bg-yellow-700 py-1 px-2 w-full rounded mr-1 focus:outline-none",
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.editRow(
+                                              tourTypeIndex,
+                                              commissionTypeIndex
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                Edit\n                            "
+                                        )
+                                      ]
+                                    )
+                              ])
+                            ]
+                          )
+                        ],
+                        2
+                      )
+                    }),
+                    0
+                  )
+                ])
               ])
-            ])
-          }),
-          0
+            })
+          ],
+          2
         )
   ])
 }

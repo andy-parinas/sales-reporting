@@ -11,7 +11,7 @@ class TourCommission extends Model
         'tour_agent_id',
         'tour_type_id',
         'commission_type_id',
-        'commision_id',
+        'commission_id',
         'amount'
     ];
 

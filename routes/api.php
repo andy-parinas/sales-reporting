@@ -65,3 +65,6 @@ Route::get('/commissions', 'Api\CommissionController@index');
 Route::post('/commissions', 'Api\CommissionController@store');
 Route::delete('/commissions/{commission}', 'Api\CommissionController@destroy');
 Route::patch('/commissions/{commission}', 'Api\CommissionController@update');
+
+Route::post('/tour-commissions', 'Api\TourCommissionController@store');
+Route::patch('/tour-commissions/{commission}', 'Api\TourCommissionController@update');
