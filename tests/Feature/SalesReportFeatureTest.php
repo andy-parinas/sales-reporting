@@ -12,6 +12,7 @@ use App\SelectedProduct;
 use App\TourAgent;
 use App\TourCommission;
 use App\TourGuide;
+use App\TourType;
 use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -134,6 +135,7 @@ class SalesReportFeatureTest extends TestCase
             'grp_code' => 'Foo Bar',
             'tour_agent_id' => $report->tour_agent_id,
             'tour_guide_id' => $report->tour_guide_id,
+            'tour_type_id' => $report->tour_type_id,
             'tour_date' => $this->faker->date('d/m/Y'),
             'adult_count' => 10,
             'children_count' => 10,
@@ -303,6 +305,7 @@ class SalesReportFeatureTest extends TestCase
 
         $tourAgent = factory(TourAgent::class)->create();
         $tourGuide = factory(TourGuide::class)->create();
+        $tourType = factory(TourType::class)->create();
 
         $product1 = factory(Product::class)->create();
         $product2 = factory(Product::class)->create();
@@ -325,6 +328,7 @@ class SalesReportFeatureTest extends TestCase
             'children_count' => $this->faker->numberBetween(0, 10),
             'tour_agent_id' => $tourAgent->id,
             'tour_guide_id' => $tourGuide->id,
+            'tour_type_id' => $tourType->id,
             'tc_name' => $this->faker->name,
             'tour_date' => $this->faker->date('d/m/Y'),
             'total_sales' => $this->faker->randomFloat(2),

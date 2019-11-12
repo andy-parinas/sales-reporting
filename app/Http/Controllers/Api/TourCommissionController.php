@@ -15,6 +15,32 @@ class TourCommissionController extends Controller
         $this->middleware('auth:api');
     }
 
+
+    /**
+     *  @Description:   Get TourCommissions
+     *  @Route          GET /api/tour-commissions?tourAgent=<tour_agent_id>&&tourType=<tour_type_id>
+     *      
+     */
+    public function index(Request $request)
+    {
+   
+        if($request->has('tourAgent') && $request->has('tourType')){
+
+            $tourCommissions = TourCommission::where([
+                ['tour_agent_id', '=', request('tourAgent')],
+                ['tour_type_id', '=', request('tourType')],
+            ])->get();
+
+
+            return response($tourCommissions, Response::HTTP_OK);
+        }
+
+        $tourCommissions = TourCommission::paginate(10);
+
+        return response($tourCommissions, Response::HTTP_OK);
+
+    }
+
     public function store()
     {
 

@@ -5,6 +5,7 @@
 use App\SalesReport;
 use App\TourAgent;
 use App\TourGuide;
+use App\TourType;
 use Faker\Generator as Faker;
 
 $factory->define(SalesReport::class, function (Faker $faker) {
@@ -15,6 +16,7 @@ $factory->define(SalesReport::class, function (Faker $faker) {
         'children_count' => $faker->numberBetween(0, 10),
         'tour_agent_id' => factory(TourAgent::class),
         'tour_guide_id' => factory(TourGuide::class),
+        'tour_type_id' => factory(TourType::class),
         'tc_name' => $faker->name,
         'tour_date' => $faker->date('d/m/Y'),
         'total_sales' => $faker->randomFloat(2),

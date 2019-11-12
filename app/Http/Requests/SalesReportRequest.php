@@ -30,6 +30,7 @@ class SalesReportRequest extends FormRequest
             'children_count' => 'required',
             'tour_agent_id' => 'required',
             'tour_guide_id' => 'required',
+            'tour_type_id' => 'required',
             'tc_name' => '',
             'tour_date' => 'required',
             'total_sales' => 'required',

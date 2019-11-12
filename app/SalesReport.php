@@ -21,6 +21,11 @@ class SalesReport extends Model
         return $this->belongsTo(TourGuide::class);
     }
 
+    public function tourType()
+    {
+        return $this->belongsTo(TourType::class);
+    }
+
     public function selectedProducts()
     {
         return $this->hasMany(SelectedProduct::class);

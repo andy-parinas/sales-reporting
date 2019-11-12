@@ -1,10 +1,13 @@
 <template>
     <div>
-        <div class="px-4 flex justify-between mt-5">
+            <!-- <div class="bg-gray-700 text-white py-2 px-4">
+
+            </div> -->
+        <div class="px-4 flex justify-between mt-5 items-start">
             <div class="border border-gray-700 flex-1 mr-4">
                 <div class="flex">
                     <div class="border-b border-r border-gray-700 w-32 text-center">
-                        <label  class="text-sm font-semibold text-gray-800 uppercase" for="agent">Tour Agent</label>
+                        <label  class="text-sm font-semibold text-gray-800 uppercase" for="agent">Tour Agent <sup class="text-red-600 font-bold" >*</sup></label>
                     </div>
                     <div  class="flex-1 border-b border-gray-700" >
                         <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm"
@@ -14,6 +17,22 @@
                             <option disabled value="" > --- Select Tour Agent ---</option>
                             <option v-for="agent in tourAgents" :key="agent.id"
                                 :value="agent.id">{{ agent.name }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="border-b border-r border-gray-700 w-32 text-center">
+                        <label  class="text-sm font-semibold text-gray-800 uppercase" for="agent">Tour Types <sup class="text-red-600 font-bold" >*</sup></label>
+                    </div>
+                    <div  class="flex-1 border-b border-gray-700" >
+                        <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm"
+                                :class="errors && errors.tour_type_id ? 'bg-red-200' : ''"  :disabled="!form.tour_agent_id"
+                                type="text" id="agent" placeholder="Tour Type Name" v-model="form.tour_type_id" @change="onTourTypeChanged" >
+
+                            <option disabled value="" v-if="!form.tour_agent_id" > --- Please Select Tour Agent First ---</option>
+                            <option disabled value="" v-else > --- Select Tour Type ---</option>
+                            <option v-for="type in tourTypes" :key="type.id"
+                                :value="type.id">{{ type.name }}</option>
                         </select>
                     </div>
                 </div>
@@ -33,7 +52,7 @@
                 </div>
                 <div class="flex">
                     <div class="border-r border-gray-700 w-32 text-center">
-                        <label  class="text-sm font-semibold text-gray-800 uppercase" for="guide">Guide Name</label>
+                        <label  class="text-sm font-semibold text-gray-800 uppercase" for="guide">Guide Name <sup class="text-red-600 font-bold" >*</sup></label>
                     </div>
                     <div class="flex-1 border-gray-700">
                         <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm"
@@ -150,6 +169,7 @@ export default {
     props: ['user', 'edit', 'report', 'backend'],
     data: function(){
         return {
+            statusMessage: "Step 1. Select Tour Agent ",
             errors: null,
             success: false,
             submitting: false,
@@ -157,6 +177,9 @@ export default {
             deductionReference: [],
             tourAgents: [],
             tourGuides: [],
+            tourTypes: [],
+            selectedTourTypeId: '',
+            commissionTypes: [],
             creating: false,
             code1Count: 0,
             code1Total: 0,
@@ -165,6 +188,7 @@ export default {
                     report_number: this.createReportNumber(),
                     tour_agent_id: '',
                     tour_guide_id: '',
+                    tour_type_id: '',
                     tour_date: '',
                     tc_name: null,
                     grp_code: null,
@@ -182,7 +206,7 @@ export default {
                     total: 0,
                     selected_products: [],
                     sales_commissions: [],
-                    sales_deductions: []
+                    sales_deductions: [],
             }
         }
     },
@@ -279,7 +303,21 @@ export default {
             }
 
         },
+        loadTourTypes: async function(){
 
+            try {
+                
+                const url = this.backend + '/api/tour-types?api_token=' + this.user.api_token
+
+                const response = await axios.get(url);
+
+                this.tourTypes = response.data;
+
+
+            } catch (error) {
+                console.log(error);
+            }
+        },
         computeCommission: function()
         {
 
@@ -443,6 +481,28 @@ export default {
                 this.success = false;
             }
 
+        },
+
+        
+        onTourTypeChanged: async function()
+        {
+            
+            try {
+                
+                // Get the Tourcommission associated with the TourAgent and TourType
+                const url = this.backend + '/api/tour-commissions?api_token=' + this.user.api_token 
+                                + '&tourAgent=' + this.form.tour_agent_id
+                                + '&tourType=' + this.form.tour_type_id
+
+                
+
+
+
+            } catch (error) {
+                
+            }
+
+
         }
     },
     async mounted()
@@ -450,6 +510,8 @@ export default {
         this.loadTourAgents();
 
         this.loadTourGuides();
+
+        this.loadTourTypes();
 
         if(this.edit){
 

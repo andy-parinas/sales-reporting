@@ -3055,6 +3055,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3073,6 +3092,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   props: ['user', 'edit', 'report', 'backend'],
   data: function data() {
     return {
+      statusMessage: "Step 1. Select Tour Agent ",
       errors: null,
       success: false,
       submitting: false,
@@ -3080,6 +3100,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       deductionReference: [],
       tourAgents: [],
       tourGuides: [],
+      tourTypes: [],
+      selectedTourTypeId: '',
+      commissionTypes: [],
       creating: false,
       code1Count: 0,
       code1Total: 0,
@@ -3298,6 +3321,69 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return loadTourGuides;
     }(),
+    loadTourTypes: function () {
+      var _loadTourTypes = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+        var url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.prev = 0;
+                url = this.backend + '/api/tour-types?api_token=' + this.user.api_token;
+                _context5.next = 4;
+                return axios.get(url);
+
+              case 4:
+                response = _context5.sent;
+                this.tourTypes = response.data;
+                _context5.next = 11;
+                break;
+
+              case 8:
+                _context5.prev = 8;
+                _context5.t0 = _context5["catch"](0);
+                console.log(_context5.t0);
+
+              case 11:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, this, [[0, 8]]);
+      }));
+
+      function loadTourTypes() {
+        return _loadTourTypes.apply(this, arguments);
+      }
+
+      return loadTourTypes;
+    }(),
+    getTourCommission: function () {
+      var _getTourCommission = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                console.log('Selected TourTypeId', this.selectedTourTypeId);
+
+              case 1:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6, this);
+      }));
+
+      function getTourCommission() {
+        return _getTourCommission.apply(this, arguments);
+      }
+
+      return getTourCommission;
+    }(),
     computeCommission: function computeCommission() {
       var _this3 = this;
 
@@ -3381,59 +3467,59 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     submit: function () {
       var _submit = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7() {
         var data, response, _response;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context7.prev = _context7.next) {
               case 0:
                 this.submitting = true;
                 this.errors = null;
-                _context5.prev = 2;
+                _context7.prev = 2;
                 data = _objectSpread({}, this.form, {
                   api_token: this.user.api_token
                 });
 
                 if (!this.edit) {
-                  _context5.next = 13;
+                  _context7.next = 13;
                   break;
                 }
 
-                _context5.next = 7;
+                _context7.next = 7;
                 return axios.patch(this.backend + '/api/sales/' + this.report.id, data);
 
               case 7:
-                response = _context5.sent;
+                response = _context7.sent;
                 this.submitting = false;
                 this.success = true;
                 window.location.href = '/sales/' + response.data.id;
-                _context5.next = 19;
+                _context7.next = 19;
                 break;
 
               case 13:
-                _context5.next = 15;
+                _context7.next = 15;
                 return axios.post(this.backend + '/api/sales', data);
 
               case 15:
-                _response = _context5.sent;
+                _response = _context7.sent;
                 this.submitting = false;
                 this.success = true;
                 window.location.href = '/sales/' + _response.data.id;
 
               case 19:
-                _context5.next = 26;
+                _context7.next = 26;
                 break;
 
               case 21:
-                _context5.prev = 21;
-                _context5.t0 = _context5["catch"](2);
+                _context7.prev = 21;
+                _context7.t0 = _context7["catch"](2);
 
-                if (_context5.t0.response && _context5.t0.response.data && _context5.t0.response.data.errors) {
-                  this.errors = _context5.t0.response.data.errors;
+                if (_context7.t0.response && _context7.t0.response.data && _context7.t0.response.data.errors) {
+                  this.errors = _context7.t0.response.data.errors;
                   console.log(this.errors);
                 } else {
-                  console.log(_context5.t0);
+                  console.log(_context7.t0);
                 }
 
                 this.submitting = false;
@@ -3441,10 +3527,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 26:
               case "end":
-                return _context5.stop();
+                return _context7.stop();
             }
           }
-        }, _callee5, this, [[2, 21]]);
+        }, _callee7, this, [[2, 21]]);
       }));
 
       function submit() {
@@ -3452,20 +3538,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return submit;
-    }()
+    }(),
+    onTourAgentSelected: function onTourAgentSelected() {
+      this.statusMessage = 'Step 2. ';
+    }
   },
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee8() {
       var _this5 = this;
 
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee8$(_context8) {
         while (1) {
-          switch (_context6.prev = _context6.next) {
+          switch (_context8.prev = _context8.next) {
             case 0:
               this.loadTourAgents();
               this.loadTourGuides();
+              this.loadTourTypes();
 
               if (this.edit) {
                 console.log(this.report);
@@ -3537,12 +3627,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               console.log('report number', this.form.report_number);
 
-            case 4:
+            case 5:
             case "end":
-              return _context6.stop();
+              return _context8.stop();
           }
         }
-      }, _callee6, this);
+      }, _callee8, this);
     }));
 
     function mounted() {
@@ -29212,7 +29302,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "px-4 flex justify-between mt-5" }, [
+    _c("div", { staticClass: "px-4 flex justify-between mt-5 items-start" }, [
       _c("div", { staticClass: "border border-gray-700 flex-1 mr-4" }, [
         _c("div", { staticClass: "flex" }, [
           _vm._m(0),
@@ -29239,21 +29329,26 @@ var render = function() {
                   placeholder: "Tour Agent Name"
                 },
                 on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.$set(
-                      _vm.form,
-                      "tour_agent_id",
-                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                    )
-                  }
+                  change: [
+                    function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.form,
+                        "tour_agent_id",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    },
+                    _vm.onTourAgentSelected
+                  ]
                 }
               },
               [
@@ -29276,6 +29371,72 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "flex" }, [
           _vm._m(1),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex-1 border-b border-gray-700" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.selectedTourTypeId,
+                    expression: "selectedTourTypeId"
+                  }
+                ],
+                staticClass:
+                  "w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm",
+                class:
+                  _vm.errors && _vm.errors.tour_type_id ? "bg-red-200" : "",
+                attrs: {
+                  disabled: !_vm.form.tour_agent_id,
+                  type: "text",
+                  id: "agent",
+                  placeholder: "Tour Type Name"
+                },
+                on: {
+                  change: [
+                    function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.selectedTourTypeId = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    },
+                    _vm.getTourCommission
+                  ]
+                }
+              },
+              [
+                !_vm.form.tour_agent_id
+                  ? _c("option", { attrs: { disabled: "", value: "" } }, [
+                      _vm._v(" --- Please Select Tour Agent First ---")
+                    ])
+                  : _c("option", { attrs: { disabled: "", value: "" } }, [
+                      _vm._v(" --- Select Tour Type ---")
+                    ]),
+                _vm._v(" "),
+                _vm._l(_vm.tourTypes, function(type) {
+                  return _c(
+                    "option",
+                    { key: type.id, domProps: { value: type.id } },
+                    [_vm._v(_vm._s(type.name))]
+                  )
+                })
+              ],
+              2
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "flex" }, [
+          _vm._m(2),
           _vm._v(" "),
           _c(
             "div",
@@ -29352,7 +29513,7 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "flex" }, [
-          _vm._m(2),
+          _vm._m(3),
           _vm._v(" "),
           _c("div", { staticClass: "flex-1 border-gray-700" }, [
             _c(
@@ -29410,7 +29571,7 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "border border-gray-700 flex-1" }, [
         _c("div", { staticClass: "flex" }, [
-          _vm._m(3),
+          _vm._m(4),
           _vm._v(" "),
           _c("div", { staticClass: "flex-1  border-b border-gray-700" }, [
             _c("input", {
@@ -29440,7 +29601,7 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "flex" }, [
-          _vm._m(4),
+          _vm._m(5),
           _vm._v(" "),
           _c("div", { staticClass: "flex-1 border-b border-gray-700" }, [
             _c("input", {
@@ -29469,7 +29630,7 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "flex" }, [
-          _vm._m(5),
+          _vm._m(6),
           _vm._v(" "),
           _c("div", { staticClass: "flex-1 border-gray-700" }, [
             _c("input", {
@@ -29519,7 +29680,7 @@ var render = function() {
           "div",
           { staticClass: "flex-1" },
           [
-            _vm._m(6),
+            _vm._m(7),
             _vm._v(" "),
             _c("selected-product", {
               attrs: {
@@ -29622,7 +29783,32 @@ var staticRenderFns = [
             staticClass: "text-sm font-semibold text-gray-800 uppercase",
             attrs: { for: "agent" }
           },
-          [_vm._v("Tour Agent")]
+          [
+            _vm._v("Tour Agent "),
+            _c("sup", { staticClass: "text-red-600 font-bold" }, [_vm._v("*")])
+          ]
+        )
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "border-b border-r border-gray-700 w-32 text-center" },
+      [
+        _c(
+          "label",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase",
+            attrs: { for: "agent" }
+          },
+          [
+            _vm._v("Tour Types "),
+            _c("sup", { staticClass: "text-red-600 font-bold" }, [_vm._v("*")])
+          ]
         )
       ]
     )
@@ -29660,7 +29846,10 @@ var staticRenderFns = [
             staticClass: "text-sm font-semibold text-gray-800 uppercase",
             attrs: { for: "guide" }
           },
-          [_vm._v("Guide Name")]
+          [
+            _vm._v("Guide Name "),
+            _c("sup", { staticClass: "text-red-600 font-bold" }, [_vm._v("*")])
+          ]
         )
       ]
     )
