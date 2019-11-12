@@ -2901,7 +2901,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ProductSelection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ProductSelection */ "./resources/js/components/ProductSelection.vue");
 /* harmony import */ var _SelectedProduct__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SelectedProduct */ "./resources/js/components/SelectedProduct.vue");
 /* harmony import */ var _Deductions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Deductions */ "./resources/js/components/Deductions.vue");
-/* harmony import */ var _TotalSales__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TotalSales */ "./resources/js/components/TotalSales.vue");
+/* harmony import */ var _TotalCommissions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TotalCommissions */ "./resources/js/components/TotalCommissions.vue");
 /* harmony import */ var _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ui/loader/CircleLoader */ "./resources/js/components/ui/loader/CircleLoader.vue");
 /* harmony import */ var q__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! q */ "./node_modules/q/q.js");
 /* harmony import */ var q__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(q__WEBPACK_IMPORTED_MODULE_6__);
@@ -3074,6 +3074,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3086,7 +3096,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     ProductSelection: _ProductSelection__WEBPACK_IMPORTED_MODULE_1__["default"],
     SelectedProduct: _SelectedProduct__WEBPACK_IMPORTED_MODULE_2__["default"],
     Deductions: _Deductions__WEBPACK_IMPORTED_MODULE_3__["default"],
-    TotalSales: _TotalSales__WEBPACK_IMPORTED_MODULE_4__["default"],
+    TotalCommissions: _TotalCommissions__WEBPACK_IMPORTED_MODULE_4__["default"],
     CircleLoader: _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   props: ['user', 'edit', 'report', 'backend'],
@@ -3111,6 +3121,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         report_number: this.createReportNumber(),
         tour_agent_id: '',
         tour_guide_id: '',
+        tour_type_id: '',
         tour_date: '',
         tc_name: null,
         grp_code: null,
@@ -3360,30 +3371,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return loadTourTypes;
     }(),
-    getTourCommission: function () {
-      var _getTourCommission = _asyncToGenerator(
-      /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
-          while (1) {
-            switch (_context6.prev = _context6.next) {
-              case 0:
-                console.log('Selected TourTypeId', this.selectedTourTypeId);
-
-              case 1:
-              case "end":
-                return _context6.stop();
-            }
-          }
-        }, _callee6, this);
-      }));
-
-      function getTourCommission() {
-        return _getTourCommission.apply(this, arguments);
-      }
-
-      return getTourCommission;
-    }(),
     computeCommission: function computeCommission() {
       var _this3 = this;
 
@@ -3467,59 +3454,59 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     submit: function () {
       var _submit = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
         var data, response, _response;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context7.prev = _context7.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
                 this.submitting = true;
                 this.errors = null;
-                _context7.prev = 2;
+                _context6.prev = 2;
                 data = _objectSpread({}, this.form, {
                   api_token: this.user.api_token
                 });
 
                 if (!this.edit) {
-                  _context7.next = 13;
+                  _context6.next = 13;
                   break;
                 }
 
-                _context7.next = 7;
+                _context6.next = 7;
                 return axios.patch(this.backend + '/api/sales/' + this.report.id, data);
 
               case 7:
-                response = _context7.sent;
+                response = _context6.sent;
                 this.submitting = false;
                 this.success = true;
                 window.location.href = '/sales/' + response.data.id;
-                _context7.next = 19;
+                _context6.next = 19;
                 break;
 
               case 13:
-                _context7.next = 15;
+                _context6.next = 15;
                 return axios.post(this.backend + '/api/sales', data);
 
               case 15:
-                _response = _context7.sent;
+                _response = _context6.sent;
                 this.submitting = false;
                 this.success = true;
                 window.location.href = '/sales/' + _response.data.id;
 
               case 19:
-                _context7.next = 26;
+                _context6.next = 26;
                 break;
 
               case 21:
-                _context7.prev = 21;
-                _context7.t0 = _context7["catch"](2);
+                _context6.prev = 21;
+                _context6.t0 = _context6["catch"](2);
 
-                if (_context7.t0.response && _context7.t0.response.data && _context7.t0.response.data.errors) {
-                  this.errors = _context7.t0.response.data.errors;
+                if (_context6.t0.response && _context6.t0.response.data && _context6.t0.response.data.errors) {
+                  this.errors = _context6.t0.response.data.errors;
                   console.log(this.errors);
                 } else {
-                  console.log(_context7.t0);
+                  console.log(_context6.t0);
                 }
 
                 this.submitting = false;
@@ -3527,10 +3514,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 26:
               case "end":
-                return _context7.stop();
+                return _context6.stop();
             }
           }
-        }, _callee7, this, [[2, 21]]);
+        }, _callee6, this, [[2, 21]]);
       }));
 
       function submit() {
@@ -3539,19 +3526,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return submit;
     }(),
-    onTourAgentSelected: function onTourAgentSelected() {
-      this.statusMessage = 'Step 2. ';
+    onTourTypeChanged: function onTourTypeChanged() {
+      this.$refs.totalCommissions.loadTourCommissions(this.form.tour_agent_id, this.form.tour_type_id);
+    },
+    onTourAgentChanged: function onTourAgentChanged() {
+      if (this.form.tour_type_id) {
+        this.$refs.totalCommissions.loadTourCommissions(this.form.tour_agent_id, this.form.tour_type_id);
+      }
     }
   },
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee8() {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7() {
       var _this5 = this;
 
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee8$(_context8) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
         while (1) {
-          switch (_context8.prev = _context8.next) {
+          switch (_context7.prev = _context7.next) {
             case 0:
               this.loadTourAgents();
               this.loadTourGuides();
@@ -3629,10 +3621,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
             case 5:
             case "end":
-              return _context8.stop();
+              return _context7.stop();
           }
         }
-      }, _callee8, this);
+      }, _callee7, this);
     }));
 
     function mounted() {
@@ -4747,16 +4739,40 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalSales.vue?vue&type=script&lang=js&":
-/*!*********************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TotalSales.vue?vue&type=script&lang=js& ***!
-  \*********************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalCommissions.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TotalCommissions.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -4815,11 +4831,146 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'TotalSales',
-  props: ['commissions', 'totalCommissions', 'gst', 'grandTotal', 'totalSales', 'totalDeduction', 'totalAgentSales'],
+  name: 'TotalCommissions',
+  props: ['user', 'backend', 'totalCommissions', 'gst', 'grandTotal', 'totalSales', 'totalDeduction', 'totalAgentSales'],
   components: {
-    CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_0__["default"]
-  }
+    CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      tourCommissions: [],
+      message: 'Loading Data...',
+      error: false,
+      commissionTypes: [],
+      commissions: []
+    };
+  },
+  methods: {
+    loadTourCommissions: function () {
+      var _loadTourCommissions = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(tourAgentId, tourTypeId) {
+        var url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                this.message = 'Loading Tour Commission ... '; // Get the Tourcommission associated with the TourAgent and TourType
+
+                url = this.backend + '/api/tour-commissions?api_token=' + this.user.api_token + '&tourAgent=' + tourAgentId + '&tourType=' + tourTypeId;
+                _context.next = 5;
+                return axios.get(url);
+
+              case 5:
+                response = _context.sent;
+                this.tourCommissions = response.data;
+
+                if (this.tourCommissions.length === 0) {
+                  this.message = 'No Tour Commission found please add tour commission for the Tour Agent';
+                } else {
+                  this.message = null;
+                  this.error = false;
+                }
+
+                console.log(this.tourCommissions);
+                _context.next = 16;
+                break;
+
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context["catch"](0);
+                this.message = 'Error loading Tour Commissions, please check with System Adminastrator';
+                this.error = true;
+                console.error('Error getting TourCommission', _context.t0);
+
+              case 16:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[0, 11]]);
+      }));
+
+      function loadTourCommissions(_x, _x2) {
+        return _loadTourCommissions.apply(this, arguments);
+      }
+
+      return loadTourCommissions;
+    }(),
+    computeCommissions: function computeCommissions() {},
+    getTourCommissionAmount: function getTourCommissionAmount(commissionTypeId, commissionId) {
+      var tourCommission = this.tourCommissions.filter(function (tc) {
+        return tc.commission_type_id === commissionTypeId && tc.commission_id === commissionId;
+      });
+      var amount = 0;
+
+      if (tourCommission[0]) {
+        amount = tourCommission[0].amount;
+      }
+
+      return amount.toFixed(2);
+    }
+  },
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+      var commissionTypeUrl, commissionUrl, commissionTypeResponse, commissionResponse;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              this.message = 'Loading Commission Type';
+              commissionTypeUrl = this.backend + '/api/commission-types?api_token=' + this.user.api_token;
+              commissionUrl = this.backend + '/api/commissions?api_token=' + this.user.api_token;
+              _context2.next = 6;
+              return axios.get(commissionTypeUrl);
+
+            case 6:
+              commissionTypeResponse = _context2.sent;
+              _context2.next = 9;
+              return axios.get(commissionUrl);
+
+            case 9:
+              commissionResponse = _context2.sent;
+              this.commissionTypes = commissionTypeResponse.data;
+              this.commissions = commissionResponse.data;
+
+              if (this.commissionTypes.length === 0 || this.commissions.length === 0) {
+                this.message = 'No Commission Types or Commissions. Please check database.';
+                this.error = true;
+              } else {
+                this.message = 'Commission Types Loaded. Please Select Tour Agent and Tour Type to load the Tour Commission';
+                this.error = false;
+              }
+
+              console.log(this.commissions);
+              _context2.next = 21;
+              break;
+
+            case 16:
+              _context2.prev = 16;
+              _context2.t0 = _context2["catch"](0);
+              this.message = 'Error loading Commissions Types, please check with System Adminastrator';
+              this.error = true;
+              console.error('Error getting TourCommission', _context2.t0);
+
+            case 21:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, this, [[0, 16]]);
+    }));
+
+    function mounted() {
+      return _mounted.apply(this, arguments);
+    }
+
+    return mounted;
+  }()
 });
 
 /***/ }),
@@ -27861,7 +28012,7 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "div",
-                  { staticClass: "w-32  px-2 py-1" },
+                  { staticClass: "w-32  px-2 py-1 text-right" },
                   [
                     _c("currency-format", {
                       attrs: { value: deduction.amount }
@@ -27885,7 +28036,7 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "div",
-                { staticClass: "w-32  px-2 py-1" },
+                { staticClass: "w-32  px-2 py-1 text-right" },
                 [
                   _c("currency-format", {
                     attrs: { value: _vm.totalDeductions }
@@ -29347,7 +29498,7 @@ var render = function() {
                           : $$selectedVal[0]
                       )
                     },
-                    _vm.onTourAgentSelected
+                    _vm.onTourAgentChanged
                   ]
                 }
               },
@@ -29380,8 +29531,8 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.selectedTourTypeId,
-                    expression: "selectedTourTypeId"
+                    value: _vm.form.tour_type_id,
+                    expression: "form.tour_type_id"
                   }
                 ],
                 staticClass:
@@ -29405,11 +29556,15 @@ var render = function() {
                           var val = "_value" in o ? o._value : o.value
                           return val
                         })
-                      _vm.selectedTourTypeId = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
+                      _vm.$set(
+                        _vm.form,
+                        "tour_type_id",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
                     },
-                    _vm.getTourCommission
+                    _vm.onTourTypeChanged
                   ]
                 }
               },
@@ -29697,9 +29852,12 @@ var render = function() {
               }
             }),
             _vm._v(" "),
-            _c("total-sales", {
+            _c("total-commissions", {
+              ref: "totalCommissions",
               attrs: {
                 commissions: _vm.form.sales_commissions,
+                user: _vm.user,
+                backend: _vm.backend,
                 totalSales: _vm.form.total_sales,
                 totalDeduction: _vm.form.total_deductions,
                 totalAgentSales: _vm.form.total_agent_sales,
@@ -31783,10 +31941,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalSales.vue?vue&type=template&id=90e77e5a&":
-/*!*************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TotalSales.vue?vue&type=template&id=90e77e5a& ***!
-  \*************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalCommissions.vue?vue&type=template&id=2e396b6f&":
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TotalCommissions.vue?vue&type=template&id=2e396b6f& ***!
+  \*******************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -31798,177 +31956,282 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass:
-        "flex border border-gray-700 mt-5 items-start text-sm bg-green-200"
-    },
-    [
-      _c(
-        "div",
-        { staticClass: "flex-1" },
-        [
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("Total Sales")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "w-32  px-2 py-1" },
-                [_c("currency-format", { attrs: { value: _vm.totalSales } })],
-                1
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b-2 border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("Deductions")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "w-32  px-2 py-1" },
-                [
-                  _c("currency-format", {
-                    attrs: { value: _vm.totalDeduction }
-                  })
-                ],
-                1
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("Total Agent Sales")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "w-32  px-2 py-1" },
-                [
-                  _c("currency-format", {
-                    attrs: { value: _vm.totalAgentSales }
-                  })
-                ],
-                1
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _vm._l(_vm.commissions, function(commission) {
-            return _c(
+  return _c("div", [
+    _vm.message
+      ? _c(
+          "div",
+          {
+            staticClass:
+              "flex border border-gray-700 mt-5 items-center text-sm text-white py-4 px-8 rounded",
+            class: _vm.error ? "bg-red-600" : "bg-gray-600"
+          },
+          [_c("p", [_vm._v(" " + _vm._s(_vm.message) + " ")])]
+        )
+      : _c(
+          "div",
+          {
+            staticClass:
+              "flex border border-gray-700 mt-5 items-start text-sm bg-green-200"
+          },
+          [
+            _c(
               "div",
-              {
-                key: commission.id,
-                staticClass: "flex justify-between border-b border-gray-700"
-              },
+              { staticClass: "flex-1" },
               [
                 _c(
                   "div",
-                  { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                  [_vm._v(_vm._s(commission.name))]
+                  {
+                    staticClass: "flex justify-between border-b border-gray-700"
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "flex-1 border-gray-700 border-r px-2 py-1"
+                      },
+                      [_vm._v("Total Sales")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-32  px-2 py-1 text-right" },
+                      [
+                        _c("currency-format", {
+                          attrs: { value: _vm.totalSales }
+                        })
+                      ],
+                      1
+                    )
+                  ]
                 ),
                 _vm._v(" "),
                 _c(
                   "div",
-                  { staticClass: "w-32  px-2 py-1" },
+                  {
+                    staticClass:
+                      "flex justify-between border-b-2 border-gray-700"
+                  },
                   [
-                    _c("currency-format", {
-                      attrs: { value: commission.amount }
-                    })
-                  ],
-                  1
+                    _c(
+                      "div",
+                      {
+                        staticClass: "flex-1 border-gray-700 border-r px-2 py-1"
+                      },
+                      [_vm._v("Deductions")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-32  px-2 py-1 text-right" },
+                      [
+                        _c("currency-format", {
+                          attrs: { value: _vm.totalDeduction }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flex justify-between border-b border-gray-700"
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "flex-1 border-gray-700 border-r px-2 py-1"
+                      },
+                      [_vm._v("Total Agent Sales")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-32  px-2 py-1 text-right" },
+                      [
+                        _c("currency-format", {
+                          attrs: { value: _vm.totalAgentSales }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._l(_vm.commissionTypes, function(type) {
+                  return _c(
+                    "div",
+                    {
+                      key: type.id,
+                      staticClass:
+                        "flex justify-between border-b border-gray-700"
+                    },
+                    [
+                      _c(
+                        "div",
+                        { staticClass: "flex-1 border-gray-700 border-r flex" },
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "border-r border-gray-700 px-2 py-1 w-48"
+                            },
+                            [_vm._v(_vm._s(type.name))]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "flex-1" },
+                            _vm._l(_vm.commissions, function(commission) {
+                              return _c(
+                                "div",
+                                {
+                                  key: commission.id,
+                                  staticClass:
+                                    "border-b border-gray-700 flex items-center justify-between"
+                                },
+                                [
+                                  _c(
+                                    "div",
+                                    { staticClass: "flex-1 px-2 py-1 " },
+                                    [
+                                      _vm._v(
+                                        " " + _vm._s(commission.name) + " "
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass: "flex-1 px-2 py-1 text-right"
+                                    },
+                                    [
+                                      _vm._v(
+                                        " " +
+                                          _vm._s(
+                                            _vm.getTourCommissionAmount(
+                                              type.id,
+                                              commission.id
+                                            )
+                                          ) +
+                                          " "
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass:
+                                        "w-32 text-right border-l border-gray-700 px-2 py-1"
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                0.00\n                            "
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            }),
+                            0
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                }),
+                _vm._v(" "),
+                _vm._m(0),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flex justify-between border-b border-gray-700"
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "flex-1 border-gray-700 border-r px-2 py-1"
+                      },
+                      [_vm._v("Total Agent Commission")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-32  px-2 py-1 text-right" },
+                      [
+                        _c("currency-format", {
+                          attrs: { value: _vm.totalCommissions }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flex justify-between border-b border-gray-700"
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "flex-1 border-gray-700 border-r px-2 py-1"
+                      },
+                      [_vm._v("GST")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-32  px-2 py-1 text-right" },
+                      [_c("currency-format", { attrs: { value: _vm.gst } })],
+                      1
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "flex justify-between font-semibold bg-green-400"
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "flex-1 border-gray-700 border-r  px-2 py-1"
+                      },
+                      [_vm._v("Grand Total Agent Commission")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-32  px-2 py-1 text-right" },
+                      [
+                        _c("currency-format", {
+                          attrs: { value: _vm.grandTotal }
+                        })
+                      ],
+                      1
+                    )
+                  ]
                 )
-              ]
+              ],
+              2
             )
-          }),
-          _vm._v(" "),
-          _vm._m(0),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("Total Agent Commission")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "w-32  px-2 py-1" },
-                [
-                  _c("currency-format", {
-                    attrs: { value: _vm.totalCommissions }
-                  })
-                ],
-                1
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("GST")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "w-32  px-2 py-1" },
-                [_c("currency-format", { attrs: { value: _vm.gst } })],
-                1
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between font-semibold bg-green-400" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r  px-2 py-1" },
-                [_vm._v("Grand Total Agent Commission")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "w-32  px-2 py-1" },
-                [_c("currency-format", { attrs: { value: _vm.grandTotal } })],
-                1
-              )
-            ]
-          )
-        ],
-        2
-      )
-    ]
-  )
+          ]
+        )
+  ])
 }
 var staticRenderFns = [
   function() {
@@ -47918,17 +48181,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/TotalSales.vue":
-/*!************************************************!*\
-  !*** ./resources/js/components/TotalSales.vue ***!
-  \************************************************/
+/***/ "./resources/js/components/TotalCommissions.vue":
+/*!******************************************************!*\
+  !*** ./resources/js/components/TotalCommissions.vue ***!
+  \******************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _TotalSales_vue_vue_type_template_id_90e77e5a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TotalSales.vue?vue&type=template&id=90e77e5a& */ "./resources/js/components/TotalSales.vue?vue&type=template&id=90e77e5a&");
-/* harmony import */ var _TotalSales_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TotalSales.vue?vue&type=script&lang=js& */ "./resources/js/components/TotalSales.vue?vue&type=script&lang=js&");
+/* harmony import */ var _TotalCommissions_vue_vue_type_template_id_2e396b6f___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TotalCommissions.vue?vue&type=template&id=2e396b6f& */ "./resources/js/components/TotalCommissions.vue?vue&type=template&id=2e396b6f&");
+/* harmony import */ var _TotalCommissions_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TotalCommissions.vue?vue&type=script&lang=js& */ "./resources/js/components/TotalCommissions.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -47938,9 +48201,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _TotalSales_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _TotalSales_vue_vue_type_template_id_90e77e5a___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _TotalSales_vue_vue_type_template_id_90e77e5a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _TotalCommissions_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TotalCommissions_vue_vue_type_template_id_2e396b6f___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TotalCommissions_vue_vue_type_template_id_2e396b6f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -47950,38 +48213,38 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/TotalSales.vue"
+component.options.__file = "resources/js/components/TotalCommissions.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/components/TotalSales.vue?vue&type=script&lang=js&":
-/*!*************************************************************************!*\
-  !*** ./resources/js/components/TotalSales.vue?vue&type=script&lang=js& ***!
-  \*************************************************************************/
+/***/ "./resources/js/components/TotalCommissions.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/TotalCommissions.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalSales_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./TotalSales.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalSales.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalSales_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalCommissions_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./TotalCommissions.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalCommissions.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalCommissions_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/components/TotalSales.vue?vue&type=template&id=90e77e5a&":
-/*!*******************************************************************************!*\
-  !*** ./resources/js/components/TotalSales.vue?vue&type=template&id=90e77e5a& ***!
-  \*******************************************************************************/
+/***/ "./resources/js/components/TotalCommissions.vue?vue&type=template&id=2e396b6f&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/TotalCommissions.vue?vue&type=template&id=2e396b6f& ***!
+  \*************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalSales_vue_vue_type_template_id_90e77e5a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./TotalSales.vue?vue&type=template&id=90e77e5a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalSales.vue?vue&type=template&id=90e77e5a&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalSales_vue_vue_type_template_id_90e77e5a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalCommissions_vue_vue_type_template_id_2e396b6f___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./TotalCommissions.vue?vue&type=template&id=2e396b6f& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalCommissions.vue?vue&type=template&id=2e396b6f&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalCommissions_vue_vue_type_template_id_2e396b6f___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalSales_vue_vue_type_template_id_90e77e5a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalCommissions_vue_vue_type_template_id_2e396b6f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

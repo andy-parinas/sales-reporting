@@ -12,7 +12,7 @@
                     <div  class="flex-1 border-b border-gray-700" >
                         <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm"
                                 :class="errors && errors.tour_agent_id ? 'bg-red-200' : ''"  
-                                type="text" id="agent" placeholder="Tour Agent Name" v-model="form.tour_agent_id" >
+                                type="text" id="agent" placeholder="Tour Agent Name" v-model="form.tour_agent_id" @change="onTourAgentChanged" >
 
                             <option disabled value="" > --- Select Tour Agent ---</option>
                             <option v-for="agent in tourAgents" :key="agent.id"
@@ -115,14 +115,24 @@
                 <deductions :deductions="form.sales_deductions" :totalDeductions="form.total_deductions">
                 </deductions>
 
-                <total-sales :commissions="form.sales_commissions"
+                <!-- <total-sales :commissions="form.sales_commissions"
                             :totalSales="form.total_sales"
                             :totalDeduction="form.total_deductions"
                             :totalAgentSales='form.total_agent_sales'
                             :totalCommissions="form.total_commissions"
                             :gst="form.gst"
                             :grandTotal="form.grand_total_commission" >
-                </total-sales>
+                </total-sales> -->
+
+                  <total-commissions ref="totalCommissions"
+                            :commissions="form.sales_commissions" :user="user" :backend="backend"
+                            :totalSales="form.total_sales"
+                            :totalDeduction="form.total_deductions"
+                            :totalAgentSales='form.total_agent_sales'
+                            :totalCommissions="form.total_commissions"
+                            :gst="form.gst"
+                            :grandTotal="form.grand_total_commission" >
+                </total-commissions>
 
                 <button 
                     class="flex items-center w-full mt-5 py-2 px-4 text-white rounded-full justify-center focus:outline-none" 
@@ -159,13 +169,13 @@
 import ProductSelection from './ProductSelection';
 import SelectedProduct from './SelectedProduct';
 import Deductions from './Deductions';
-import TotalSales from './TotalSales';
+import TotalCommissions from './TotalCommissions';
 import CircleLoader from './ui/loader/CircleLoader';
 import { async } from 'q';
 
 export default {
     name: 'SalesReportForm',
-    components: {ProductSelection, SelectedProduct, Deductions, TotalSales, CircleLoader},
+    components: {ProductSelection, SelectedProduct, Deductions, TotalCommissions, CircleLoader},
     props: ['user', 'edit', 'report', 'backend'],
     data: function(){
         return {
@@ -484,25 +494,18 @@ export default {
         },
 
         
-        onTourTypeChanged: async function()
+        onTourTypeChanged: function()
         {
+
+            this.$refs.totalCommissions.loadTourCommissions(this.form.tour_agent_id, this.form.tour_type_id)
             
-            try {
-                
-                // Get the Tourcommission associated with the TourAgent and TourType
-                const url = this.backend + '/api/tour-commissions?api_token=' + this.user.api_token 
-                                + '&tourAgent=' + this.form.tour_agent_id
-                                + '&tourType=' + this.form.tour_type_id
+        },
+        onTourAgentChanged: function()
+        {
+            if(this.form.tour_type_id){
 
-                
-
-
-
-            } catch (error) {
-                
+                 this.$refs.totalCommissions.loadTourCommissions(this.form.tour_agent_id, this.form.tour_type_id)
             }
-
-
         }
     },
     async mounted()
