@@ -3074,7 +3074,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
 
 
 
@@ -3124,10 +3123,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         total_commissions: 0,
         gst: 0,
         grand_total_commission: 0,
-        guide_incentive: 0,
-        delivery: 0,
-        service: 0,
-        total: 0,
         selected_products: [],
         sales_commissions: [],
         sales_deductions: []
@@ -3424,6 +3419,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       this.$refs.totalCommissions.deductCommission(removedProduct[0]);
     },
+    getSalesCommissions: function getSalesCommissions(salesCommissions, totalCommissions, totalGST, grandTotalCommissions) {
+      this.form.sales_commissions = salesCommissions;
+      this.form.total_commissions = totalCommissions;
+      this.form.gst = totalGST;
+      this.form.grand_total_commission = grandTotalCommissions; // console.log('from the sales report form', this.form.sales_commissions);
+    },
     submit: function () {
       var _submit = _asyncToGenerator(
       /*#__PURE__*/
@@ -3486,6 +3487,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 this.success = false;
 
               case 26:
+                console.log('Form Data', this.form);
+
+              case 27:
               case "end":
                 return _context6.stop();
             }
@@ -4819,7 +4823,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TotalCommissions',
-  props: ['user', 'backend', 'totalCommissions', 'gst', 'grandTotal', 'totalSales', 'totalDeduction', 'totalAgentSales'],
+  props: ['user', 'backend', 'totalSales', 'totalDeduction', 'totalAgentSales'],
   components: {
     CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
@@ -4833,7 +4837,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       computedCommissions: {},
       input: {},
       totalProducts: {},
-      totalByCommission: {}
+      totalByCommission: {},
+      totalAgentCommission: 0,
+      totalGST: 0,
+      grandTotalCommission: 0
     };
   },
   methods: {
@@ -4879,23 +4886,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   });
                 }
 
-                console.log('Input', this.input);
-                _context.next = 16;
+                _context.next = 15;
                 break;
 
-              case 11:
-                _context.prev = 11;
+              case 10:
+                _context.prev = 10;
                 _context.t0 = _context["catch"](0);
                 this.message = 'Error loading Tour Commissions, please check with System Adminastrator';
                 this.error = true;
                 console.error('Error getting TourCommission', _context.t0);
 
-              case 16:
+              case 15:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 11]]);
+        }, _callee, this, [[0, 10]]);
       }));
 
       function loadTourCommissions(_x, _x2) {
@@ -4904,13 +4910,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return loadTourCommissions;
     }(),
-    addCommission: function addCommission(selectedProduct) {
+    computeCommissions: function computeCommissions(selectedProduct) {
       var _this2 = this;
 
-      this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] + selectedProduct.total; //Loop Through the commissions
+      var totalAgentCommission = 0; // Loop Through the commissions and compute for 
+      // Commission based on the produdct.code
 
       this.commissions.map(function (c) {
-        _this2.computedCommissions[selectedProduct.code][c.id] = parseFloat((_this2.totalProducts[selectedProduct.code] * _this2.input[selectedProduct.code][c.id]).toFixed(2));
+        _this2.computedCommissions[selectedProduct.code][c.id] = parseFloat((_this2.totalProducts[selectedProduct.code] * _this2.input[selectedProduct.code][c.id]).toFixed(2)); // Loop Through each commisionTypes adding the same commission for each type
+
         var total = 0;
 
         _this2.commissionTypes.map(function (ct) {
@@ -4918,42 +4926,84 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
 
         _this2.totalByCommission[c.id] = total;
+        totalAgentCommission = totalAgentCommission + _this2.totalByCommission[c.id];
       });
+      this.totalAgentCommission = totalAgentCommission;
+      this.totalGST = this.totalAgentCommission * 0.10;
+      this.grandTotalCommission = this.totalAgentCommission + this.totalGST;
+      var salesCommissions = this.createSalesCommissions();
+      this.$emit('salesCommissionChanged', salesCommissions, this.totalAgentCommission, this.totalGST, this.grandTotalCommission);
+    },
+    addCommission: function addCommission(selectedProduct) {
+      this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] + selectedProduct.total;
+      this.computeCommissions(selectedProduct);
+      this.createSalesCommissions();
     },
     deductCommission: function deductCommission(selectedProduct) {
-      var _this3 = this;
-
-      this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] - selectedProduct.total; //Loop Through the commissions
-
-      this.commissions.map(function (c) {
-        _this3.computedCommissions[selectedProduct.code][c.id] = parseFloat((_this3.totalProducts[selectedProduct.code] * _this3.input[selectedProduct.code][c.id]).toFixed(2));
-        var total = 0;
-
-        _this3.commissionTypes.map(function (ct) {
-          total = total + _this3.computedCommissions[ct.code][c.id];
-        });
-
-        _this3.totalByCommission[c.id] = total;
-      });
+      this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] - selectedProduct.total;
+      this.computeCommissions(selectedProduct); // let totalAgentCommission = 0
+      // //Loop Through the commissions
+      // this.commissions.map(c => {
+      //     this.computedCommissions[selectedProduct.code][c.id] = parseFloat((this.totalProducts[selectedProduct.code] * this.input[selectedProduct.code][c.id]).toFixed(2));
+      //     let total = 0;
+      //     this.commissionTypes.map(ct => {
+      //         total = total + this.computedCommissions[ct.code][c.id]
+      //     })
+      //     this.totalByCommission[c.id] = total; 
+      //     totalAgentCommission = totalAgentCommission + this.totalByCommission[c.id];
+      // })
+      // this.totalAgentCommission = totalAgentCommission;
+      // this.totalGST = this.totalAgentCommission * 0.10;
+      // this.grandTotalCommission = this.totalAgentCommission + this.totalGST;
     },
-    getTourCommissionAmount: function getTourCommissionAmount(commissionTypeId, commissionId) {
+    findTourCommission: function findTourCommission(commissionTypeId, commissionId) {
       var tourCommission = this.tourCommissions.filter(function (tc) {
         return tc.commission_type_id === commissionTypeId && tc.commission_id === commissionId;
       });
+      return tourCommission[0];
+    },
+    getTourCommissionAmount: function getTourCommissionAmount(commissionTypeId, commissionId) {
+      // const tourCommission = this.tourCommissions.filter(tc => tc.commission_type_id === commissionTypeId && tc.commission_id === commissionId);
+      var tourCommission = this.findTourCommission(commissionTypeId, commissionId);
       var amount = 0;
 
-      if (tourCommission[0]) {
-        amount = tourCommission[0].amount;
+      if (tourCommission) {
+        amount = tourCommission.amount;
       }
 
       return parseFloat(amount);
+    },
+    findTourCommissionByCode: function findTourCommissionByCode(commissionTypeCode, commissionId) {
+      // const tourCommission = this.tourCommissions.filter(tc => tc.commission_type.code === commissionTypeCode && tc.commission_id === commissionId);
+      var tourCommission = this.tourCommissions.filter(function (tc) {
+        return tc.commission_type.code == commissionTypeCode && tc.commission_id == commissionId;
+      });
+      return tourCommission[0];
+    },
+    createSalesCommissions: function createSalesCommissions() {
+      var salesCommissions = [];
+
+      for (var c in this.computedCommissions) {
+        for (var i in this.computedCommissions[c]) {
+          var tourCommission = this.findTourCommissionByCode(c, i);
+
+          if (tourCommission) {
+            salesCommissions.push({
+              tour_commission_id: tourCommission.id,
+              amount: this.computedCommissions[c][i]
+            });
+          }
+        }
+      }
+
+      return salesCommissions;
     }
   },
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-      var _this4 = this;
+      var _this3 = this;
 
       var commissionTypeUrl, commissionUrl, commissionTypeResponse, commissionResponse;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
@@ -5008,17 +5058,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   //Initializing a commissionType Object
                   var commissionTypeObject = {}; // Looping through the commissions
 
-                  _this4.commissions.map(function (c) {
+                  _this3.commissions.map(function (c) {
                     //creating a property of Commission.id in the CommissionType object
                     commissionTypeObject[c.id] = 0;
-                    _this4.totalByCommission[c.id] = 0;
+                    _this3.totalByCommission[c.id] = 0;
                   }); // Creating a property of commissionType.code in the ComputedCommission object
 
 
-                  _this4.computedCommissions[ct.code] = commissionTypeObject;
-                  _this4.totalProducts[ct.code] = 0;
+                  _this3.computedCommissions[ct.code] = commissionTypeObject;
+                  _this3.totalProducts[ct.code] = 0;
                 });
-                console.log('computedCommissions:', this.computedCommissions);
               }
 
               _context2.next = 20;
@@ -29934,10 +29983,9 @@ var render = function() {
                 totalSales: _vm.form.total_sales,
                 totalDeduction: _vm.form.total_deductions,
                 totalAgentSales: _vm.form.total_agent_sales,
-                totalCommissions: _vm.form.total_commissions,
-                gst: _vm.form.gst,
-                grandTotal: _vm.form.grand_total_commission
-              }
+                totalCommissions: _vm.form.total_commissions
+              },
+              on: { salesCommissionChanged: _vm.getSalesCommissions }
             }),
             _vm._v(" "),
             _c(
@@ -32309,7 +32357,7 @@ var render = function() {
                       { staticClass: "w-32  px-2 py-1 text-right" },
                       [
                         _c("currency-format", {
-                          attrs: { value: _vm.totalCommissions }
+                          attrs: { value: _vm.totalAgentCommission }
                         })
                       ],
                       1
@@ -32334,7 +32382,11 @@ var render = function() {
                     _c(
                       "div",
                       { staticClass: "w-32  px-2 py-1 text-right" },
-                      [_c("currency-format", { attrs: { value: _vm.gst } })],
+                      [
+                        _c("currency-format", {
+                          attrs: { value: _vm.totalGST }
+                        })
+                      ],
                       1
                     )
                   ]
@@ -32361,7 +32413,7 @@ var render = function() {
                       { staticClass: "w-32  px-2 py-1 text-right" },
                       [
                         _c("currency-format", {
-                          attrs: { value: _vm.grandTotal }
+                          attrs: { value: _vm.grandTotalCommission }
                         })
                       ],
                       1

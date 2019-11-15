@@ -121,8 +121,7 @@
                             :totalDeduction="form.total_deductions"
                             :totalAgentSales='form.total_agent_sales'
                             :totalCommissions="form.total_commissions"
-                            :gst="form.gst"
-                            :grandTotal="form.grand_total_commission" >
+                            @salesCommissionChanged="getSalesCommissions" >
                 </total-commissions>
 
                 <button 
@@ -201,10 +200,6 @@ export default {
                     total_commissions: 0,
                     gst: 0,
                     grand_total_commission: 0,
-                    guide_incentive: 0,
-                    delivery: 0,
-                    service: 0,
-                    total: 0,
                     selected_products: [],
                     sales_commissions: [],
                     sales_deductions: [],
@@ -414,6 +409,18 @@ export default {
 
         },
 
+        getSalesCommissions: function(salesCommissions, totalCommissions, totalGST, grandTotalCommissions ){
+
+            this.form.sales_commissions = salesCommissions;
+
+            this.form.total_commissions = totalCommissions;
+            this.form.gst = totalGST;
+            this.form.grand_total_commission = grandTotalCommissions;
+
+            // console.log('from the sales report form', this.form.sales_commissions);
+
+        },
+
         submit: async function()
         {
 
@@ -457,6 +464,8 @@ export default {
                 this.submitting = false;
                 this.success = false;
             }
+
+            console.log('Form Data', this.form);
 
         },
 

@@ -64,19 +64,19 @@
                 <div class="flex justify-between border-b border-gray-700" >
                     <div class="flex-1 border-gray-700 border-r px-2 py-1">Total Agent Commission</div>
                     <div class="w-32  px-2 py-1 text-right">
-                        <currency-format :value="totalCommissions"></currency-format>
+                        <currency-format :value="totalAgentCommission"></currency-format>
                     </div>
                 </div>
                 <div class="flex justify-between border-b border-gray-700" >
                     <div class="flex-1 border-gray-700 border-r px-2 py-1">GST</div>
                     <div class="w-32  px-2 py-1 text-right">
-                        <currency-format :value="gst"></currency-format>
+                        <currency-format :value="totalGST"></currency-format>
                     </div>
                 </div>
                 <div class="flex justify-between font-semibold bg-green-400">
                     <div class="flex-1 border-gray-700 border-r  px-2 py-1">Grand Total Agent Commission</div>
                     <div class="w-32  px-2 py-1 text-right">
-                        <currency-format :value="grandTotal"></currency-format>
+                        <currency-format :value="grandTotalCommission"></currency-format>
                     </div>
                 </div>
             </div>
@@ -89,7 +89,7 @@ import CurrencyFormat from './ui/formated/CurrencyFormat';
 
 export default {
     name: 'TotalCommissions',
-    props: ['user', 'backend', 'totalCommissions', 'gst', 'grandTotal', 'totalSales', 'totalDeduction', 'totalAgentSales'],
+    props: ['user', 'backend',  'totalSales', 'totalDeduction', 'totalAgentSales'],
     components: {CurrencyFormat},
     data: function()
     {
@@ -102,7 +102,10 @@ export default {
             computedCommissions: {},
             input: {},
             totalProducts: {},
-            totalByCommission: {}
+            totalByCommission: {},
+            totalAgentCommission: 0,
+            totalGST: 0,
+            grandTotalCommission: 0,
         }
     },
     methods: {
@@ -148,8 +151,6 @@ export default {
 
                 }
 
-                console.log('Input', this.input);
-
             } catch (error) {
                 
                 this.message = 'Error loading Tour Commissions, please check with System Adminastrator'
@@ -158,25 +159,49 @@ export default {
             }
 
         },
+
+        computeCommissions: function(selectedProduct){
+
+            let totalAgentCommission = 0
+
+            // Loop Through the commissions and compute for 
+            // Commission based on the produdct.code
+            this.commissions.map(c => {
+
+                this.computedCommissions[selectedProduct.code][c.id] = parseFloat((this.totalProducts[selectedProduct.code] * this.input[selectedProduct.code][c.id]).toFixed(2));
+                
+                // Loop Through each commisionTypes adding the same commission for each type
+                let total = 0;
+                this.commissionTypes.map(ct => {
+                    
+                    total = total + this.computedCommissions[ct.code][c.id]
+
+                })
+
+                this.totalByCommission[c.id] = total;   
+
+                totalAgentCommission = totalAgentCommission + this.totalByCommission[c.id];
+            })
+
+            this.totalAgentCommission = totalAgentCommission;
+            this.totalGST = this.totalAgentCommission * 0.10;
+            this.grandTotalCommission = this.totalAgentCommission + this.totalGST;
+            
+            const salesCommissions = this.createSalesCommissions();
+
+            this.$emit('salesCommissionChanged', salesCommissions, this.totalAgentCommission, this.totalGST, this.grandTotalCommission);
+
+        },
         
         addCommission: function(selectedProduct){
 
 
             this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] + selectedProduct.total;
+            
+            this.computeCommissions(selectedProduct);
 
-            //Loop Through the commissions
-            this.commissions.map(c => {
-
-                this.computedCommissions[selectedProduct.code][c.id] = parseFloat((this.totalProducts[selectedProduct.code] * this.input[selectedProduct.code][c.id]).toFixed(2));
-
-                let total = 0;
-                this.commissionTypes.map(ct => {
-                    total = total + this.computedCommissions[ct.code][c.id]
-                })
-
-                this.totalByCommission[c.id] = total;   
-
-            })
+            this.createSalesCommissions();
+            
         },
 
 
@@ -185,35 +210,96 @@ export default {
 
             this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] - selectedProduct.total;
 
-            //Loop Through the commissions
-            this.commissions.map(c => {
+            this.computeCommissions(selectedProduct);
 
-                this.computedCommissions[selectedProduct.code][c.id] = parseFloat((this.totalProducts[selectedProduct.code] * this.input[selectedProduct.code][c.id]).toFixed(2));
+            // let totalAgentCommission = 0
 
-                let total = 0;
-                this.commissionTypes.map(ct => {
-                    total = total + this.computedCommissions[ct.code][c.id]
-                })
+            // //Loop Through the commissions
+            // this.commissions.map(c => {
 
-                this.totalByCommission[c.id] = total;   
+            //     this.computedCommissions[selectedProduct.code][c.id] = parseFloat((this.totalProducts[selectedProduct.code] * this.input[selectedProduct.code][c.id]).toFixed(2));
 
-            })
+            //     let total = 0;
+            //     this.commissionTypes.map(ct => {
+            //         total = total + this.computedCommissions[ct.code][c.id]
+            //     })
+
+            //     this.totalByCommission[c.id] = total; 
+
+            //     totalAgentCommission = totalAgentCommission + this.totalByCommission[c.id];
+            // })
+
+            // this.totalAgentCommission = totalAgentCommission;
+            // this.totalGST = this.totalAgentCommission * 0.10;
+            // this.grandTotalCommission = this.totalAgentCommission + this.totalGST;
 
         },
 
-        getTourCommissionAmount: function(commissionTypeId, commissionId){
+        findTourCommission: function(commissionTypeId, commissionId){
 
             const tourCommission = this.tourCommissions.filter(tc => tc.commission_type_id === commissionTypeId && tc.commission_id === commissionId);
 
+            return tourCommission[0];
+
+        },
+
+
+        getTourCommissionAmount: function(commissionTypeId, commissionId){
+
+            // const tourCommission = this.tourCommissions.filter(tc => tc.commission_type_id === commissionTypeId && tc.commission_id === commissionId);
+            const tourCommission = this.findTourCommission(commissionTypeId, commissionId)
+
             let amount = 0
-            if(tourCommission[0]){
-                amount = tourCommission[0].amount
+
+            if(tourCommission){
+                amount = tourCommission.amount
             }
 
 
             return parseFloat(amount);
 
+        },
+
+        findTourCommissionByCode: function(commissionTypeCode, commissionId){
+
+            // const tourCommission = this.tourCommissions.filter(tc => tc.commission_type.code === commissionTypeCode && tc.commission_id === commissionId);
+            const tourCommission = this.tourCommissions.filter(tc => {
+
+                return tc.commission_type.code == commissionTypeCode && tc.commission_id == commissionId
+            });
+
+
+            return tourCommission[0];
+
+        },
+
+        createSalesCommissions: function(){
+
+            const salesCommissions = [];
+
+            for(let c in this.computedCommissions){
+
+                for(let i in this.computedCommissions[c]){
+
+                    const tourCommission = this.findTourCommissionByCode(c, i);
+
+                    if(tourCommission){
+
+                        salesCommissions.push({
+                            tour_commission_id: tourCommission.id,
+                            amount: this.computedCommissions[c][i]
+                        })
+
+                    }
+        
+                }
+            }
+
+            return salesCommissions;
+
         }
+
+
     },
     async mounted(){
 
@@ -281,8 +367,6 @@ export default {
                     this.totalProducts[ct.code] = 0;
                 })
 
-
-                console.log('computedCommissions:', this.computedCommissions);
 
             }
 
