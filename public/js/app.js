@@ -3362,38 +3362,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return loadTourTypes;
     }(),
-    computeCommission: function computeCommission() {
-      var _this3 = this;
-
-      var totalCommissions = 0;
-      this.form.sales_commissions.forEach(function (commission, index) {
-        if (commission.type === 1) {
-          _this3.form.sales_commissions[index].amount = commission.percentage * _this3.code1Total;
-        } else if (commission.type === 2) {
-          _this3.form.sales_commissions[index].amount = commission.percentage * _this3.code2Total;
-        } else {
-          _this3.form.sales_commissions[index].amount = commission.percentage * _this3.form.total_agent_sales;
-        }
-
-        totalCommissions = totalCommissions + _this3.form.sales_commissions[index].amount;
-      });
-      this.form.total_commissions = totalCommissions; // this.form.total_agent_sales = this.form.total_sales - this.this.form.total_deductions;
-
-      this.form.gst = this.form.total_commissions * 0.10;
-      this.form.grand_total_commission = this.form.gst + this.form.total_commissions;
-    },
     computeDeduction: function computeDeduction(product, action) {
-      var _this4 = this;
+      var _this3 = this;
 
       var total = 0;
       this.form.sales_deductions.forEach(function (deduction, index) {
         if (deduction.type === 1) {
-          _this4.form.sales_deductions[index].amount = _this4.code1Count * _this4.form.sales_deductions[index].multiplier;
+          _this3.form.sales_deductions[index].amount = _this3.code1Count * _this3.form.sales_deductions[index].multiplier;
         } else if (deduction.type === 3 && product.quantity >= 1 && product.total === 0) {
           if (action === 'add') {
-            _this4.form.sales_deductions[index].amount = _this4.form.sales_deductions[index].amount + product.cost;
+            _this3.form.sales_deductions[index].amount = _this3.form.sales_deductions[index].amount + product.cost;
           } else {
-            _this4.form.sales_deductions[index].amount = _this4.form.sales_deductions[index].amount - product.cost;
+            _this3.form.sales_deductions[index].amount = _this3.form.sales_deductions[index].amount - product.cost;
           }
         }
 
@@ -3532,7 +3512,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7() {
-      var _this5 = this;
+      var _this4 = this;
 
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
         while (1) {
@@ -3570,7 +3550,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     amount: ref.amount
                   };
 
-                  _this5.form.sales_commissions.push(salesCommission);
+                  _this4.form.sales_commissions.push(salesCommission);
                 });
                 this.report.sales_deductions.forEach(function (ref) {
                   var deduction = {
@@ -3582,7 +3562,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     multiplier: ref.deduction.amount
                   };
 
-                  _this5.form.sales_deductions.push(deduction);
+                  _this4.form.sales_deductions.push(deduction);
                 });
                 this.report.selected_products.forEach(function (ref) {
                   var selectedProduct = {
@@ -3597,16 +3577,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   };
 
                   if (ref.product.product_type.code === 1) {
-                    _this5.code1Total = _this5.code1Total + ref.total;
-                    _this5.code1Count = _this5.code1Count + ref.quantity;
+                    _this4.code1Total = _this4.code1Total + ref.total;
+                    _this4.code1Count = _this4.code1Count + ref.quantity;
                   }
 
-                  if (ref.product.product_type.code === 2) _this5.code2Total = _this5.code2Total + ref.total;
+                  if (ref.product.product_type.code === 2) _this4.code2Total = _this4.code2Total + ref.total;
 
-                  _this5.form.selected_products.push(selectedProduct);
+                  _this4.form.selected_products.push(selectedProduct);
                 });
               } else {
-                this.loadSalesCommissionReference();
+                // this.loadSalesCommissionReference();
                 this.loadDeductionsReference();
               }
 
@@ -4927,13 +4907,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     addCommission: function addCommission(selectedProduct) {
       var _this2 = this;
 
-      // console.log(`${this.totalProducts[selectedProduct.code]} + ${selectedProduct.total} = ${this.totalProducts[selectedProduct.code]}`)
       this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] + selectedProduct.total; //Loop Through the commissions
 
       this.commissions.map(function (c) {
-        _this2.computedCommissions[selectedProduct.code][c.id] = parseFloat((_this2.totalProducts[selectedProduct.code] * _this2.input[selectedProduct.code][c.id]).toFixed(2)); // console.log(`${this.totalProducts[selectedProduct.code]} * ${this.input[selectedProduct.code][c.id]} = ${this.computedCommissions[selectedProduct.code][c.id]}`)
-        // this.totalByCommission[c.id] = this.totalByCommission[c.id] + this.computedCommissions[selectedProduct.code][c.id];
-
+        _this2.computedCommissions[selectedProduct.code][c.id] = parseFloat((_this2.totalProducts[selectedProduct.code] * _this2.input[selectedProduct.code][c.id]).toFixed(2));
         var total = 0;
 
         _this2.commissionTypes.map(function (ct) {
@@ -4946,13 +4923,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     deductCommission: function deductCommission(selectedProduct) {
       var _this3 = this;
 
-      // console.log('Deducting Commissions');
       this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] - selectedProduct.total; //Loop Through the commissions
 
       this.commissions.map(function (c) {
-        _this3.computedCommissions[selectedProduct.code][c.id] = parseFloat((_this3.totalProducts[selectedProduct.code] * _this3.input[selectedProduct.code][c.id]).toFixed(2)); // console.log(`${this.totalProducts[selectedProduct.code]} * ${this.input[selectedProduct.code][c.id]} = ${this.computedCommissions[selectedProduct.code][c.id]}`)
-        // this.totalByCommission[c.id] = this.totalByCommission[c.id] + this.computedCommissions[selectedProduct.code][c.id];
-
+        _this3.computedCommissions[selectedProduct.code][c.id] = parseFloat((_this3.totalProducts[selectedProduct.code] * _this3.input[selectedProduct.code][c.id]).toFixed(2));
         var total = 0;
 
         _this3.commissionTypes.map(function (ct) {
@@ -4987,6 +4961,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
+              // Start of Getting the required data from the backend
               this.message = 'Loading Commission Type';
               commissionTypeUrl = this.backend + '/api/commission-types?api_token=' + this.user.api_token;
               commissionUrl = this.backend + '/api/commissions?api_token=' + this.user.api_token;
@@ -5001,24 +4976,43 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 9:
               commissionResponse = _context2.sent;
               this.commissionTypes = commissionTypeResponse.data;
-              this.commissions = commissionResponse.data;
+              this.commissions = commissionResponse.data; // End of Data aquistion from the Backend
+              // Start initializing the data model to be used by the templates and computation
 
               if (this.commissionTypes.length === 0 || this.commissions.length === 0) {
                 this.message = 'No Commission Types or Commissions. Please check database.';
                 this.error = true;
               } else {
                 this.message = 'Commission Types Loaded. Please Select Tour Agent and Tour Type to load the Tour Commission';
-                this.error = false; //Initialized the computerCommission Model
+                this.error = false; //Initialized the ComputedCommission Data Model
+
+                /**
+                 *  commissions are based on the TourType, CommissionType, Commission/Commission Name
+                 * 
+                 * Create a computedCommissions object that has the property:
+                 *  computedCommission = {
+                 *      [commissionType.code] : {
+                 *          [commission.id]: [computed commission]
+                 *      }
+                 *  }
+                 *  
+                 *  The object can easily be referenced in the template or when computing for the commissions
+                 *  using the commissionType.code which is also the same as product.code. When product is added or removed
+                 *  computed commission can be accessed using the product.code of the added or removed product.
+                 *  
+                 * computedCommissions[product.code][commission.id] = <Computation Here>
+                 * 
+                 */
 
                 this.commissionTypes.map(function (ct) {
-                  var commissionTypeObject = {};
+                  //Initializing a commissionType Object
+                  var commissionTypeObject = {}; // Looping through the commissions
 
                   _this4.commissions.map(function (c) {
+                    //creating a property of Commission.id in the CommissionType object
                     commissionTypeObject[c.id] = 0;
                     _this4.totalByCommission[c.id] = 0;
-                  }); // Will use the commisstionType.code for object properties
-                  // For easier reference when computing for the commission based on productType
-                  // ProductType and CommissionType Code correspond accordingly.
+                  }); // Creating a property of commissionType.code in the ComputedCommission object
 
 
                   _this4.computedCommissions[ct.code] = commissionTypeObject;

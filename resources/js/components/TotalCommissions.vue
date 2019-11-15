@@ -161,7 +161,6 @@ export default {
         
         addCommission: function(selectedProduct){
 
-            // console.log(`${this.totalProducts[selectedProduct.code]} + ${selectedProduct.total} = ${this.totalProducts[selectedProduct.code]}`)
 
             this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] + selectedProduct.total;
 
@@ -169,10 +168,7 @@ export default {
             this.commissions.map(c => {
 
                 this.computedCommissions[selectedProduct.code][c.id] = parseFloat((this.totalProducts[selectedProduct.code] * this.input[selectedProduct.code][c.id]).toFixed(2));
-                // console.log(`${this.totalProducts[selectedProduct.code]} * ${this.input[selectedProduct.code][c.id]} = ${this.computedCommissions[selectedProduct.code][c.id]}`)
 
-
-                // this.totalByCommission[c.id] = this.totalByCommission[c.id] + this.computedCommissions[selectedProduct.code][c.id];
                 let total = 0;
                 this.commissionTypes.map(ct => {
                     total = total + this.computedCommissions[ct.code][c.id]
@@ -186,7 +182,6 @@ export default {
 
         deductCommission: function(selectedProduct){
 
-            // console.log('Deducting Commissions');
 
             this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] - selectedProduct.total;
 
@@ -194,10 +189,7 @@ export default {
             this.commissions.map(c => {
 
                 this.computedCommissions[selectedProduct.code][c.id] = parseFloat((this.totalProducts[selectedProduct.code] * this.input[selectedProduct.code][c.id]).toFixed(2));
-                // console.log(`${this.totalProducts[selectedProduct.code]} * ${this.input[selectedProduct.code][c.id]} = ${this.computedCommissions[selectedProduct.code][c.id]}`)
 
-
-                // this.totalByCommission[c.id] = this.totalByCommission[c.id] + this.computedCommissions[selectedProduct.code][c.id];
                 let total = 0;
                 this.commissionTypes.map(ct => {
                     total = total + this.computedCommissions[ct.code][c.id]
@@ -227,6 +219,7 @@ export default {
 
         try {
 
+            // Start of Getting the required data from the backend
             this.message = 'Loading Commission Type'
             
             const commissionTypeUrl = this.backend + '/api/commission-types?api_token=' + this.user.api_token;
@@ -238,28 +231,52 @@ export default {
             this.commissionTypes = commissionTypeResponse.data;
             this.commissions = commissionResponse.data;
 
+            // End of Data aquistion from the Backend
+            // Start initializing the data model to be used by the templates and computation
+
             if(this.commissionTypes.length === 0 || this.commissions.length === 0 ){
+
                 this.message = 'No Commission Types or Commissions. Please check database.'
                 this.error = true;
+
             }else {
+
                 this.message = 'Commission Types Loaded. Please Select Tour Agent and Tour Type to load the Tour Commission'
                 this.error = false;
 
-                //Initialized the computerCommission Model
+                //Initialized the ComputedCommission Data Model
 
+                /**
+                 *  commissions are based on the TourType, CommissionType, Commission/Commission Name
+                 * 
+                 * Create a computedCommissions object that has the property:
+                 *  computedCommission = {
+                 *      [commissionType.code] : {
+                 *          [commission.id]: [computed commission]
+                 *      }
+                 *  }
+                 *  
+                 *  The object can easily be referenced in the template or when computing for the commissions
+                 *  using the commissionType.code which is also the same as product.code. When product is added or removed
+                 *  computed commission can be accessed using the product.code of the added or removed product.
+                 *  
+                 * computedCommissions[product.code][commission.id] = <Computation Here>
+                 * 
+                 */
                 this.commissionTypes.map(ct => {
-                       
-                       const commissionTypeObject = {}
+                    
+                    //Initializing a commissionType Object
+                    const commissionTypeObject = {}
 
-                        this.commissions.map(c => {
+                    // Looping through the commissions
+                    this.commissions.map(c => {
+                        
+                        //creating a property of Commission.id in the CommissionType object
+                        commissionTypeObject[c.id] = 0;
+                        this.totalByCommission[c.id] = 0;
+                    })
 
-                            commissionTypeObject[c.id] = 0;
-                            this.totalByCommission[c.id] = 0;
-                        })
-
-                    // Will use the commisstionType.code for object properties
-                    // For easier reference when computing for the commission based on productType
-                    // ProductType and CommissionType Code correspond accordingly.
+                    // Creating a property of commissionType.code in the ComputedCommission object
                     this.computedCommissions[ct.code] = commissionTypeObject;
                     this.totalProducts[ct.code] = 0;
                 })

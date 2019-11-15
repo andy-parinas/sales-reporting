@@ -319,33 +319,7 @@ export default {
                 console.log(error);
             }
         },
-        computeCommission: function()
-        {
 
-            let totalCommissions = 0;
-
-            this.form.sales_commissions.forEach((commission, index) => {
-
-                if(commission.type === 1) {
-                    this.form.sales_commissions[index].amount = commission.percentage * this.code1Total;
-                }else if(commission.type === 2){
-                    this.form.sales_commissions[index].amount = commission.percentage * this.code2Total;
-                }else {
-                    this.form.sales_commissions[index].amount = commission.percentage * this.form.total_agent_sales;
-                }
-
-                totalCommissions =  totalCommissions + this.form.sales_commissions[index].amount;
-               
-
-            });
-
-            this.form.total_commissions = totalCommissions;
-            // this.form.total_agent_sales = this.form.total_sales - this.this.form.total_deductions;
-            this.form.gst = this.form.total_commissions * 0.10;
-            this.form.grand_total_commission = this.form.gst + this.form.total_commissions;
-
-
-        },
 
         computeDeduction: function(product, action)
         {
@@ -590,7 +564,7 @@ export default {
        
         }else {
 
-            this.loadSalesCommissionReference();
+            // this.loadSalesCommissionReference();
 
             this.loadDeductionsReference();
     
