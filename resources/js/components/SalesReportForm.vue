@@ -115,17 +115,8 @@
                 <deductions :deductions="form.sales_deductions" :totalDeductions="form.total_deductions">
                 </deductions>
 
-                <!-- <total-sales :commissions="form.sales_commissions"
-                            :totalSales="form.total_sales"
-                            :totalDeduction="form.total_deductions"
-                            :totalAgentSales='form.total_agent_sales'
-                            :totalCommissions="form.total_commissions"
-                            :gst="form.gst"
-                            :grandTotal="form.grand_total_commission" >
-                </total-sales> -->
-
                   <total-commissions ref="totalCommissions"
-                            :commissions="form.sales_commissions" :user="user" :backend="backend"
+                            :user="user" :backend="backend"
                             :totalSales="form.total_sales"
                             :totalDeduction="form.total_deductions"
                             :totalAgentSales='form.total_agent_sales'
@@ -418,7 +409,8 @@ export default {
           
        
             // //Compute for Commisions:
-            this.computeCommission();
+            // this.computeCommission();
+            this.$refs.totalCommissions.addCommission(product);
 
         },
 
@@ -443,7 +435,8 @@ export default {
 
             this.form.total_agent_sales = this.form.total_sales - this.form.total_deductions
 
-            this.computeCommission();
+            // this.computeCommission();
+            this.$refs.totalCommissions.deductCommission(removedProduct[0]);
 
         },
 

@@ -33,9 +33,11 @@
                             <div v-for="commission in commissions" :key="commission.id" 
                                 class="border-b border-gray-700 flex items-center justify-between">
                                 <div class="flex-1 px-2 py-1 "> {{ commission.name }} </div>
-                                <div class="flex-1 px-2 py-1 text-right"> {{ getTourCommissionAmount(type.id, commission.id) }} </div>
+                                <div class="flex-1 px-2 py-1 text-right"> 
+                                    <input type="number" class="w-full bg-transparent text-right" v-model.number="input[type.code][commission.id]" >
+                                </div>
                                 <div class="w-32 text-right border-l border-gray-700 px-2 py-1">
-                                    0.00
+                                    {{ computedCommissions[type.id][commission.id] }}
                                 </div>
                             </div>
                         </div>
@@ -47,6 +49,18 @@
                     <div class="flex-1 border-gray-700 border-r px-2 py-1"></div>
                     <div class="w-32  px-2 py-1">  </div>
                 </div>
+                <div v-for="commission in commissions" :key="commission.name" class="flex justify-between border-b border-gray-700" >
+                    <div class="flex-1 border-gray-700 border-r px-2 py-1 font-semibold"> Total {{commission.name}} </div>
+                    <div class="w-32  px-2 py-1 text-right">
+                        <currency-format :value="totalByCommission[commission.id]"></currency-format>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between border-b border-gray-700 h-8" >
+                    <div class="flex-1 border-gray-700 border-r px-2 py-1"></div>
+                    <div class="w-32  px-2 py-1">  </div>
+                </div>
+
                 <div class="flex justify-between border-b border-gray-700" >
                     <div class="flex-1 border-gray-700 border-r px-2 py-1">Total Agent Commission</div>
                     <div class="w-32  px-2 py-1 text-right">
@@ -84,7 +98,11 @@ export default {
             message: 'Loading Data...',
             error: false,
             commissionTypes: [],
-            commissions: []
+            commissions: [],
+            computedCommissions: {},
+            input: {},
+            totalProducts: {},
+            totalByCommission: {}
         }
     },
     methods: {
@@ -109,9 +127,28 @@ export default {
                 }else {
                     this.message = null
                     this.error = false;
+
+                    //Load the Input data model with the correct commission percentage based on the tourCommissions
+                    this.commissionTypes.map(ct => {
+                       
+                       const inputObject = {}
+
+                        this.commissions.map(c => {
+
+                            inputObject[c.id] = this.getTourCommissionAmount(ct.id, c.id);
+                        })
+
+                        // Will use the commisstionType.code for object properties
+                        // For easier reference when computing for the commission based on productType
+                        // ProductType and CommissionType Code correspond accordingly.
+                        this.input[ct.code] = inputObject;
+
+                    })
+
+
                 }
 
-                console.log(this.tourCommissions);
+                console.log('Input', this.input);
 
             } catch (error) {
                 
@@ -122,7 +159,53 @@ export default {
 
         },
         
-        computeCommissions: function(){
+        addCommission: function(selectedProduct){
+
+            // console.log(`${this.totalProducts[selectedProduct.code]} + ${selectedProduct.total} = ${this.totalProducts[selectedProduct.code]}`)
+
+            this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] + selectedProduct.total;
+
+            //Loop Through the commissions
+            this.commissions.map(c => {
+
+                this.computedCommissions[selectedProduct.code][c.id] = parseFloat((this.totalProducts[selectedProduct.code] * this.input[selectedProduct.code][c.id]).toFixed(2));
+                // console.log(`${this.totalProducts[selectedProduct.code]} * ${this.input[selectedProduct.code][c.id]} = ${this.computedCommissions[selectedProduct.code][c.id]}`)
+
+
+                // this.totalByCommission[c.id] = this.totalByCommission[c.id] + this.computedCommissions[selectedProduct.code][c.id];
+                let total = 0;
+                this.commissionTypes.map(ct => {
+                    total = total + this.computedCommissions[ct.code][c.id]
+                })
+
+                this.totalByCommission[c.id] = total;   
+
+            })
+        },
+
+
+        deductCommission: function(selectedProduct){
+
+            // console.log('Deducting Commissions');
+
+            this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] - selectedProduct.total;
+
+            //Loop Through the commissions
+            this.commissions.map(c => {
+
+                this.computedCommissions[selectedProduct.code][c.id] = parseFloat((this.totalProducts[selectedProduct.code] * this.input[selectedProduct.code][c.id]).toFixed(2));
+                // console.log(`${this.totalProducts[selectedProduct.code]} * ${this.input[selectedProduct.code][c.id]} = ${this.computedCommissions[selectedProduct.code][c.id]}`)
+
+
+                // this.totalByCommission[c.id] = this.totalByCommission[c.id] + this.computedCommissions[selectedProduct.code][c.id];
+                let total = 0;
+                this.commissionTypes.map(ct => {
+                    total = total + this.computedCommissions[ct.code][c.id]
+                })
+
+                this.totalByCommission[c.id] = total;   
+
+            })
 
         },
 
@@ -136,7 +219,7 @@ export default {
             }
 
 
-            return amount.toFixed(2);
+            return parseFloat(amount);
 
         }
     },
@@ -159,12 +242,32 @@ export default {
                 this.message = 'No Commission Types or Commissions. Please check database.'
                 this.error = true;
             }else {
-
                 this.message = 'Commission Types Loaded. Please Select Tour Agent and Tour Type to load the Tour Commission'
                 this.error = false;
-            }
 
-            console.log(this.commissions);
+                //Initialized the computerCommission Model
+
+                this.commissionTypes.map(ct => {
+                       
+                       const commissionTypeObject = {}
+
+                        this.commissions.map(c => {
+
+                            commissionTypeObject[c.id] = 0;
+                            this.totalByCommission[c.id] = 0;
+                        })
+
+                    // Will use the commisstionType.code for object properties
+                    // For easier reference when computing for the commission based on productType
+                    // ProductType and CommissionType Code correspond accordingly.
+                    this.computedCommissions[ct.code] = commissionTypeObject;
+                    this.totalProducts[ct.code] = 0;
+                })
+
+
+                console.log('computedCommissions:', this.computedCommissions);
+
+            }
 
         } catch (error) {
               this.message = 'Error loading Commissions Types, please check with System Adminastrator'
