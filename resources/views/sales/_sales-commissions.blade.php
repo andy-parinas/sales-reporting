@@ -35,6 +35,19 @@
                 </div>
             @endforeach
 
+            <div class="flex justify-between border-b border-gray-700 h-8" >
+                    <div class="flex-1 border-gray-700 border-r px-2 py-1"></div>
+                    <div class="w-32  px-2 py-1">  </div>
+                </div>
+
+            @foreach ($totalByCommissions as $key => $value)
+                <div class="flex justify-between border-b border-gray-700">
+                        <div class="border-r border-gray-700 px-2 py-1 w-48"></div>
+                    <div class="flex-1 border-gray-700 border-r px-2 py-1 font-semibold"> Total {{ $key}} </div>
+                    <div class="w-32  px-2 py-1 text-right"> {{ $value }} </div>
+                </div>
+            @endforeach
+
 
             <div class="flex justify-between border-b border-gray-700 h-8" >
                 <div class="flex-1 border-gray-700 border-r px-2 py-1"></div>
