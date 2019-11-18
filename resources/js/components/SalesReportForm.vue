@@ -121,6 +121,11 @@
                             :totalDeduction="form.total_deductions"
                             :totalAgentSales='form.total_agent_sales'
                             :totalCommissions="form.total_commissions"
+                            :salesCommissions="form.sales_commissions"
+                            :tourAgentId="form.tour_agent_id"
+                            :tourTypeId="form.tour_type_id"
+                            :totalProductsByCode="totalProducts"
+                            :edit="edit"
                             @salesCommissionChanged="getSalesCommissions" >
                 </total-commissions>
 
@@ -184,6 +189,10 @@ export default {
             code1Count: 0,
             code1Total: 0,
             code2Total: 0,
+            totalProducts: {
+                1: 0,
+                2: 0
+            },
             form: {
                     report_number: this.createReportNumber(),
                     tour_agent_id: '',
@@ -215,33 +224,6 @@ export default {
             return `${today.getFullYear()}${today.getMonth() + 1}${today.getDate()}-${today.getHours()}${today.getMinutes()}${today.getMilliseconds()}`;
         },
 
-        loadSalesCommissionReference: async function()
-        {
-            try {
-                
-                const commissionsUrl =  this.backend + '/api/commissions?api_token=' + this.user.api_token;
-                const commissionResponse = await axios.get(commissionsUrl);
-                this.commissionReference = commissionResponse.data;
-
-                //initialize the sales_commission
-                this.commissionReference.forEach(ref => {
-
-                    const salesCommission = {
-                        commission_id: ref.id,
-                        name: ref.name,
-                        type: ref.commission_type,
-                        percentage: ref.amount,
-                        amount: 0
-                    }
-
-                this.form.sales_commissions.push(salesCommission);
-
-            });
-            } catch (error) {
-                console.log('Error Loading Commission Reference:', error);
-            }
-
-        },
 
         loadDeductionsReference: async function()
         {
@@ -357,8 +339,6 @@ export default {
              * service products are free when purchase a high value products
              * deduction amount is the product cost.
              */
-
-
             this.form.selected_products.push(product);
 
             this.form.total_sales = this.form.total_sales + product.total;
@@ -492,6 +472,9 @@ export default {
 
         this.loadTourTypes();
 
+        console.log(this.report);
+
+        //Edit Mode
         if(this.edit){
 
             console.log(this.report);
@@ -502,6 +485,7 @@ export default {
             this.loadTourGuides(this.report.tour_agent_id);
 
             this.form.tour_guide_id = this.report.tour_guide_id;
+            this.form.tour_type_id = this.report.tour_type_id;
             this.form.tour_date = this.report.tour_date;
             this.form.tc_name = this.report.tc_name;
             this.form.grp_code = this.report.grp_code;
@@ -513,23 +497,8 @@ export default {
             this.form.total_commissions = this.report.total_commissions;
             this.form.gst = this.report.gst;
             this.form.grand_total_commission = this.report.grand_total_commission;
+            this.form.sales_commissions = this.report.sales_commissions;
 
-
-            //initialize the sales_commission
-            this.report.sales_commissions.forEach(ref => {
-
-                const salesCommission = {
-                    id: ref.id,
-                    commission_id: ref.commission_id,
-                    name: ref.commission.name,
-                    type: ref.commission.commission_type,
-                    percentage: ref.commission.amount,
-                    amount: ref.amount
-                }
-
-                this.form.sales_commissions.push(salesCommission);
-
-            });
 
 
             this.report.sales_deductions.forEach(ref => {
@@ -567,6 +536,7 @@ export default {
                 if(ref.product.product_type.code === 2) this.code2Total = this.code2Total + ref.total;
 
                 this.form.selected_products.push(selectedProduct);
+                this.totalProducts[ref.product.product_type.code] =  this.totalProducts[ref.product.product_type.code] = ref.total;
 
             });
 

@@ -3074,6 +3074,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -3107,6 +3112,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       code1Count: 0,
       code1Total: 0,
       code2Total: 0,
+      totalProducts: {
+        1: 0,
+        2: 0
+      },
       form: {
         report_number: this.createReportNumber(),
         tour_agent_id: '',
@@ -3134,77 +3143,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var today = new Date();
       return "".concat(today.getFullYear()).concat(today.getMonth() + 1).concat(today.getDate(), "-").concat(today.getHours()).concat(today.getMinutes()).concat(today.getMilliseconds());
     },
-    loadSalesCommissionReference: function () {
-      var _loadSalesCommissionReference = _asyncToGenerator(
+    loadDeductionsReference: function () {
+      var _loadDeductionsReference = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
         var _this = this;
 
-        var commissionsUrl, commissionResponse;
+        var deductionUrl, deductionResponse;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                commissionsUrl = this.backend + '/api/commissions?api_token=' + this.user.api_token;
-                _context.next = 4;
-                return axios.get(commissionsUrl);
-
-              case 4:
-                commissionResponse = _context.sent;
-                this.commissionReference = commissionResponse.data; //initialize the sales_commission
-
-                this.commissionReference.forEach(function (ref) {
-                  var salesCommission = {
-                    commission_id: ref.id,
-                    name: ref.name,
-                    type: ref.commission_type,
-                    percentage: ref.amount,
-                    amount: 0
-                  };
-
-                  _this.form.sales_commissions.push(salesCommission);
-                });
-                _context.next = 12;
-                break;
-
-              case 9:
-                _context.prev = 9;
-                _context.t0 = _context["catch"](0);
-                console.log('Error Loading Commission Reference:', _context.t0);
-
-              case 12:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, this, [[0, 9]]);
-      }));
-
-      function loadSalesCommissionReference() {
-        return _loadSalesCommissionReference.apply(this, arguments);
-      }
-
-      return loadSalesCommissionReference;
-    }(),
-    loadDeductionsReference: function () {
-      var _loadDeductionsReference = _asyncToGenerator(
-      /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        var _this2 = this;
-
-        var deductionUrl, deductionResponse;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.prev = 0;
                 deductionUrl = this.backend + '/api/deductions?api_token=' + this.user.api_token;
-                _context2.next = 4;
+                _context.next = 4;
                 return axios.get(deductionUrl);
 
               case 4:
-                deductionResponse = _context2.sent;
+                deductionResponse = _context.sent;
                 this.deductionReference = deductionResponse.data; //initialize deductions
 
                 this.deductionReference.forEach(function (ref) {
@@ -3216,22 +3172,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     multiplier: ref.amount
                   };
 
-                  _this2.form.sales_deductions.push(deduction);
+                  _this.form.sales_deductions.push(deduction);
                 });
-                _context2.next = 12;
+                _context.next = 12;
                 break;
 
               case 9:
-                _context2.prev = 9;
-                _context2.t0 = _context2["catch"](0);
-                console.log('Error Loading Deduction Reference:', _context2.t0);
+                _context.prev = 9;
+                _context.t0 = _context["catch"](0);
+                console.log('Error Loading Deduction Reference:', _context.t0);
 
               case 12:
               case "end":
-                return _context2.stop();
+                return _context.stop();
             }
           }
-        }, _callee2, this, [[0, 9]]);
+        }, _callee, this, [[0, 9]]);
       }));
 
       function loadDeductionsReference() {
@@ -3243,34 +3199,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     loadTourAgents: function () {
       var _loadTourAgents = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
         var url, response;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context3.prev = 0;
+                _context2.prev = 0;
                 url = this.backend + '/api/agents?api_token=' + this.user.api_token;
-                _context3.next = 4;
+                _context2.next = 4;
                 return axios.get(url);
 
               case 4:
-                response = _context3.sent;
+                response = _context2.sent;
                 this.tourAgents = response.data.data;
-                _context3.next = 11;
+                _context2.next = 11;
                 break;
 
               case 8:
-                _context3.prev = 8;
-                _context3.t0 = _context3["catch"](0);
-                console.log('Error Loading Tour Agents:', _context3.t0);
+                _context2.prev = 8;
+                _context2.t0 = _context2["catch"](0);
+                console.log('Error Loading Tour Agents:', _context2.t0);
 
               case 11:
               case "end":
-                return _context3.stop();
+                return _context2.stop();
             }
           }
-        }, _callee3, this, [[0, 8]]);
+        }, _callee2, this, [[0, 8]]);
       }));
 
       function loadTourAgents() {
@@ -3282,34 +3238,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     loadTourGuides: function () {
       var _loadTourGuides = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(agentId) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(agentId) {
         var url, response;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
-                _context4.prev = 0;
+                _context3.prev = 0;
                 url = this.backend + "/api/guides?api_token=".concat(this.user.api_token);
-                _context4.next = 4;
+                _context3.next = 4;
                 return axios.get(url);
 
               case 4:
-                response = _context4.sent;
+                response = _context3.sent;
                 this.tourGuides = response.data.data;
-                _context4.next = 11;
+                _context3.next = 11;
                 break;
 
               case 8:
-                _context4.prev = 8;
-                _context4.t0 = _context4["catch"](0);
-                console.log('Error Loading Tour Guides:', _context4.t0);
+                _context3.prev = 8;
+                _context3.t0 = _context3["catch"](0);
+                console.log('Error Loading Tour Guides:', _context3.t0);
 
               case 11:
               case "end":
-                return _context4.stop();
+                return _context3.stop();
             }
           }
-        }, _callee4, this, [[0, 8]]);
+        }, _callee3, this, [[0, 8]]);
       }));
 
       function loadTourGuides(_x) {
@@ -3321,34 +3277,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     loadTourTypes: function () {
       var _loadTourTypes = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
         var url, response;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
-                _context5.prev = 0;
+                _context4.prev = 0;
                 url = this.backend + '/api/tour-types?api_token=' + this.user.api_token;
-                _context5.next = 4;
+                _context4.next = 4;
                 return axios.get(url);
 
               case 4:
-                response = _context5.sent;
+                response = _context4.sent;
                 this.tourTypes = response.data;
-                _context5.next = 11;
+                _context4.next = 11;
                 break;
 
               case 8:
-                _context5.prev = 8;
-                _context5.t0 = _context5["catch"](0);
-                console.log(_context5.t0);
+                _context4.prev = 8;
+                _context4.t0 = _context4["catch"](0);
+                console.log(_context4.t0);
 
               case 11:
               case "end":
-                return _context5.stop();
+                return _context4.stop();
             }
           }
-        }, _callee5, this, [[0, 8]]);
+        }, _callee4, this, [[0, 8]]);
       }));
 
       function loadTourTypes() {
@@ -3358,17 +3314,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return loadTourTypes;
     }(),
     computeDeduction: function computeDeduction(product, action) {
-      var _this3 = this;
+      var _this2 = this;
 
       var total = 0;
       this.form.sales_deductions.forEach(function (deduction, index) {
         if (deduction.type === 1) {
-          _this3.form.sales_deductions[index].amount = _this3.code1Count * _this3.form.sales_deductions[index].multiplier;
+          _this2.form.sales_deductions[index].amount = _this2.code1Count * _this2.form.sales_deductions[index].multiplier;
         } else if (deduction.type === 3 && product.quantity >= 1 && product.total === 0) {
           if (action === 'add') {
-            _this3.form.sales_deductions[index].amount = _this3.form.sales_deductions[index].amount + product.cost;
+            _this2.form.sales_deductions[index].amount = _this2.form.sales_deductions[index].amount + product.cost;
           } else {
-            _this3.form.sales_deductions[index].amount = _this3.form.sales_deductions[index].amount - product.cost;
+            _this2.form.sales_deductions[index].amount = _this2.form.sales_deductions[index].amount - product.cost;
           }
         }
 
@@ -3428,59 +3384,59 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     submit: function () {
       var _submit = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
         var data, response, _response;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context6.prev = _context6.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
                 this.submitting = true;
                 this.errors = null;
-                _context6.prev = 2;
+                _context5.prev = 2;
                 data = _objectSpread({}, this.form, {
                   api_token: this.user.api_token
                 });
 
                 if (!this.edit) {
-                  _context6.next = 13;
+                  _context5.next = 13;
                   break;
                 }
 
-                _context6.next = 7;
+                _context5.next = 7;
                 return axios.patch(this.backend + '/api/sales/' + this.report.id, data);
 
               case 7:
-                response = _context6.sent;
+                response = _context5.sent;
                 this.submitting = false;
                 this.success = true;
                 window.location.href = '/sales/' + response.data.id;
-                _context6.next = 19;
+                _context5.next = 19;
                 break;
 
               case 13:
-                _context6.next = 15;
+                _context5.next = 15;
                 return axios.post(this.backend + '/api/sales', data);
 
               case 15:
-                _response = _context6.sent;
+                _response = _context5.sent;
                 this.submitting = false;
                 this.success = true;
                 window.location.href = '/sales/' + _response.data.id;
 
               case 19:
-                _context6.next = 26;
+                _context5.next = 26;
                 break;
 
               case 21:
-                _context6.prev = 21;
-                _context6.t0 = _context6["catch"](2);
+                _context5.prev = 21;
+                _context5.t0 = _context5["catch"](2);
 
-                if (_context6.t0.response && _context6.t0.response.data && _context6.t0.response.data.errors) {
-                  this.errors = _context6.t0.response.data.errors;
+                if (_context5.t0.response && _context5.t0.response.data && _context5.t0.response.data.errors) {
+                  this.errors = _context5.t0.response.data.errors;
                   console.log(this.errors);
                 } else {
-                  console.log(_context6.t0);
+                  console.log(_context5.t0);
                 }
 
                 this.submitting = false;
@@ -3491,10 +3447,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 27:
               case "end":
-                return _context6.stop();
+                return _context5.stop();
             }
           }
-        }, _callee6, this, [[2, 21]]);
+        }, _callee5, this, [[2, 21]]);
       }));
 
       function submit() {
@@ -3515,16 +3471,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7() {
-      var _this4 = this;
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+      var _this3 = this;
 
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
         while (1) {
-          switch (_context7.prev = _context7.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
               this.loadTourAgents();
               this.loadTourGuides();
               this.loadTourTypes();
+              console.log(this.report); //Edit Mode
 
               if (this.edit) {
                 console.log(this.report);
@@ -3532,6 +3489,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 this.form.tour_agent_id = this.report.tour_agent_id;
                 this.loadTourGuides(this.report.tour_agent_id);
                 this.form.tour_guide_id = this.report.tour_guide_id;
+                this.form.tour_type_id = this.report.tour_type_id;
                 this.form.tour_date = this.report.tour_date;
                 this.form.tc_name = this.report.tc_name;
                 this.form.grp_code = this.report.grp_code;
@@ -3542,20 +3500,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 this.form.total_deductions = this.report.total_deductions;
                 this.form.total_commissions = this.report.total_commissions;
                 this.form.gst = this.report.gst;
-                this.form.grand_total_commission = this.report.grand_total_commission; //initialize the sales_commission
-
-                this.report.sales_commissions.forEach(function (ref) {
-                  var salesCommission = {
-                    id: ref.id,
-                    commission_id: ref.commission_id,
-                    name: ref.commission.name,
-                    type: ref.commission.commission_type,
-                    percentage: ref.commission.amount,
-                    amount: ref.amount
-                  };
-
-                  _this4.form.sales_commissions.push(salesCommission);
-                });
+                this.form.grand_total_commission = this.report.grand_total_commission;
+                this.form.sales_commissions = this.report.sales_commissions;
                 this.report.sales_deductions.forEach(function (ref) {
                   var deduction = {
                     id: ref.id,
@@ -3566,7 +3512,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     multiplier: ref.deduction.amount
                   };
 
-                  _this4.form.sales_deductions.push(deduction);
+                  _this3.form.sales_deductions.push(deduction);
                 });
                 this.report.selected_products.forEach(function (ref) {
                   var selectedProduct = {
@@ -3581,13 +3527,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   };
 
                   if (ref.product.product_type.code === 1) {
-                    _this4.code1Total = _this4.code1Total + ref.total;
-                    _this4.code1Count = _this4.code1Count + ref.quantity;
+                    _this3.code1Total = _this3.code1Total + ref.total;
+                    _this3.code1Count = _this3.code1Count + ref.quantity;
                   }
 
-                  if (ref.product.product_type.code === 2) _this4.code2Total = _this4.code2Total + ref.total;
+                  if (ref.product.product_type.code === 2) _this3.code2Total = _this3.code2Total + ref.total;
 
-                  _this4.form.selected_products.push(selectedProduct);
+                  _this3.form.selected_products.push(selectedProduct);
+
+                  _this3.totalProducts[ref.product.product_type.code] = _this3.totalProducts[ref.product.product_type.code] = ref.total;
                 });
               } else {
                 // this.loadSalesCommissionReference();
@@ -3596,12 +3544,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               console.log('report number', this.form.report_number);
 
-            case 5:
+            case 6:
             case "end":
-              return _context7.stop();
+              return _context6.stop();
           }
         }
-      }, _callee7, this);
+      }, _callee6, this);
     }));
 
     function mounted() {
@@ -4823,7 +4771,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TotalCommissions',
-  props: ['user', 'backend', 'totalSales', 'totalDeduction', 'totalAgentSales'],
+  props: ['user', 'backend', 'totalSales', 'totalDeduction', 'totalAgentSales', 'edit', 'salesCommissions', 'tourAgentId', 'tourTypeId', 'totalProductsByCode'],
   components: {
     CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
@@ -4844,6 +4792,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   methods: {
+    log: function log(object) {
+      console.log('Loading Views', object);
+    },
+
+    /**
+     * Will load the TourCommissions need in computing the commission
+     * called in the mounted lifecycle.
+     */
     loadTourCommissions: function () {
       var _loadTourCommissions = _asyncToGenerator(
       /*#__PURE__*/
@@ -4856,13 +4812,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
+                console.log('###### Loading Tour Commissions #############');
                 this.message = 'Loading Tour Commission ... '; // Get the Tourcommission associated with the TourAgent and TourType
 
                 url = this.backend + '/api/tour-commissions?api_token=' + this.user.api_token + '&tourAgent=' + tourAgentId + '&tourType=' + tourTypeId;
-                _context.next = 5;
+                _context.next = 6;
                 return axios.get(url);
 
-              case 5:
+              case 6:
                 response = _context.sent;
                 this.tourCommissions = response.data;
 
@@ -4886,22 +4843,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   });
                 }
 
-                _context.next = 15;
+                _context.next = 16;
                 break;
 
-              case 10:
-                _context.prev = 10;
+              case 11:
+                _context.prev = 11;
                 _context.t0 = _context["catch"](0);
                 this.message = 'Error loading Tour Commissions, please check with System Adminastrator';
                 this.error = true;
                 console.error('Error getting TourCommission', _context.t0);
 
-              case 15:
+              case 16:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 10]]);
+        }, _callee, this, [[0, 11]]);
       }));
 
       function loadTourCommissions(_x, _x2) {
@@ -4910,51 +4867,111 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return loadTourCommissions;
     }(),
-    computeCommissions: function computeCommissions(selectedProduct) {
+
+    /**
+     * Initialized the computed commission based on the product selected.
+     * called in the mounted lifecycle
+     * 
+     * this also initializes the totalProducts databa object to dynammically create properties based on commissionTypes.
+     * 
+     */
+    initializeComputedCommission: function initializeComputedCommission() {
       var _this2 = this;
 
-      var totalAgentCommission = 0; // Loop Through the commissions and compute for 
-      // Commission based on the produdct.code
+      /**
+       *  commissions are based on the TourType, CommissionType, Commission/Commission Name
+       * 
+       * Create a computedCommissions object that has the property:
+       *  computedCommission = {
+       *      [commissionType.code] : {
+       *          [commission.id]: [computed commission]
+       *      }
+       *  }
+       *  
+       *  The object can easily be referenced in the template or when computing for the commissions
+       *  using the commissionType.code which is also the same as product.code. When product is added or removed
+       *  computed commission can be accessed using the product.code of the added or removed product.
+       *  
+       * computedCommissions[product.code][commission.id] = <Computation Here>
+       * 
+       */
+      this.commissionTypes.map(function (ct) {
+        //Initializing a commissionType Object
+        var commissionTypeObject = {}; // Looping through the commissions
 
+        _this2.commissions.map(function (c) {
+          //creating a property of Commission.id in the CommissionType object
+          commissionTypeObject[c.id] = 0; // this.totalByCommission[c.id] = 0;
+
+          _this2.$set(_this2.totalByCommission, c.id, 0);
+        }); // Creating a property of commissionType.code in the ComputedCommission object
+        // this.computedCommissions[ct.code] = commissionTypeObject;
+
+
+        _this2.$set(_this2.computedCommissions, ct.code, commissionTypeObject); // this.totalProducts[ct.code] = 0;
+
+
+        _this2.$set(_this2.totalProducts, ct.code, 0);
+      });
+    },
+
+    /**
+     * Computes the total commissions by commission types
+     * This is called in computeCommission
+     * also called in mounted lifecycle when edit mode.
+     */
+    computeTotalCommissions: function computeTotalCommissions() {
+      var _this3 = this;
+
+      var totalAgentCommission = 0;
       this.commissions.map(function (c) {
-        _this2.computedCommissions[selectedProduct.code][c.id] = parseFloat((_this2.totalProducts[selectedProduct.code] * _this2.input[selectedProduct.code][c.id]).toFixed(2)); // Loop Through each commisionTypes adding the same commission for each type
-
+        // Loop Through each commisionTypes adding the same commission for each type
         var total = 0;
 
-        _this2.commissionTypes.map(function (ct) {
-          total = total + _this2.computedCommissions[ct.code][c.id];
+        _this3.commissionTypes.map(function (ct) {
+          total = total + _this3.computedCommissions[ct.code][c.id];
         });
 
-        _this2.totalByCommission[c.id] = total;
-        totalAgentCommission = totalAgentCommission + _this2.totalByCommission[c.id];
+        _this3.totalByCommission[c.id] = total;
+        totalAgentCommission = totalAgentCommission + _this3.totalByCommission[c.id];
       });
       this.totalAgentCommission = totalAgentCommission;
       this.totalGST = this.totalAgentCommission * 0.10;
       this.grandTotalCommission = this.totalAgentCommission + this.totalGST;
+    },
+
+    /**
+     * Compute Commission is called whenever a product is added or removed
+     * See addCommission and deductCommission
+     */
+    computeCommissions: function computeCommissions(selectedProduct) {
+      var _this4 = this;
+
+      this.commissions.map(function (c) {
+        _this4.computedCommissions[selectedProduct.code][c.id] = parseFloat((_this4.totalProducts[selectedProduct.code] * _this4.input[selectedProduct.code][c.id]).toFixed(2));
+      });
+      this.computeTotalCommissions();
       var salesCommissions = this.createSalesCommissions();
       this.$emit('salesCommissionChanged', salesCommissions, this.totalAgentCommission, this.totalGST, this.grandTotalCommission);
     },
+
+    /**
+     * Called whenever a product is added
+     * Called from the Parent (SalesReportForm)
+     */
     addCommission: function addCommission(selectedProduct) {
       this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] + selectedProduct.total;
       this.computeCommissions(selectedProduct);
       this.createSalesCommissions();
     },
+
+    /**
+    * Called whenever a product is removed
+    * Called from the Parent (SalesReportForm)
+    */
     deductCommission: function deductCommission(selectedProduct) {
       this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] - selectedProduct.total;
-      this.computeCommissions(selectedProduct); // let totalAgentCommission = 0
-      // //Loop Through the commissions
-      // this.commissions.map(c => {
-      //     this.computedCommissions[selectedProduct.code][c.id] = parseFloat((this.totalProducts[selectedProduct.code] * this.input[selectedProduct.code][c.id]).toFixed(2));
-      //     let total = 0;
-      //     this.commissionTypes.map(ct => {
-      //         total = total + this.computedCommissions[ct.code][c.id]
-      //     })
-      //     this.totalByCommission[c.id] = total; 
-      //     totalAgentCommission = totalAgentCommission + this.totalByCommission[c.id];
-      // })
-      // this.totalAgentCommission = totalAgentCommission;
-      // this.totalGST = this.totalAgentCommission * 0.10;
-      // this.grandTotalCommission = this.totalAgentCommission + this.totalGST;
+      this.computeCommissions(selectedProduct);
     },
     findTourCommission: function findTourCommission(commissionTypeId, commissionId) {
       var tourCommission = this.tourCommissions.filter(function (tc) {
@@ -4997,13 +5014,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return salesCommissions;
+    },
+    loadSalesCommissions: function loadSalesCommissions(salesCommissions) {
+      var _this5 = this;
+
+      salesCommissions.map(function (sc) {
+        _this5.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id] = sc.amount;
+      });
     }
   },
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-      var _this3 = this;
+      var _this6 = this;
 
       var commissionTypeUrl, commissionUrl, commissionTypeResponse, commissionResponse;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
@@ -5029,63 +5053,72 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               this.commissions = commissionResponse.data; // End of Data aquistion from the Backend
               // Start initializing the data model to be used by the templates and computation
 
-              if (this.commissionTypes.length === 0 || this.commissions.length === 0) {
-                this.message = 'No Commission Types or Commissions. Please check database.';
-                this.error = true;
-              } else {
-                this.message = 'Commission Types Loaded. Please Select Tour Agent and Tour Type to load the Tour Commission';
-                this.error = false; //Initialized the ComputedCommission Data Model
-
-                /**
-                 *  commissions are based on the TourType, CommissionType, Commission/Commission Name
-                 * 
-                 * Create a computedCommissions object that has the property:
-                 *  computedCommission = {
-                 *      [commissionType.code] : {
-                 *          [commission.id]: [computed commission]
-                 *      }
-                 *  }
-                 *  
-                 *  The object can easily be referenced in the template or when computing for the commissions
-                 *  using the commissionType.code which is also the same as product.code. When product is added or removed
-                 *  computed commission can be accessed using the product.code of the added or removed product.
-                 *  
-                 * computedCommissions[product.code][commission.id] = <Computation Here>
-                 * 
-                 */
-
-                this.commissionTypes.map(function (ct) {
-                  //Initializing a commissionType Object
-                  var commissionTypeObject = {}; // Looping through the commissions
-
-                  _this3.commissions.map(function (c) {
-                    //creating a property of Commission.id in the CommissionType object
-                    commissionTypeObject[c.id] = 0;
-                    _this3.totalByCommission[c.id] = 0;
-                  }); // Creating a property of commissionType.code in the ComputedCommission object
-
-
-                  _this3.computedCommissions[ct.code] = commissionTypeObject;
-                  _this3.totalProducts[ct.code] = 0;
-                });
+              if (!(this.commissionTypes.length === 0 || this.commissions.length === 0)) {
+                _context2.next = 17;
+                break;
               }
 
-              _context2.next = 20;
+              this.message = 'No Commission Types or Commissions. Please check database.';
+              this.error = true;
+              _context2.next = 26;
               break;
 
-            case 15:
-              _context2.prev = 15;
+            case 17:
+              this.initializeComputedCommission();
+
+              if (!(this.tourAgentId && this.tourTypeId)) {
+                _context2.next = 23;
+                break;
+              }
+
+              _context2.next = 21;
+              return this.loadTourCommissions(this.tourAgentId, this.tourTypeId);
+
+            case 21:
+              _context2.next = 25;
+              break;
+
+            case 23:
+              this.message = "Must have TourAgent and TourTypeLoaded when Editing.";
+              this.error = true;
+
+            case 25:
+              /**
+               *  ####  Edit Mode #####
+               */
+              if (this.edit) {
+                this.salesCommissions.map(function (sc) {
+                  _this6.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id] = sc.amount;
+                });
+                this.computeTotalCommissions();
+                this.message = null;
+                this.error = false;
+                this.commissionTypes.map(function (ct) {
+                  _this6.totalProducts[ct.code] = _this6.totalProductsByCode[ct.code];
+                });
+                console.log('Total Products', this.totalProducts);
+              } else {
+                this.message = 'Commission Types Loaded. Please Select Tour Agent and Tour Type to load the Tour Commission';
+                this.error = false;
+              }
+
+            case 26:
+              _context2.next = 33;
+              break;
+
+            case 28:
+              _context2.prev = 28;
               _context2.t0 = _context2["catch"](0);
               this.message = 'Error loading Commissions Types, please check with System Adminastrator';
               this.error = true;
               console.error('Error getting TourCommission', _context2.t0);
 
-            case 20:
+            case 33:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, this, [[0, 15]]);
+      }, _callee2, this, [[0, 28]]);
     }));
 
     function mounted() {
@@ -29983,7 +30016,12 @@ var render = function() {
                 totalSales: _vm.form.total_sales,
                 totalDeduction: _vm.form.total_deductions,
                 totalAgentSales: _vm.form.total_agent_sales,
-                totalCommissions: _vm.form.total_commissions
+                totalCommissions: _vm.form.total_commissions,
+                salesCommissions: _vm.form.sales_commissions,
+                tourAgentId: _vm.form.tour_agent_id,
+                tourTypeId: _vm.form.tour_type_id,
+                totalProductsByCode: _vm.totalProducts,
+                edit: _vm.edit
               },
               on: { salesCommissionChanged: _vm.getSalesCommissions }
             }),
@@ -32281,7 +32319,7 @@ var render = function() {
                                       _vm._v(
                                         "\n                                " +
                                           _vm._s(
-                                            _vm.computedCommissions[type.id][
+                                            _vm.computedCommissions[type.code][
                                               commission.id
                                             ]
                                           ) +
