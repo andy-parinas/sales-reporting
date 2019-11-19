@@ -12,6 +12,7 @@ $factory->define(SalesCommission::class, function (Faker $faker) {
     return [
         'sales_report_id' => factory(SalesReport::class),
         'tour_commission_id' => factory(TourCommission::class),
-        'amount' => $faker->randomFloat(2)
+        'amount' => $faker->randomFloat(2),
+        'percentage' => $faker->randomNumber(2) / 100
     ];
 });

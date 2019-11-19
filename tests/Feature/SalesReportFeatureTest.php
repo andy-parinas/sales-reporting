@@ -164,19 +164,23 @@ class SalesReportFeatureTest extends TestCase
             'sales_commissions' => [
                 [
                     'id' => $salesCommissions[0]->id,
-                    'amount' => 100
+                    'amount' => 100,
+                    'percentage' => 0.5
                 ],
                 [
                     'id' => $salesCommissions[1]->id,
-                    'amount' => 100
+                    'amount' => 100,
+                    'percentage' => 0.5
                 ],
                 [
                     'id' => $salesCommissions[2]->id,
-                    'amount' => 100
+                    'amount' => 100,
+                    'percentage' => 0.5
                 ],
                 [
                     'id' => $salesCommissions[3]->id,
-                    'amount' => 100
+                    'amount' => 100,
+                    'percentage' => 0.5
                 ],
 
             ],
@@ -378,19 +382,23 @@ class SalesReportFeatureTest extends TestCase
             'sales_commissions' => [
                 [
                     'tour_commission_id' => $tourCommission1->id,
-                    'amount' => $this->faker->randomFloat(2)
+                    'amount' => $this->faker->randomFloat(2),
+                    'percentage' => $this->faker->randomNumber(2) / 100
                 ],
                 [
                     'tour_commission_id' => $tourCommission2->id,
-                    'amount' => $this->faker->randomFloat(2)
+                    'amount' => $this->faker->randomFloat(2),
+                    'percentage' => $this->faker->randomNumber(2) / 100
                 ],
                 [
                     'tour_commission_id' => $tourCommission3->id,
-                    'amount' => $this->faker->randomFloat(2)
+                    'amount' => $this->faker->randomFloat(2),
+                    'percentage' => $this->faker->randomNumber(2) / 100
                 ],
                 [
                     'tour_commission_id' => $tourCommission4->id,
-                    'amount' => $this->faker->randomFloat(2)
+                    'amount' => $this->faker->randomFloat(2),
+                    'percentage' => $this->faker->randomNumber(2) / 100
                 ],
 
             ]

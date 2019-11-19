@@ -8,7 +8,8 @@ class SalesCommission extends Model
 {
     protected $fillable = [
         'tour_commission_id',
-        'amount'
+        'amount',
+        'percentage'
     ];
 
     protected $with = ['tourCommission'];
