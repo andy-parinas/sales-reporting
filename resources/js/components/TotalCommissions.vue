@@ -299,6 +299,7 @@ export default {
 
             this.computeCommissions(selectedProduct);
 
+            this.createSalesCommissions();
 
         },
 
@@ -344,23 +345,40 @@ export default {
 
             const salesCommissions = [];
 
-            for(let c in this.computedCommissions){
+            if(this.edit){
 
-                for(let i in this.computedCommissions[c]){
+                this.salesCommissions.map(sc => {
+                    salesCommissions.push({
+                        ...sc,
+                        amount: this.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id]
+                    })
+                })
 
-                    const tourCommission = this.findTourCommissionByCode(c, i);
+            }else {
+                
+                
 
-                    if(tourCommission){
+                for(let c in this.computedCommissions){
 
-                        salesCommissions.push({
-                            tour_commission_id: tourCommission.id,
-                            amount: this.computedCommissions[c][i]
-                        })
+                    for(let i in this.computedCommissions[c]){
 
+                        const tourCommission = this.findTourCommissionByCode(c, i);
+
+                        if(tourCommission){
+
+                            salesCommissions.push({
+                                tour_commission_id: tourCommission.id,
+                                amount: this.computedCommissions[c][i]
+                            })
+
+                        }
+            
                     }
-        
                 }
+
             }
+
+            console.log('Created Sales Commission', salesCommissions);
 
             return salesCommissions;
 
@@ -451,7 +469,7 @@ export default {
                 }
 
             }
-
+            console.log(this.user);
 
 
         } catch (error) {

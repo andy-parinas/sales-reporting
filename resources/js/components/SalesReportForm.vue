@@ -536,7 +536,9 @@ export default {
                 if(ref.product.product_type.code === 2) this.code2Total = this.code2Total + ref.total;
 
                 this.form.selected_products.push(selectedProduct);
-                this.totalProducts[ref.product.product_type.code] =  this.totalProducts[ref.product.product_type.code] = ref.total;
+                this.totalProducts[ref.product.product_type.code] =  this.totalProducts[ref.product.product_type.code] + ref.total;
+
+                console.log('Looping Throught the selected Products', ref)
 
             });
 

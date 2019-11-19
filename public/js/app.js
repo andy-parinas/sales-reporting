@@ -3535,7 +3535,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                   _this3.form.selected_products.push(selectedProduct);
 
-                  _this3.totalProducts[ref.product.product_type.code] = _this3.totalProducts[ref.product.product_type.code] = ref.total;
+                  _this3.totalProducts[ref.product.product_type.code] = _this3.totalProducts[ref.product.product_type.code] + ref.total;
+                  console.log('Looping Throught the selected Products', ref);
                 });
               } else {
                 // this.loadSalesCommissionReference();
@@ -4678,6 +4679,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
 
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -4972,6 +4979,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     deductCommission: function deductCommission(selectedProduct) {
       this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] - selectedProduct.total;
       this.computeCommissions(selectedProduct);
+      this.createSalesCommissions();
     },
     findTourCommission: function findTourCommission(commissionTypeId, commissionId) {
       var tourCommission = this.tourCommissions.filter(function (tc) {
@@ -4998,28 +5006,39 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return tourCommission[0];
     },
     createSalesCommissions: function createSalesCommissions() {
+      var _this5 = this;
+
       var salesCommissions = [];
 
-      for (var c in this.computedCommissions) {
-        for (var i in this.computedCommissions[c]) {
-          var tourCommission = this.findTourCommissionByCode(c, i);
+      if (this.edit) {
+        this.salesCommissions.map(function (sc) {
+          salesCommissions.push(_objectSpread({}, sc, {
+            amount: _this5.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id]
+          }));
+        });
+      } else {
+        for (var c in this.computedCommissions) {
+          for (var i in this.computedCommissions[c]) {
+            var tourCommission = this.findTourCommissionByCode(c, i);
 
-          if (tourCommission) {
-            salesCommissions.push({
-              tour_commission_id: tourCommission.id,
-              amount: this.computedCommissions[c][i]
-            });
+            if (tourCommission) {
+              salesCommissions.push({
+                tour_commission_id: tourCommission.id,
+                amount: this.computedCommissions[c][i]
+              });
+            }
           }
         }
       }
 
+      console.log('Created Sales Commission', salesCommissions);
       return salesCommissions;
     },
     loadSalesCommissions: function loadSalesCommissions(salesCommissions) {
-      var _this5 = this;
+      var _this6 = this;
 
       salesCommissions.map(function (sc) {
-        _this5.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id] = sc.amount;
+        _this6.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id] = sc.amount;
       });
     }
   },
@@ -5027,7 +5046,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-      var _this6 = this;
+      var _this7 = this;
 
       var commissionTypeUrl, commissionUrl, commissionTypeResponse, commissionResponse;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
@@ -5088,13 +5107,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                */
               if (this.edit) {
                 this.salesCommissions.map(function (sc) {
-                  _this6.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id] = sc.amount;
+                  _this7.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id] = sc.amount;
                 });
                 this.computeTotalCommissions();
                 this.message = null;
                 this.error = false;
                 this.commissionTypes.map(function (ct) {
-                  _this6.totalProducts[ct.code] = _this6.totalProductsByCode[ct.code];
+                  _this7.totalProducts[ct.code] = _this7.totalProductsByCode[ct.code];
                 });
                 console.log('Total Products', this.totalProducts);
               } else {
@@ -5103,22 +5122,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               }
 
             case 26:
-              _context2.next = 33;
+              console.log(this.user);
+              _context2.next = 34;
               break;
 
-            case 28:
-              _context2.prev = 28;
+            case 29:
+              _context2.prev = 29;
               _context2.t0 = _context2["catch"](0);
               this.message = 'Error loading Commissions Types, please check with System Adminastrator';
               this.error = true;
               console.error('Error getting TourCommission', _context2.t0);
 
-            case 33:
+            case 34:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, this, [[0, 28]]);
+      }, _callee2, this, [[0, 29]]);
     }));
 
     function mounted() {
@@ -49825,8 +49845,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! G:\WoolHouse\reporting-app\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! G:\WoolHouse\reporting-app\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! g:\WoolHouse\reporting-app\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! g:\WoolHouse\reporting-app\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
