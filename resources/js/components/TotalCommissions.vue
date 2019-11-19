@@ -34,7 +34,7 @@
                                 class="border-b border-gray-700 flex items-center justify-between">
                                 <div class="flex-1 px-2 py-1 "> {{ commission.name }} </div>
                                 <div class="flex-1 px-2 py-1 text-right"> 
-                                    <input type="number" class="w-full bg-transparent text-right" v-model.number="input[type.code][commission.id]" >
+                                    <input type="number" class="w-full bg-transparent text-right" v-model.number="input[type.code][commission.id]" @change="changeCommission(type.code,commission.id)" >
                                 </div>
                                 <div class="w-32 text-right border-l border-gray-700 px-2 py-1">
                                     {{ computedCommissions[type.code][commission.id] }}
@@ -117,12 +117,11 @@ export default {
         /**
          * Will load the TourCommissions need in computing the commission
          * called in the mounted lifecycle.
+         * Values are places in the input data model
          */
         loadTourCommissions: async function(tourAgentId, tourTypeId){
               
             try {
-
-                console.log('###### Loading Tour Commissions #############');
 
                 this.message = 'Loading Tour Commission ... '
                 
@@ -154,7 +153,8 @@ export default {
                         // Will use the commisstionType.code for object properties
                         // For easier reference when computing for the commission based on productType
                         // ProductType and CommissionType Code correspond accordingly.
-                        this.input[ct.code] = inputObject;
+                        // this.input[ct.code] = inputObject;
+                        this.$set(this.input, ct.code, inputObject );
 
                     })
 
@@ -283,7 +283,7 @@ export default {
             
             this.computeCommissions(selectedProduct);
 
-            this.createSalesCommissions();
+            // this.createSalesCommissions();
             
         },
 
@@ -299,7 +299,19 @@ export default {
 
             this.computeCommissions(selectedProduct);
 
-            this.createSalesCommissions();
+            // this.createSalesCommissions();
+
+        },
+
+        changeCommission: function(commissionTypeCode, commissionId){
+            this.computedCommissions[commissionTypeCode][commissionId] = parseFloat((this.input[commissionTypeCode][commissionId] * this.totalProducts[commissionTypeCode]).toFixed(2)) 
+            // this.createSalesCommissions();
+
+            this.computeTotalCommissions();
+             
+            const salesCommissions = this.createSalesCommissions();
+
+            this.$emit('salesCommissionChanged', salesCommissions, this.totalAgentCommission, this.totalGST, this.grandTotalCommission);
 
         },
 
@@ -350,7 +362,8 @@ export default {
                 this.salesCommissions.map(sc => {
                     salesCommissions.push({
                         ...sc,
-                        amount: this.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id]
+                        amount: this.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id],
+                        percentage: this.input[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id]
                     })
                 })
 
@@ -368,7 +381,8 @@ export default {
 
                             salesCommissions.push({
                                 tour_commission_id: tourCommission.id,
-                                amount: this.computedCommissions[c][i]
+                                amount: this.computedCommissions[c][i],
+                                percentage: this.input[c][i]
                             })
 
                         }
@@ -445,6 +459,8 @@ export default {
 
                         this.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id] = sc.amount;
 
+                        //Set the value of the input data model to the value in the sales commission.
+                        this.input[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id] = sc.percentage;
                     })
 
                     this.computeTotalCommissions();

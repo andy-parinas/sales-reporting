@@ -4806,6 +4806,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     /**
      * Will load the TourCommissions need in computing the commission
      * called in the mounted lifecycle.
+     * Values are places in the input data model
      */
     loadTourCommissions: function () {
       var _loadTourCommissions = _asyncToGenerator(
@@ -4819,14 +4820,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                console.log('###### Loading Tour Commissions #############');
                 this.message = 'Loading Tour Commission ... '; // Get the Tourcommission associated with the TourAgent and TourType
 
                 url = this.backend + '/api/tour-commissions?api_token=' + this.user.api_token + '&tourAgent=' + tourAgentId + '&tourType=' + tourTypeId;
-                _context.next = 6;
+                _context.next = 5;
                 return axios.get(url);
 
-              case 6:
+              case 5:
                 response = _context.sent;
                 this.tourCommissions = response.data;
 
@@ -4844,28 +4844,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     }); // Will use the commisstionType.code for object properties
                     // For easier reference when computing for the commission based on productType
                     // ProductType and CommissionType Code correspond accordingly.
+                    // this.input[ct.code] = inputObject;
 
 
-                    _this.input[ct.code] = inputObject;
+                    _this.$set(_this.input, ct.code, inputObject);
                   });
                 }
 
-                _context.next = 16;
+                _context.next = 15;
                 break;
 
-              case 11:
-                _context.prev = 11;
+              case 10:
+                _context.prev = 10;
                 _context.t0 = _context["catch"](0);
                 this.message = 'Error loading Tour Commissions, please check with System Adminastrator';
                 this.error = true;
                 console.error('Error getting TourCommission', _context.t0);
 
-              case 16:
+              case 15:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 11]]);
+        }, _callee, this, [[0, 10]]);
       }));
 
       function loadTourCommissions(_x, _x2) {
@@ -4968,8 +4969,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
      */
     addCommission: function addCommission(selectedProduct) {
       this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] + selectedProduct.total;
-      this.computeCommissions(selectedProduct);
-      this.createSalesCommissions();
+      this.computeCommissions(selectedProduct); // this.createSalesCommissions();
     },
 
     /**
@@ -4978,8 +4978,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     */
     deductCommission: function deductCommission(selectedProduct) {
       this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] - selectedProduct.total;
-      this.computeCommissions(selectedProduct);
-      this.createSalesCommissions();
+      this.computeCommissions(selectedProduct); // this.createSalesCommissions();
+    },
+    changeCommission: function changeCommission(commissionTypeCode, commissionId) {
+      this.computedCommissions[commissionTypeCode][commissionId] = parseFloat((this.input[commissionTypeCode][commissionId] * this.totalProducts[commissionTypeCode]).toFixed(2)); // this.createSalesCommissions();
+
+      this.computeTotalCommissions();
+      var salesCommissions = this.createSalesCommissions();
+      this.$emit('salesCommissionChanged', salesCommissions, this.totalAgentCommission, this.totalGST, this.grandTotalCommission);
     },
     findTourCommission: function findTourCommission(commissionTypeId, commissionId) {
       var tourCommission = this.tourCommissions.filter(function (tc) {
@@ -5013,7 +5019,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (this.edit) {
         this.salesCommissions.map(function (sc) {
           salesCommissions.push(_objectSpread({}, sc, {
-            amount: _this5.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id]
+            amount: _this5.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id],
+            percentage: _this5.input[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id]
           }));
         });
       } else {
@@ -5024,7 +5031,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             if (tourCommission) {
               salesCommissions.push({
                 tour_commission_id: tourCommission.id,
-                amount: this.computedCommissions[c][i]
+                amount: this.computedCommissions[c][i],
+                percentage: this.input[c][i]
               });
             }
           }
@@ -5107,7 +5115,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                */
               if (this.edit) {
                 this.salesCommissions.map(function (sc) {
-                  _this7.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id] = sc.amount;
+                  _this7.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id] = sc.amount; //Set the value of the input data model to the value in the sales commission.
+
+                  _this7.input[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id] = sc.percentage;
                 });
                 this.computeTotalCommissions();
                 this.message = null;
@@ -32311,6 +32321,12 @@ var render = function() {
                                             _vm.input[type.code][commission.id]
                                         },
                                         on: {
+                                          change: function($event) {
+                                            return _vm.changeCommission(
+                                              type.code,
+                                              commission.id
+                                            )
+                                          },
                                           input: function($event) {
                                             if ($event.target.composing) {
                                               return
