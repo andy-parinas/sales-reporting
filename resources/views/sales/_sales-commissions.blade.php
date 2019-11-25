@@ -25,7 +25,7 @@
                                         <div class="flex items-center justify-between">
                                                 @if ($salesCommission->tourCommission->commissionType->id == $commissionType->id )
                                                     <div class="border-b border-gray-700 flex-1 px-2 py-1 "> {{  $salesCommission->tourCommission->commission->name }} </div>
-                                                    <div class="border-b border-gray-700 flex-1 px-2 py-1 text-right"> {{  $salesCommission->tourCommission->amount * 100 }} % </div>
+                                                    <div class="border-b border-gray-700 flex-1 px-2 py-1 text-right"> {{  $salesCommission->percentage * 100 }} % </div>
                                                     <div class="border-b border-l border-gray-700 w-32  px-2 py-1 text-right"> {{ number_format($salesCommission->amount, 2, '.', ',') }} </div>
                                                 @endif
                                         </div>
