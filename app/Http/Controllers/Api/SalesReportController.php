@@ -130,6 +130,7 @@ class SalesReportController extends Controller
                 $salesCommission = SalesCommission::find($commission['id']);
 
                 $salesCommission->amount = $commission['amount'];
+                $salesCommission->percentage = $commission['percentage'];
 
                 $salesCommission->save();
 
