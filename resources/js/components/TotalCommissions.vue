@@ -474,8 +474,6 @@ export default {
                         this.totalProducts[ct.code] = this.totalProductsByCode[ct.code];
                     })
 
-                    console.log('Total Products', this.totalProducts);
-
 
                 }else {
                     
@@ -485,7 +483,7 @@ export default {
                 }
 
             }
-            console.log(this.user);
+            // console.log(this.user);
 
 
         } catch (error) {

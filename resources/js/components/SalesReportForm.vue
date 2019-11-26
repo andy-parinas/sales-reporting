@@ -112,10 +112,16 @@
                     :subtotal="form.total_sales" 
                     @remove="removeSelection" ></selected-product>
 
-                <deductions :deductions="form.sales_deductions" :totalDeductions="form.total_deductions">
+                <deductions ref="deductions"
+                            :totalDeductions="form.total_deductions"
+                            :backend="backend"
+                            :user="user"
+                            :edit="edit"
+                            :salesDeductions="form.sales_deductions"
+                            @deductionComputed="computeDeduction" >
                 </deductions>
 
-                  <total-commissions ref="totalCommissions"
+                <total-commissions ref="totalCommissions"
                             :user="user" :backend="backend"
                             :totalSales="form.total_sales"
                             :totalDeduction="form.total_deductions"
@@ -178,7 +184,7 @@ export default {
             errors: null,
             success: false,
             submitting: false,
-            commissionReference: [],
+            // commissionReference: [],
             deductionReference: [],
             tourAgents: [],
             tourGuides: [],
@@ -298,38 +304,18 @@ export default {
         },
 
 
-        computeDeduction: function(product, action)
+        computeDeduction: function(totalDeduction, salesDeductions)
         {
+            this.form.total_deductions = totalDeduction;
+            this.form.sales_deductions = salesDeductions;
 
-            let total = 0;
-
-            this.form.sales_deductions.forEach((deduction, index) => {
-
-
-                if(deduction.type === 1){
-
-                    this.form.sales_deductions[index].amount = this.code1Count * this.form.sales_deductions[index].multiplier
-
-                }else if(deduction.type === 3 && product.quantity >= 1 && product.total === 0){
-
-                    if(action === 'add'){
-                        this.form.sales_deductions[index].amount = this.form.sales_deductions[index].amount + product.cost;
-
-                    }else {
-                        this.form.sales_deductions[index].amount = this.form.sales_deductions[index].amount - product.cost;
-                    }
-
-                }
-
-                total = total + deduction.amount;
-
-            })
-
-            this.form.total_deductions = total;
+            this.form.total_agent_sales = this.form.total_sales - this.form.total_deductions
 
         },
 
         selectProduct: function(product){
+
+            
 
             /**
              * Type1 or Code1 products are Carpets which are high value
@@ -343,24 +329,9 @@ export default {
 
             this.form.total_sales = this.form.total_sales + product.total;
 
-            if(product.code === 1) {
-                this.code1Total = this.code1Total + product.total;
-                this.code1Count = this.code1Count + product.quantity;
-            }
 
-            if(product.code === 2) this.code2Total = this.code2Total + product.total;
-
-   
-            //Compute for Deductions
-            this.computeDeduction(product, 'add');
-
-            this.form.total_agent_sales = this.form.total_sales - this.form.total_deductions
-          
-       
-            // //Compute for Commisions:
-            // this.computeCommission();
             this.$refs.totalCommissions.addCommission(product);
-
+            this.$refs.deductions.computeDeduction(product, 'add')
         },
 
         removeSelection: function(index)
@@ -368,24 +339,10 @@ export default {
 
             const removedProduct = this.form.selected_products.splice(index, 1);
 
-            if(removedProduct[0].code === 1){
-                this.code1Count = this.code1Count - removedProduct[0].quantity;
-                this.code1Total = this.code1Total - removedProduct[0].total;
-            }
-
-            if(removedProduct[0].code === 2){
-                this.code2Total = this.code2Total - removedProduct[0].total;
-            }
-
-
             this.form.total_sales  = this.form.total_sales - removedProduct[0].total;
 
-            this.computeDeduction(removedProduct[0], 'remove');
-
-            this.form.total_agent_sales = this.form.total_sales - this.form.total_deductions
-
-            // this.computeCommission();
             this.$refs.totalCommissions.deductCommission(removedProduct[0]);
+            this.$refs.deductions.computeDeduction(removedProduct[0], 'deduct')
 
         },
 
@@ -397,7 +354,6 @@ export default {
             this.form.gst = totalGST;
             this.form.grand_total_commission = grandTotalCommissions;
 
-            // console.log('from the sales report form', this.form.sales_commissions);
 
         },
 
@@ -472,12 +428,12 @@ export default {
 
         this.loadTourTypes();
 
-        console.log(this.report);
+        // console.log(this.report);
 
         //Edit Mode
         if(this.edit){
 
-            console.log(this.report);
+            // console.log(this.report);
 
             this.form.report_number = this.report.report_number;
             this.form.tour_agent_id = this.report.tour_agent_id;
@@ -498,10 +454,11 @@ export default {
             this.form.gst = this.report.gst;
             this.form.grand_total_commission = this.report.grand_total_commission;
             this.form.sales_commissions = this.report.sales_commissions;
+            
 
 
+            this.report.sales_deductions.forEach(ref => { 
 
-            this.report.sales_deductions.forEach(ref => {
                 const deduction = {
                     id : ref.id,
                     deduction_id: ref.deduction_id,
@@ -513,6 +470,8 @@ export default {
 
                 this.form.sales_deductions.push(deduction);
             });
+
+            this.$refs.deductions.getSalesDeductionsFromParent(this.form.sales_deductions, this.form.total_deductions);
 
             this.report.selected_products.forEach(ref => {
 
@@ -538,7 +497,7 @@ export default {
                 this.form.selected_products.push(selectedProduct);
                 this.totalProducts[ref.product.product_type.code] =  this.totalProducts[ref.product.product_type.code] + ref.total;
 
-                console.log('Looping Throught the selected Products', ref)
+                // console.log('Looping Throught the selected Products', ref)
 
             });
 
@@ -551,10 +510,9 @@ export default {
     
         }
 
-        console.log('report number', this.form.report_number);
+        // console.log('report number', this.form.report_number);
 
-    },
-   
+    }
 }
 </script>
 

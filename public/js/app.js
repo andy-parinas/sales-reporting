@@ -1850,7 +1850,27 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
+/* harmony import */ var _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui/loader/CircleLoader */ "./resources/js/components/ui/loader/CircleLoader.vue");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1875,12 +1895,167 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Deductions',
-  props: ['deductions', 'totalDeductions'],
+  props: ['backend', 'user', 'edit', 'salesDeductions', 'totalDeductions'],
   components: {
-    CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_0__["default"]
-  }
+    CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_1__["default"],
+    CircleLoader: _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  data: function data() {
+    return {
+      deductions: [],
+      input: {},
+      productByType: {
+        count: [0, 0],
+        total: [0, 0]
+      },
+      total_deductions: 0,
+      loading: true,
+      error: null
+    };
+  },
+  methods: {
+    computeProductCount: function computeProductCount(product, action) {
+      if (action === 'add') {
+        if (product.code === 1) {
+          this.productByType.count[0] = this.productByType.count[0] + product.quantity;
+          this.productByType.total[0] = this.productByType.total[0] + product.total;
+        } else {
+          this.productByType.count[1] = this.productByType.count[1] + product.quantity;
+          this.productByType.total[1] = this.productByType.total[1] + product.total;
+        }
+      } else {
+        if (product.code === 1) {
+          this.productByType.count[0] = this.productByType.count[0] - product.quantity;
+          this.productByType.total[0] = this.productByType.total[0] - product.total;
+        } else {
+          this.productByType.count[1] = this.productByType.count[1] - product.quantity;
+          this.productByType.total[1] = this.productByType.total[1] - product.total;
+        }
+      }
+    },
+    computeDeduction: function computeDeduction(product, action) {
+      var _this = this;
+
+      console.log('Computing Deduction [Deductions.Vue]', product, action);
+      this.computeProductCount(product, action);
+      var total = 0;
+      this.deductions.forEach(function (deduction, index) {
+        if (deduction.type === 1) {
+          _this.input[deduction.deduction_id] = _this.productByType.count[0] * _this.deductions[index].multiplier;
+          _this.deductions[index].amount = _this.input[deduction.deduction_id];
+        } else if (deduction.type === 3 && product.quantity >= 1 && product.total === 0) {
+          if (action === 'add') {
+            _this.input[deduction.deduction_id] = _this.deductions[index].amount + product.cost;
+            _this.deductions[index].amount = _this.input[deduction.deduction_id];
+          } else {
+            _this.input[deduction.deduction_id] = _this.deductions[index].amount - product.cost;
+            _this.deductions[index].amount = _this.input[deduction.deduction_id];
+          }
+        }
+
+        total = total + deduction.amount;
+      });
+      this.total_deductions = total;
+      this.$emit('deductionComputed', this.total_deductions, this.deductions);
+    },
+    changeDeduction: function changeDeduction(deductionId, index) {
+      this.deductions[index].amount = this.input[deductionId];
+      var total = 0;
+      this.deductions.forEach(function (deduction, index) {
+        total = total + deduction.amount;
+      });
+      this.total_deductions = total;
+      this.$emit('deductionComputed', this.total_deductions, this.deductions);
+    },
+    getSalesDeductionsFromParent: function getSalesDeductionsFromParent(salesDeductions, totalDeductions) {
+      var _this2 = this;
+
+      var sales_deductions = [];
+      this.salesDeductions.forEach(function (deduction, index) {
+        var deductionObject = {
+          id: deduction.id,
+          deduction_id: deduction.deduction_id,
+          name: deduction.name,
+          amount: deduction.amount,
+          type: deduction.type,
+          multiplier: deduction.multiplier
+        };
+
+        _this2.$set(_this2.input, deduction.deduction_id, deduction.amount);
+
+        _this2.$set(_this2.deductions, index, deductionObject);
+      });
+      this.total_deductions = totalDeductions;
+      this.loading = false;
+      console.log('Method', this.deductions);
+    }
+  },
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      var _this3 = this;
+
+      var deductionUrl, deductionResponse, deductionReference, sales_deductions;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              if (this.edit) {
+                _context.next = 16;
+                break;
+              }
+
+              _context.prev = 1;
+              deductionUrl = this.backend + '/api/deductions?api_token=' + this.user.api_token;
+              _context.next = 5;
+              return axios.get(deductionUrl);
+
+            case 5:
+              deductionResponse = _context.sent;
+              deductionReference = deductionResponse.data;
+              sales_deductions = []; //initialize deductions
+
+              deductionReference.forEach(function (ref) {
+                var deduction = {
+                  deduction_id: ref.id,
+                  name: ref.name,
+                  amount: 0,
+                  type: ref.type,
+                  multiplier: ref.amount
+                };
+
+                _this3.$set(_this3.input, ref.id, 0);
+
+                sales_deductions.push(deduction);
+              });
+              this.deductions = sales_deductions;
+              this.loading = false;
+              _context.next = 16;
+              break;
+
+            case 13:
+              _context.prev = 13;
+              _context.t0 = _context["catch"](1);
+              console.log('Error Loading Deduction Reference:', _context.t0);
+
+            case 16:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this, [[1, 13]]);
+    }));
+
+    function mounted() {
+      return _mounted.apply(this, arguments);
+    }
+
+    return mounted;
+  }()
 });
 
 /***/ }),
@@ -3079,6 +3254,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3101,7 +3282,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       errors: null,
       success: false,
       submitting: false,
-      commissionReference: [],
+      // commissionReference: [],
       deductionReference: [],
       tourAgents: [],
       tourGuides: [],
@@ -3313,24 +3494,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return loadTourTypes;
     }(),
-    computeDeduction: function computeDeduction(product, action) {
-      var _this2 = this;
-
-      var total = 0;
-      this.form.sales_deductions.forEach(function (deduction, index) {
-        if (deduction.type === 1) {
-          _this2.form.sales_deductions[index].amount = _this2.code1Count * _this2.form.sales_deductions[index].multiplier;
-        } else if (deduction.type === 3 && product.quantity >= 1 && product.total === 0) {
-          if (action === 'add') {
-            _this2.form.sales_deductions[index].amount = _this2.form.sales_deductions[index].amount + product.cost;
-          } else {
-            _this2.form.sales_deductions[index].amount = _this2.form.sales_deductions[index].amount - product.cost;
-          }
-        }
-
-        total = total + deduction.amount;
-      });
-      this.form.total_deductions = total;
+    computeDeduction: function computeDeduction(totalDeduction, salesDeductions) {
+      this.form.total_deductions = totalDeduction;
+      this.form.sales_deductions = salesDeductions;
+      this.form.total_agent_sales = this.form.total_sales - this.form.total_deductions;
     },
     selectProduct: function selectProduct(product) {
       /**
@@ -3343,43 +3510,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
        */
       this.form.selected_products.push(product);
       this.form.total_sales = this.form.total_sales + product.total;
-
-      if (product.code === 1) {
-        this.code1Total = this.code1Total + product.total;
-        this.code1Count = this.code1Count + product.quantity;
-      }
-
-      if (product.code === 2) this.code2Total = this.code2Total + product.total; //Compute for Deductions
-
-      this.computeDeduction(product, 'add');
-      this.form.total_agent_sales = this.form.total_sales - this.form.total_deductions; // //Compute for Commisions:
-      // this.computeCommission();
-
       this.$refs.totalCommissions.addCommission(product);
+      this.$refs.deductions.computeDeduction(product, 'add');
     },
     removeSelection: function removeSelection(index) {
       var removedProduct = this.form.selected_products.splice(index, 1);
-
-      if (removedProduct[0].code === 1) {
-        this.code1Count = this.code1Count - removedProduct[0].quantity;
-        this.code1Total = this.code1Total - removedProduct[0].total;
-      }
-
-      if (removedProduct[0].code === 2) {
-        this.code2Total = this.code2Total - removedProduct[0].total;
-      }
-
       this.form.total_sales = this.form.total_sales - removedProduct[0].total;
-      this.computeDeduction(removedProduct[0], 'remove');
-      this.form.total_agent_sales = this.form.total_sales - this.form.total_deductions; // this.computeCommission();
-
       this.$refs.totalCommissions.deductCommission(removedProduct[0]);
+      this.$refs.deductions.computeDeduction(removedProduct[0], 'deduct');
     },
     getSalesCommissions: function getSalesCommissions(salesCommissions, totalCommissions, totalGST, grandTotalCommissions) {
       this.form.sales_commissions = salesCommissions;
       this.form.total_commissions = totalCommissions;
       this.form.gst = totalGST;
-      this.form.grand_total_commission = grandTotalCommissions; // console.log('from the sales report form', this.form.sales_commissions);
+      this.form.grand_total_commission = grandTotalCommissions;
     },
     submit: function () {
       var _submit = _asyncToGenerator(
@@ -3472,7 +3616,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
-      var _this3 = this;
+      var _this2 = this;
 
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
         while (1) {
@@ -3480,11 +3624,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 0:
               this.loadTourAgents();
               this.loadTourGuides();
-              this.loadTourTypes();
-              console.log(this.report); //Edit Mode
+              this.loadTourTypes(); // console.log(this.report);
+              //Edit Mode
 
               if (this.edit) {
-                console.log(this.report);
+                // console.log(this.report);
                 this.form.report_number = this.report.report_number;
                 this.form.tour_agent_id = this.report.tour_agent_id;
                 this.loadTourGuides(this.report.tour_agent_id);
@@ -3512,8 +3656,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     multiplier: ref.deduction.amount
                   };
 
-                  _this3.form.sales_deductions.push(deduction);
+                  _this2.form.sales_deductions.push(deduction);
                 });
+                this.$refs.deductions.getSalesDeductionsFromParent(this.form.sales_deductions, this.form.total_deductions);
                 this.report.selected_products.forEach(function (ref) {
                   var selectedProduct = {
                     product_id: ref.product_id,
@@ -3527,25 +3672,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   };
 
                   if (ref.product.product_type.code === 1) {
-                    _this3.code1Total = _this3.code1Total + ref.total;
-                    _this3.code1Count = _this3.code1Count + ref.quantity;
+                    _this2.code1Total = _this2.code1Total + ref.total;
+                    _this2.code1Count = _this2.code1Count + ref.quantity;
                   }
 
-                  if (ref.product.product_type.code === 2) _this3.code2Total = _this3.code2Total + ref.total;
+                  if (ref.product.product_type.code === 2) _this2.code2Total = _this2.code2Total + ref.total;
 
-                  _this3.form.selected_products.push(selectedProduct);
+                  _this2.form.selected_products.push(selectedProduct);
 
-                  _this3.totalProducts[ref.product.product_type.code] = _this3.totalProducts[ref.product.product_type.code] + ref.total;
-                  console.log('Looping Throught the selected Products', ref);
+                  _this2.totalProducts[ref.product.product_type.code] = _this2.totalProducts[ref.product.product_type.code] + ref.total; // console.log('Looping Throught the selected Products', ref)
                 });
               } else {
                 // this.loadSalesCommissionReference();
                 this.loadDeductionsReference();
-              }
+              } // console.log('report number', this.form.report_number);
 
-              console.log('report number', this.form.report_number);
 
-            case 6:
+            case 4:
             case "end":
               return _context6.stop();
           }
@@ -5125,30 +5268,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 this.commissionTypes.map(function (ct) {
                   _this7.totalProducts[ct.code] = _this7.totalProductsByCode[ct.code];
                 });
-                console.log('Total Products', this.totalProducts);
               } else {
                 this.message = 'Commission Types Loaded. Please Select Tour Agent and Tour Type to load the Tour Commission';
                 this.error = false;
               }
 
             case 26:
-              console.log(this.user);
-              _context2.next = 34;
+              _context2.next = 33;
               break;
 
-            case 29:
-              _context2.prev = 29;
+            case 28:
+              _context2.prev = 28;
               _context2.t0 = _context2["catch"](0);
               this.message = 'Error loading Commissions Types, please check with System Adminastrator';
               this.error = true;
               console.error('Error getting TourCommission', _context2.t0);
 
-            case 34:
+            case 33:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, this, [[0, 29]]);
+      }, _callee2, this, [[0, 28]]);
     }));
 
     function mounted() {
@@ -28169,74 +28310,129 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass:
-        "flex border border-gray-700 mt-5 items-start text-sm bg-orange-300"
-    },
-    [
-      _vm._m(0),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "flex-1 border-l border-gray-700 " },
-        [
-          _vm._l(_vm.deductions, function(deduction) {
-            return _c(
+  return _c("div", [
+    _vm.loading
+      ? _c(
+          "div",
+          {
+            staticClass:
+              "flex items-center py-4 px-8 bg-gray-600 mt-5 text-white rounded text-sm"
+          },
+          [
+            _c("h3", { staticClass: "mr-1" }, [_vm._v("Loading Deductions")]),
+            _vm._v(" "),
+            _c("circle-loader")
+          ],
+          1
+        )
+      : _c(
+          "div",
+          {
+            staticClass:
+              "flex border border-gray-700 mt-5 items-start text-sm bg-orange-300"
+          },
+          [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
               "div",
-              {
-                key: deduction.id,
-                staticClass: "flex justify-between border-b border-gray-700"
-              },
+              { staticClass: "flex-1 border-l border-gray-700 " },
               [
-                _c(
-                  "div",
-                  { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                  [_vm._v(_vm._s(deduction.name))]
-                ),
+                _vm._l(_vm.deductions, function(deduction, index) {
+                  return _c(
+                    "div",
+                    {
+                      key: deduction.id,
+                      staticClass:
+                        "flex justify-between border-b border-gray-700"
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "flex-1 border-gray-700 border-r px-2 py-1"
+                        },
+                        [_vm._v(_vm._s(deduction.name))]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "w-32  px-2 py-1 text-right" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model.number",
+                              value: _vm.input[deduction.deduction_id],
+                              expression: "input[deduction.deduction_id]",
+                              modifiers: { number: true }
+                            }
+                          ],
+                          staticClass: "bg-transparent text-right w-24",
+                          attrs: { type: "text" },
+                          domProps: {
+                            value: _vm.input[deduction.deduction_id]
+                          },
+                          on: {
+                            change: function($event) {
+                              return _vm.changeDeduction(
+                                deduction.deduction_id,
+                                index
+                              )
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.input,
+                                deduction.deduction_id,
+                                _vm._n($event.target.value)
+                              )
+                            },
+                            blur: function($event) {
+                              return _vm.$forceUpdate()
+                            }
+                          }
+                        })
+                      ])
+                    ]
+                  )
+                }),
                 _vm._v(" "),
                 _c(
                   "div",
-                  { staticClass: "w-32  px-2 py-1 text-right" },
+                  {
+                    staticClass:
+                      "flex justify-between font-semibold bg-orange-400"
+                  },
                   [
-                    _c("currency-format", {
-                      attrs: { value: deduction.amount }
-                    })
-                  ],
-                  1
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "flex-1 border-gray-700 border-r  px-2 py-1"
+                      },
+                      [_vm._v("Sub Total")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-32  px-2 py-1 text-right" },
+                      [
+                        _c("currency-format", {
+                          attrs: { value: _vm.total_deductions }
+                        })
+                      ],
+                      1
+                    )
+                  ]
                 )
-              ]
+              ],
+              2
             )
-          }),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between font-semibold bg-orange-400" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r  px-2 py-1" },
-                [_vm._v("Sub Total")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "w-32  px-2 py-1 text-right" },
-                [
-                  _c("currency-format", {
-                    attrs: { value: _vm.totalDeductions }
-                  })
-                ],
-                1
-              )
-            ]
-          )
-        ],
-        2
-      )
-    ]
-  )
+          ]
+        )
+  ])
 }
 var staticRenderFns = [
   function() {
@@ -30032,10 +30228,15 @@ var render = function() {
             }),
             _vm._v(" "),
             _c("deductions", {
+              ref: "deductions",
               attrs: {
-                deductions: _vm.form.sales_deductions,
-                totalDeductions: _vm.form.total_deductions
-              }
+                totalDeductions: _vm.form.total_deductions,
+                backend: _vm.backend,
+                user: _vm.user,
+                edit: _vm.edit,
+                salesDeductions: _vm.form.sales_deductions
+              },
+              on: { deductionComputed: _vm.computeDeduction }
             }),
             _vm._v(" "),
             _c("total-commissions", {
@@ -49861,8 +50062,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! g:\WoolHouse\reporting-app\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! g:\WoolHouse\reporting-app\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! G:\WoolHouse\reporting-app\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! G:\WoolHouse\reporting-app\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
