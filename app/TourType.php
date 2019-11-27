@@ -12,5 +12,10 @@ class TourType extends Model
         'description'
     ];
 
+
+    public function tourCommissions()
+    {
+        return $this->hasMany(TourCommission::class);
+    }
     
 }

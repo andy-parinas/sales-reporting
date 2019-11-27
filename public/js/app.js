@@ -1990,7 +1990,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
       this.total_deductions = totalDeductions;
       this.loading = false;
-      console.log('Method', this.deductions);
     }
   },
   mounted: function () {
@@ -2394,7 +2393,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui/loader/BarLoader */ "./resources/js/components/ui/loader/BarLoader.vue");
-/* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
+/* harmony import */ var _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui/loader/CircleLoader */ "./resources/js/components/ui/loader/CircleLoader.vue");
+/* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -2475,6 +2475,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2482,7 +2489,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   props: ['user', 'backend'],
   components: {
     BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"],
-    CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_2__["default"]
+    CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_3__["default"],
+    CircleLoader: _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   data: function data() {
     return {
@@ -2490,7 +2498,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       meta: null,
       links: null,
       loading: true,
-      productInput: []
+      productInput: [],
+      search: '',
+      processing: false
     };
   },
   methods: {
@@ -2507,11 +2517,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                url = this.backend + '/api/products?api_token=' + this.user.api_token + '&page=' + page;
-                _context.next = 4;
+                this.processing = true;
+                url = this.backend + '/api/products?api_token=' + this.user.api_token + '&page=' + page + '&search=' + this.search;
+                _context.next = 5;
                 return axios.get(url);
 
-              case 4:
+              case 5:
                 response = _context.sent;
                 this.products = response.data.data;
                 this.meta = response.data.meta; //Refresh the Quantity and Total
@@ -2521,20 +2532,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   this.productInput[index].total = 0;
                 }
 
-                _context.next = 13;
+                this.processing = false;
+                _context.next = 16;
                 break;
 
-              case 10:
-                _context.prev = 10;
+              case 12:
+                _context.prev = 12;
                 _context.t0 = _context["catch"](0);
                 console.log(_context.t0);
+                this.processing = false;
 
-              case 13:
+              case 16:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 10]]);
+        }, _callee, this, [[0, 12]]);
       }));
 
       function changePage(_x) {
@@ -2555,24 +2568,67 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         code: product.product_type_code
       };
       this.$emit('select', selectedProduct);
-    }
+    },
+    searchProduct: function () {
+      var _searchProduct = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                this.processing = true;
+                url = this.backend + '/api/products?api_token=' + this.user.api_token + '&search=' + this.search;
+                _context2.next = 5;
+                return axios.get(url);
+
+              case 5:
+                response = _context2.sent;
+                this.products = response.data.data;
+                this.meta = response.data.meta;
+                this.processing = false;
+                _context2.next = 15;
+                break;
+
+              case 11:
+                _context2.prev = 11;
+                _context2.t0 = _context2["catch"](0);
+                console.log(_context2.t0);
+                this.processing = false;
+
+              case 15:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 11]]);
+      }));
+
+      function searchProduct() {
+        return _searchProduct.apply(this, arguments);
+      }
+
+      return searchProduct;
+    }()
   },
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
       var url, response, index;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              _context2.prev = 0;
+              _context3.prev = 0;
               url = this.backend + '/api/products?api_token=' + this.user.api_token;
-              _context2.next = 4;
+              _context3.next = 4;
               return axios.get(url);
 
             case 4:
-              response = _context2.sent;
+              response = _context3.sent;
               this.products = response.data.data;
               this.meta = response.data.meta;
               this.links = response.data.links;
@@ -2585,20 +2641,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               }
 
               this.loading = false;
-              _context2.next = 15;
+              _context3.next = 15;
               break;
 
             case 12:
-              _context2.prev = 12;
-              _context2.t0 = _context2["catch"](0);
-              console.log(_context2.t0);
+              _context3.prev = 12;
+              _context3.t0 = _context3["catch"](0);
+              console.log(_context3.t0);
 
             case 15:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
         }
-      }, _callee2, this, [[0, 12]]);
+      }, _callee3, this, [[0, 12]]);
     }));
 
     function mounted() {
@@ -28971,10 +29027,66 @@ var render = function() {
           1
         )
       : _c("div", [
-          _vm._m(0),
+          _c(
+            "form",
+            {
+              attrs: { method: "POST" },
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.searchProduct($event)
+                }
+              }
+            },
+            [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "mb-4 flex items-center border border-gray-700 rounded"
+                },
+                [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "pl-2 font-bold text-gray-800 mr-2",
+                      attrs: { for: "filter" }
+                    },
+                    [_vm._v("Filter")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.search,
+                        expression: "search"
+                      }
+                    ],
+                    staticClass: "py-2 px-4 flex-1 focus:outline-none",
+                    attrs: {
+                      type: "text",
+                      id: "filter",
+                      placeholder: "Product Name"
+                    },
+                    domProps: { value: _vm.search },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.search = $event.target.value
+                      }
+                    }
+                  })
+                ]
+              )
+            ]
+          ),
           _vm._v(" "),
           _c("table", { staticClass: "w-full" }, [
-            _vm._m(1),
+            _vm._m(0),
             _vm._v(" "),
             _c(
               "tbody",
@@ -29183,23 +29295,27 @@ var render = function() {
               )
             ],
             2
-          )
+          ),
+          _vm._v(" "),
+          _vm.processing
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "mt-2 bg-blue-500 text-white text-sm font-semibold px-4 py-2 rounded flex items-center"
+                },
+                [
+                  _c("h2", [_vm._v("Processing")]),
+                  _vm._v(" "),
+                  _c("circle-loader")
+                ],
+                1
+              )
+            : _vm._e()
         ])
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "mb-4" }, [
-      _c("label", { attrs: { for: "filter" } }, [_vm._v("Filter")]),
-      _vm._v(" "),
-      _c("input", {
-        attrs: { type: "text", id: "filter", placeholder: "Product Name" }
-      })
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -35009,7 +35125,7 @@ var render = function() {
                 ],
                 staticClass:
                   "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm bg-transparent",
-                attrs: { type: "text", placeholder: "Product Type Name" },
+                attrs: { type: "text", placeholder: "Tour Type Name" },
                 domProps: { value: _vm.form.name },
                 on: {
                   input: function($event) {

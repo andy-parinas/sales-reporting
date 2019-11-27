@@ -4,10 +4,12 @@
             <bar-loader color="#a0aec0"></bar-loader>
         </div>
         <div v-else>
-            <div class="mb-4">
-                <label for="filter">Filter</label>
-                <input type="text" id="filter" placeholder="Product Name">
-            </div>
+            <form method="POST" @submit.prevent="searchProduct">
+                <div class="mb-4 flex items-center border border-gray-700 rounded">
+                    <label for="filter" class="pl-2 font-bold text-gray-800 mr-2">Filter</label>
+                    <input type="text" id="filter" placeholder="Product Name" class="py-2 px-4 flex-1 focus:outline-none" v-model="search"> 
+                </div>
+            </form>
             <table class="w-full">
                 <thead>
                     <tr class="text-left bg-gray-300 border border-gray-800 text-sm">
@@ -68,6 +70,10 @@
                     Last
                 </button>
             </div>
+             <div v-if="processing"
+                class="mt-2 bg-blue-500 text-white text-sm font-semibold px-4 py-2 rounded flex items-center">
+                 <h2>Processing</h2> <circle-loader></circle-loader> 
+             </div>
         </div>
     </div>
 </template>
@@ -75,12 +81,13 @@
 <script>
 
 import BarLoader from './ui/loader/BarLoader';
+import CircleLoader from './ui/loader/CircleLoader';
 import CurrencyFormat from './ui/formated/CurrencyFormat';
 
 export default {
     name: 'ProductSelection',
     props: ['user', 'backend'],
-    components: {BarLoader, CurrencyFormat},
+    components: {BarLoader, CurrencyFormat, CircleLoader},
     data: function(){
 
    
@@ -89,7 +96,9 @@ export default {
             meta: null,
             links: null,
             loading: true,
-            productInput: []
+            productInput: [],
+            search: '',
+            processing: false
         }
     },
     methods: {
@@ -98,7 +107,8 @@ export default {
         },
         changePage: async function(page){
            try {
-                const url = this.backend + '/api/products?api_token=' + this.user.api_token + '&page=' + page;
+                this.processing = true;
+                const url = this.backend + '/api/products?api_token=' + this.user.api_token + '&page=' + page  + '&search=' + this.search;
                 const response = await axios.get(url);
                 this.products = response.data.data;
                 this.meta = response.data.meta;
@@ -109,8 +119,13 @@ export default {
                     this.productInput[index].total = 0;
                 }
 
+                this.processing = false;
+
+
            } catch (error) {
-               console.log(error);
+                console.log(error);
+                this.processing = false;
+
            }
         },
         selectProduct: function(product, index){
@@ -127,6 +142,27 @@ export default {
             }
 
             this.$emit('select', selectedProduct);
+        },
+        searchProduct: async function(){
+               try {
+                this.processing = true;
+                
+                const url = this.backend + '/api/products?api_token=' + this.user.api_token
+                            + '&search=' + this.search;
+
+                const response = await axios.get(url);
+
+                this.products = response.data.data;
+                this.meta = response.data.meta;
+
+                this.processing = false;
+
+
+            } catch (error) {
+                console.log(error);
+                this.processing = false;
+
+            }
         }
     },
     async mounted(){

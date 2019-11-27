@@ -14,7 +14,7 @@
                     </div>
                     <div  class="flex-1 border-b border-gray-700" :class="errors && errors.name ? 'bg-red-200' : ''" >
                         <input class="w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm bg-transparent"
-                            type="text" placeholder="Product Type Name" 
+                            type="text" placeholder="Tour Type Name" 
                             v-model="form.name" >
                     </div>
                 </div>

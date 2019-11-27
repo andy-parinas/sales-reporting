@@ -161,8 +161,6 @@ export default {
 
             this.loading = false;
 
-            console.log('Method', this.deductions);
-
         }
 
 
