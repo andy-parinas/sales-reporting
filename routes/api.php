@@ -45,7 +45,6 @@ Route::delete('/guides/{guide}', 'Api\TourGuideController@destroy')->name('guide
 Route::patch('/guides/{guide}', 'Api\TourGuideController@update')->name('guides.api.update');
 
 Route::get('/deductions', 'Api\DeductionController@index');
-Route::get('/commissions', 'Api\CommissionController@index');
 
 Route::get('/users', 'Api\UserController@index');
 Route::delete('/users/{user}', 'Api\UserController@destroy')->name('users.api.destroy');
@@ -54,3 +53,19 @@ Route::get('/summaries', 'Api\SummaryReportController@index');
 Route::post('/summaries', 'Api\SummaryReportController@store');
 Route::delete('/summaries/{summary}', 'Api\SummaryReportController@destroy')->name('summaries.api.destroy');
 Route::patch('/summaries/{summary}', 'Api\SummaryReportController@update')->name('summaries.api.update');
+
+
+Route::get('/tour-types', 'Api\TourTypeController@index');
+Route::post('/tour-types', 'Api\TourTypeController@store');
+Route::delete('/tour-types/{type}', 'Api\TourTypeController@destroy');
+Route::patch('/tour-types/{type}', 'Api\TourTypeController@update');
+
+Route::get('/commission-types', 'Api\CommissionTypeController@index');
+Route::get('/commissions', 'Api\CommissionController@index');
+Route::post('/commissions', 'Api\CommissionController@store');
+Route::delete('/commissions/{commission}', 'Api\CommissionController@destroy');
+Route::patch('/commissions/{commission}', 'Api\CommissionController@update');
+
+Route::get('/tour-commissions', 'Api\TourCommissionController@index');
+Route::post('/tour-commissions', 'Api\TourCommissionController@store');
+Route::patch('/tour-commissions/{commission}', 'Api\TourCommissionController@update');

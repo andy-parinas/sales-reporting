@@ -12,82 +12,86 @@ use App\TourType;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
-class CommissionController extends Controller
+class TourTypeController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth:api');
     }
 
+
     public function index()
     {
-        return Commission::all();
+        return TourType::all();
     }
+
 
     public function store()
     {
-
         DB::beginTransaction();
 
         try {
             
-            $commission = Commission::create($this->validateData());
+            $tourType = TourType::create($this->validateData());
 
-            $tourTypes = TourType::all();
             $tourAgents = TourAgent::all();
             $commissionTypes = CommissionType::all();
+            $commissions = Commission::all();
 
-            foreach ($tourAgents as $tourAgent) {
-                foreach ($tourTypes as $tourType) {
+            foreach ($tourAgents as $agent) {
+                
+                foreach ($commissions as $commission) {
+                    
                     foreach ($commissionTypes as $commissionType) {
+                        
                         TourCommission::create([
-                            'tour_agent_id' => $tourAgent->id,
                             'tour_type_id' => $tourType->id,
-                            'commission_type_id' => $commissionType->id,
+                            'tour_agent_id' => $agent->id,
                             'commission_id' => $commission->id,
+                            'commission_type_id' => $commissionType->id,
                             'amount' => 0
                         ]);
-                    }                    
+
+                    }
                 }
             }
 
             DB::commit();
 
-            return response($commission, Response::HTTP_CREATED);
+            return response($tourType, Response::HTTP_CREATED);
 
         } catch (Exception $e) {
-
             DB::rollBack();
-            return response(['error' => $e], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response(['error' => $e ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-
+       
     }
 
-    public function update(Commission $commission)
+    public function update(TourType $type)
     {
-        $commission->update($this->validateData());
+        $type->update($this->validateData());
 
-        return response($commission, Response::HTTP_OK);
+        return response($type, Response::HTTP_OK);
     }
+    
 
-
-    public function destroy(Commission $commission)
+    public function destroy(TourType $type)
     {
+        // $type->delete();
         DB::beginTransaction();
 
         try {
             
-            $commission->tourCommissions->each(function($tourCommission){
+            $type->tourCommissions->each(function($tourCommission){
                 $tourCommission->delete();
             });
 
-            $commission->delete();
+            $type->delete();
 
             DB::commit();
-            
+
             return response([], Response::HTTP_OK);
+
 
         } catch (Exception $e) {
             
@@ -95,7 +99,6 @@ class CommissionController extends Controller
             return response(['error' => $e], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-    
     }
 
 
@@ -106,4 +109,6 @@ class CommissionController extends Controller
             'description' => ''
         ]);
     }
+
+
 }

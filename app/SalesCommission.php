@@ -7,20 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class SalesCommission extends Model
 {
     protected $fillable = [
-        'commission_id',
-        'amount'
+        'tour_commission_id',
+        'amount',
+        'percentage'
     ];
 
-    protected $with = ['commission'];
+    protected $with = ['tourCommission'];
 
-    // public function getAmountAttribute($value)
-    // {
-    //     return number_format($value, 2, '.', ',');
-    // }
 
-    public function commission()
+    public function tourCommission()
     {
-        return $this->belongsTo(Commission::class);
+        return $this->belongsTo(TourCommission::class);
     }
     
 }

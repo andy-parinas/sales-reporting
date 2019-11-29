@@ -21,6 +21,7 @@ class CreateSalesReportsTable extends Migration
             $table->integer('children_count');
             $table->unsignedBigInteger('tour_agent_id');
             $table->unsignedBigInteger('tour_guide_id');
+            $table->unsignedBigInteger('tour_type_id');
             $table->string('tc_name')->nullable(true);
             $table->date('tour_date');
             $table->float('total_sales');
@@ -33,6 +34,7 @@ class CreateSalesReportsTable extends Migration
 
             $table->foreign('tour_agent_id')->references('id')->on('tour_agents')->onDelete('restrict');
             $table->foreign('tour_guide_id')->references('id')->on('tour_guides')->onDelete('restrict');
+            $table->foreign('tour_type_id')->references('id')->on('tour_types')->onDelete('restrict');
             
         });
     }

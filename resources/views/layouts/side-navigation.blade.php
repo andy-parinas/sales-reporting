@@ -90,8 +90,8 @@
             </svg>
             <span class="ml-2">Tour Guides</span>
         </a>
-        <a href="#" class="block py-3 flex items-center focus:outline-none
-                        hover:text-white">
+        <a href="{{ route('commissions.index')}}" class="block py-3 flex items-center focus:outline-none
+                        hover:text-white {{ (strpos(Route::currentRouteName(), 'commissions') === 0) ? 'active' : '' }}">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="database" 
                 class="w-5 h-5" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path fill="currentColor" d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 
@@ -99,7 +99,7 @@
                 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 
                 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"></path>
             </svg>
-            <span class="ml-2">Attributes</span>
+            <span class="ml-2">Commissions</span>
         </a>
         
         <div class="mt-4 border-t border-gray-700 text-gray-500 py-4">

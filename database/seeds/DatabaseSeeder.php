@@ -1,11 +1,14 @@
 <?php
 
 use App\Commission;
+use App\CommissionType;
 use App\Deduction;
 use App\Product;
 use App\ProductType;
 use App\TourAgent;
+use App\TourCommission;
 use App\TourGuide;
+use App\TourType;
 use App\User;
 use Illuminate\Database\Seeder;
 
@@ -18,84 +21,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+
+        $this->call([
+            ProductSeeder::class,
+            TourTypeSeeder::class,
+            CommissionSeeder::class,
+            TourAgentSeeder::class,
+            DeductionSeeder::class
+        ]);
         
-        collect(['Carpet', 'Item'])->each(function($type){
-
-            if($type === 'Carpet'){
-                $productType = factory(ProductType::class)->create(['name' => $type, 'code' => 1]);
-            }
-
-            if($type === 'Item'){
-                $productType = factory(ProductType::class)->create(['name' => $type, 'code' => 2]);
-            }
-            
-
-            // factory(Product::class, 12)->create(['product_type_id' => $productType->id]); //Comment out for production seed
-
-        });
-
-        collect([1,2,3,4])->each(function($type){
-
-            if($type === 1){
-                factory(Commission::class)->create([
-                    'name' => 'Carpet Agent Comm',
-                    'commission_type' => $type,
-                    'amount' => 0.46
-                ]);
-            };
-
-            if($type === 2){
-                factory(Commission::class)->create([
-                    'name' => 'Item Agent Comm',
-                    'commission_type' => $type,
-                    'amount' => 0.41
-                ]);
-            };
-
-            if($type === 3){
-                factory(Commission::class)->create([
-                    'name' => 'Guide',
-                    'commission_type' => $type,
-                    'amount' => 0.07
-                ]);
-            };
-
-            if($type === 4){
-                factory(Commission::class)->create([
-                    'name' => 'Manager',
-                    'commission_type' => $type,
-                    'amount' => 0.01
-                ]);
-            };
-
-        });
-
-        collect(['Guide Incentive', 'Delivery', 'Service'])->each(function($type){
-
-            if($type === 'Service'){
-                factory(Deduction::class)->create(['name' => $type, 'type' => 3]);
-            }
-            
-            if($type === 'Guide Incentive') {
-                factory(Deduction::class)->create(['name' => $type, 'type' => 1, 'amount' => 50]);
-            }
-
-            if($type === 'Delivery') {
-                factory(Deduction::class)->create(['name' => $type, 'type' => 1, 'amount' => 200]);
-            }
-
-        });
-
+ 
         factory(User::class)->create([
             'name' => 'Administrator',
             'email' => 'admin@salesreport.com'
         ]);
 
-        // factory(User::class, 5)->create(); //comment out for production seed
-
-        // factory(TourAgent::class, 10)->create(); // Comment out for production seed
-
-        // factory(TourGuide::class, 15)->create(); // Comment out for production seed
+        factory(TourGuide::class, 15)->create(); // Comment out for production seed
 
 
     }

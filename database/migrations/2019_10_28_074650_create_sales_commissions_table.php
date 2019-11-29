@@ -16,12 +16,12 @@ class CreateSalesCommissionsTable extends Migration
         Schema::create('sales_commissions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('sales_report_id');
-            $table->unsignedBigInteger('commission_id');
+            $table->unsignedBigInteger('tour_commission_id');
             $table->float('amount');
+            $table->float('percentage');
             $table->timestamps();
-
             $table->foreign('sales_report_id')->references('id')->on('sales_reports')->onDelete('restrict');
-            $table->foreign('commission_id')->references('id')->on('commissions')->onDelete('restrict');
+            $table->foreign('tour_commission_id')->references('id')->on('tour_commissions')->onDelete('restrict');
         });
     }
 

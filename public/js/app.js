@@ -1850,7 +1850,27 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
+/* harmony import */ var _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui/loader/CircleLoader */ "./resources/js/components/ui/loader/CircleLoader.vue");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1875,12 +1895,166 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Deductions',
-  props: ['deductions', 'totalDeductions'],
+  props: ['backend', 'user', 'edit', 'salesDeductions', 'totalDeductions'],
   components: {
-    CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_0__["default"]
-  }
+    CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_1__["default"],
+    CircleLoader: _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  data: function data() {
+    return {
+      deductions: [],
+      input: {},
+      productByType: {
+        count: [0, 0],
+        total: [0, 0]
+      },
+      total_deductions: 0,
+      loading: true,
+      error: null
+    };
+  },
+  methods: {
+    computeProductCount: function computeProductCount(product, action) {
+      if (action === 'add') {
+        if (product.code === 1) {
+          this.productByType.count[0] = this.productByType.count[0] + product.quantity;
+          this.productByType.total[0] = this.productByType.total[0] + product.total;
+        } else {
+          this.productByType.count[1] = this.productByType.count[1] + product.quantity;
+          this.productByType.total[1] = this.productByType.total[1] + product.total;
+        }
+      } else {
+        if (product.code === 1) {
+          this.productByType.count[0] = this.productByType.count[0] - product.quantity;
+          this.productByType.total[0] = this.productByType.total[0] - product.total;
+        } else {
+          this.productByType.count[1] = this.productByType.count[1] - product.quantity;
+          this.productByType.total[1] = this.productByType.total[1] - product.total;
+        }
+      }
+    },
+    computeDeduction: function computeDeduction(product, action) {
+      var _this = this;
+
+      console.log('Computing Deduction [Deductions.Vue]', product, action);
+      this.computeProductCount(product, action);
+      var total = 0;
+      this.deductions.forEach(function (deduction, index) {
+        if (deduction.type === 1) {
+          _this.input[deduction.deduction_id] = _this.productByType.count[0] * _this.deductions[index].multiplier;
+          _this.deductions[index].amount = _this.input[deduction.deduction_id];
+        } else if (deduction.type === 3 && product.quantity >= 1 && product.total === 0) {
+          if (action === 'add') {
+            _this.input[deduction.deduction_id] = _this.deductions[index].amount + product.cost;
+            _this.deductions[index].amount = _this.input[deduction.deduction_id];
+          } else {
+            _this.input[deduction.deduction_id] = _this.deductions[index].amount - product.cost;
+            _this.deductions[index].amount = _this.input[deduction.deduction_id];
+          }
+        }
+
+        total = total + deduction.amount;
+      });
+      this.total_deductions = total;
+      this.$emit('deductionComputed', this.total_deductions, this.deductions);
+    },
+    changeDeduction: function changeDeduction(deductionId, index) {
+      this.deductions[index].amount = this.input[deductionId];
+      var total = 0;
+      this.deductions.forEach(function (deduction, index) {
+        total = total + deduction.amount;
+      });
+      this.total_deductions = total;
+      this.$emit('deductionComputed', this.total_deductions, this.deductions);
+    },
+    getSalesDeductionsFromParent: function getSalesDeductionsFromParent(salesDeductions, totalDeductions) {
+      var _this2 = this;
+
+      var sales_deductions = [];
+      this.salesDeductions.forEach(function (deduction, index) {
+        var deductionObject = {
+          id: deduction.id,
+          deduction_id: deduction.deduction_id,
+          name: deduction.name,
+          amount: deduction.amount,
+          type: deduction.type,
+          multiplier: deduction.multiplier
+        };
+
+        _this2.$set(_this2.input, deduction.deduction_id, deduction.amount);
+
+        _this2.$set(_this2.deductions, index, deductionObject);
+      });
+      this.total_deductions = totalDeductions;
+      this.loading = false;
+    }
+  },
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      var _this3 = this;
+
+      var deductionUrl, deductionResponse, deductionReference, sales_deductions;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              if (this.edit) {
+                _context.next = 16;
+                break;
+              }
+
+              _context.prev = 1;
+              deductionUrl = this.backend + '/api/deductions?api_token=' + this.user.api_token;
+              _context.next = 5;
+              return axios.get(deductionUrl);
+
+            case 5:
+              deductionResponse = _context.sent;
+              deductionReference = deductionResponse.data;
+              sales_deductions = []; //initialize deductions
+
+              deductionReference.forEach(function (ref) {
+                var deduction = {
+                  deduction_id: ref.id,
+                  name: ref.name,
+                  amount: 0,
+                  type: ref.type,
+                  multiplier: ref.amount
+                };
+
+                _this3.$set(_this3.input, ref.id, 0);
+
+                sales_deductions.push(deduction);
+              });
+              this.deductions = sales_deductions;
+              this.loading = false;
+              _context.next = 16;
+              break;
+
+            case 13:
+              _context.prev = 13;
+              _context.t0 = _context["catch"](1);
+              console.log('Error Loading Deduction Reference:', _context.t0);
+
+            case 16:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this, [[1, 13]]);
+    }));
+
+    function mounted() {
+      return _mounted.apply(this, arguments);
+    }
+
+    return mounted;
+  }()
 });
 
 /***/ }),
@@ -2219,7 +2393,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui/loader/BarLoader */ "./resources/js/components/ui/loader/BarLoader.vue");
-/* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
+/* harmony import */ var _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui/loader/CircleLoader */ "./resources/js/components/ui/loader/CircleLoader.vue");
+/* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -2300,6 +2475,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2307,7 +2489,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   props: ['user', 'backend'],
   components: {
     BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"],
-    CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_2__["default"]
+    CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_3__["default"],
+    CircleLoader: _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   data: function data() {
     return {
@@ -2315,7 +2498,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       meta: null,
       links: null,
       loading: true,
-      productInput: []
+      productInput: [],
+      search: '',
+      processing: false
     };
   },
   methods: {
@@ -2332,11 +2517,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                url = this.backend + '/api/products?api_token=' + this.user.api_token + '&page=' + page;
-                _context.next = 4;
+                this.processing = true;
+                url = this.backend + '/api/products?api_token=' + this.user.api_token + '&page=' + page + '&search=' + this.search;
+                _context.next = 5;
                 return axios.get(url);
 
-              case 4:
+              case 5:
                 response = _context.sent;
                 this.products = response.data.data;
                 this.meta = response.data.meta; //Refresh the Quantity and Total
@@ -2346,20 +2532,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   this.productInput[index].total = 0;
                 }
 
-                _context.next = 13;
+                this.processing = false;
+                _context.next = 16;
                 break;
 
-              case 10:
-                _context.prev = 10;
+              case 12:
+                _context.prev = 12;
                 _context.t0 = _context["catch"](0);
                 console.log(_context.t0);
+                this.processing = false;
 
-              case 13:
+              case 16:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 10]]);
+        }, _callee, this, [[0, 12]]);
       }));
 
       function changePage(_x) {
@@ -2380,24 +2568,67 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         code: product.product_type_code
       };
       this.$emit('select', selectedProduct);
-    }
+    },
+    searchProduct: function () {
+      var _searchProduct = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                this.processing = true;
+                url = this.backend + '/api/products?api_token=' + this.user.api_token + '&search=' + this.search;
+                _context2.next = 5;
+                return axios.get(url);
+
+              case 5:
+                response = _context2.sent;
+                this.products = response.data.data;
+                this.meta = response.data.meta;
+                this.processing = false;
+                _context2.next = 15;
+                break;
+
+              case 11:
+                _context2.prev = 11;
+                _context2.t0 = _context2["catch"](0);
+                console.log(_context2.t0);
+                this.processing = false;
+
+              case 15:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 11]]);
+      }));
+
+      function searchProduct() {
+        return _searchProduct.apply(this, arguments);
+      }
+
+      return searchProduct;
+    }()
   },
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
       var url, response, index;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              _context2.prev = 0;
+              _context3.prev = 0;
               url = this.backend + '/api/products?api_token=' + this.user.api_token;
-              _context2.next = 4;
+              _context3.next = 4;
               return axios.get(url);
 
             case 4:
-              response = _context2.sent;
+              response = _context3.sent;
               this.products = response.data.data;
               this.meta = response.data.meta;
               this.links = response.data.links;
@@ -2410,20 +2641,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               }
 
               this.loading = false;
-              _context2.next = 15;
+              _context3.next = 15;
               break;
 
             case 12:
-              _context2.prev = 12;
-              _context2.t0 = _context2["catch"](0);
-              console.log(_context2.t0);
+              _context3.prev = 12;
+              _context3.t0 = _context3["catch"](0);
+              console.log(_context3.t0);
 
             case 15:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
         }
-      }, _callee2, this, [[0, 12]]);
+      }, _callee3, this, [[0, 12]]);
     }));
 
     function mounted() {
@@ -2901,7 +3132,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ProductSelection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ProductSelection */ "./resources/js/components/ProductSelection.vue");
 /* harmony import */ var _SelectedProduct__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SelectedProduct */ "./resources/js/components/SelectedProduct.vue");
 /* harmony import */ var _Deductions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Deductions */ "./resources/js/components/Deductions.vue");
-/* harmony import */ var _TotalSales__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TotalSales */ "./resources/js/components/TotalSales.vue");
+/* harmony import */ var _TotalCommissions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TotalCommissions */ "./resources/js/components/TotalCommissions.vue");
 /* harmony import */ var _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ui/loader/CircleLoader */ "./resources/js/components/ui/loader/CircleLoader.vue");
 /* harmony import */ var q__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! q */ "./node_modules/q/q.js");
 /* harmony import */ var q__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(q__WEBPACK_IMPORTED_MODULE_6__);
@@ -3055,6 +3286,36 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3067,27 +3328,36 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     ProductSelection: _ProductSelection__WEBPACK_IMPORTED_MODULE_1__["default"],
     SelectedProduct: _SelectedProduct__WEBPACK_IMPORTED_MODULE_2__["default"],
     Deductions: _Deductions__WEBPACK_IMPORTED_MODULE_3__["default"],
-    TotalSales: _TotalSales__WEBPACK_IMPORTED_MODULE_4__["default"],
+    TotalCommissions: _TotalCommissions__WEBPACK_IMPORTED_MODULE_4__["default"],
     CircleLoader: _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   props: ['user', 'edit', 'report', 'backend'],
   data: function data() {
     return {
+      statusMessage: "Step 1. Select Tour Agent ",
       errors: null,
       success: false,
       submitting: false,
-      commissionReference: [],
+      // commissionReference: [],
       deductionReference: [],
       tourAgents: [],
       tourGuides: [],
+      tourTypes: [],
+      selectedTourTypeId: '',
+      commissionTypes: [],
       creating: false,
       code1Count: 0,
       code1Total: 0,
       code2Total: 0,
+      totalProducts: {
+        1: 0,
+        2: 0
+      },
       form: {
         report_number: this.createReportNumber(),
         tour_agent_id: '',
         tour_guide_id: '',
+        tour_type_id: '',
         tour_date: '',
         tc_name: null,
         grp_code: null,
@@ -3099,10 +3369,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         total_commissions: 0,
         gst: 0,
         grand_total_commission: 0,
-        guide_incentive: 0,
-        delivery: 0,
-        service: 0,
-        total: 0,
         selected_products: [],
         sales_commissions: [],
         sales_deductions: []
@@ -3114,77 +3380,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var today = new Date();
       return "".concat(today.getFullYear()).concat(today.getMonth() + 1).concat(today.getDate(), "-").concat(today.getHours()).concat(today.getMinutes()).concat(today.getMilliseconds());
     },
-    loadSalesCommissionReference: function () {
-      var _loadSalesCommissionReference = _asyncToGenerator(
+    loadDeductionsReference: function () {
+      var _loadDeductionsReference = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
         var _this = this;
 
-        var commissionsUrl, commissionResponse;
+        var deductionUrl, deductionResponse;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                commissionsUrl = this.backend + '/api/commissions?api_token=' + this.user.api_token;
-                _context.next = 4;
-                return axios.get(commissionsUrl);
-
-              case 4:
-                commissionResponse = _context.sent;
-                this.commissionReference = commissionResponse.data; //initialize the sales_commission
-
-                this.commissionReference.forEach(function (ref) {
-                  var salesCommission = {
-                    commission_id: ref.id,
-                    name: ref.name,
-                    type: ref.commission_type,
-                    percentage: ref.amount,
-                    amount: 0
-                  };
-
-                  _this.form.sales_commissions.push(salesCommission);
-                });
-                _context.next = 12;
-                break;
-
-              case 9:
-                _context.prev = 9;
-                _context.t0 = _context["catch"](0);
-                console.log('Error Loading Commission Reference:', _context.t0);
-
-              case 12:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, this, [[0, 9]]);
-      }));
-
-      function loadSalesCommissionReference() {
-        return _loadSalesCommissionReference.apply(this, arguments);
-      }
-
-      return loadSalesCommissionReference;
-    }(),
-    loadDeductionsReference: function () {
-      var _loadDeductionsReference = _asyncToGenerator(
-      /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        var _this2 = this;
-
-        var deductionUrl, deductionResponse;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.prev = 0;
                 deductionUrl = this.backend + '/api/deductions?api_token=' + this.user.api_token;
-                _context2.next = 4;
+                _context.next = 4;
                 return axios.get(deductionUrl);
 
               case 4:
-                deductionResponse = _context2.sent;
+                deductionResponse = _context.sent;
                 this.deductionReference = deductionResponse.data; //initialize deductions
 
                 this.deductionReference.forEach(function (ref) {
@@ -3196,22 +3409,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     multiplier: ref.amount
                   };
 
-                  _this2.form.sales_deductions.push(deduction);
+                  _this.form.sales_deductions.push(deduction);
                 });
-                _context2.next = 12;
+                _context.next = 12;
                 break;
 
               case 9:
-                _context2.prev = 9;
-                _context2.t0 = _context2["catch"](0);
-                console.log('Error Loading Deduction Reference:', _context2.t0);
+                _context.prev = 9;
+                _context.t0 = _context["catch"](0);
+                console.log('Error Loading Deduction Reference:', _context.t0);
 
               case 12:
               case "end":
-                return _context2.stop();
+                return _context.stop();
             }
           }
-        }, _callee2, this, [[0, 9]]);
+        }, _callee, this, [[0, 9]]);
       }));
 
       function loadDeductionsReference() {
@@ -3223,34 +3436,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     loadTourAgents: function () {
       var _loadTourAgents = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
         var url, response;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context3.prev = 0;
+                _context2.prev = 0;
                 url = this.backend + '/api/agents?api_token=' + this.user.api_token;
-                _context3.next = 4;
+                _context2.next = 4;
                 return axios.get(url);
 
               case 4:
-                response = _context3.sent;
+                response = _context2.sent;
                 this.tourAgents = response.data.data;
-                _context3.next = 11;
+                _context2.next = 11;
                 break;
 
               case 8:
-                _context3.prev = 8;
-                _context3.t0 = _context3["catch"](0);
-                console.log('Error Loading Tour Agents:', _context3.t0);
+                _context2.prev = 8;
+                _context2.t0 = _context2["catch"](0);
+                console.log('Error Loading Tour Agents:', _context2.t0);
 
               case 11:
               case "end":
-                return _context3.stop();
+                return _context2.stop();
             }
           }
-        }, _callee3, this, [[0, 8]]);
+        }, _callee2, this, [[0, 8]]);
       }));
 
       function loadTourAgents() {
@@ -3262,27 +3475,66 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     loadTourGuides: function () {
       var _loadTourGuides = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(agentId) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(agentId) {
+        var url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                url = this.backend + "/api/guides?api_token=".concat(this.user.api_token);
+                _context3.next = 4;
+                return axios.get(url);
+
+              case 4:
+                response = _context3.sent;
+                this.tourGuides = response.data.data;
+                _context3.next = 11;
+                break;
+
+              case 8:
+                _context3.prev = 8;
+                _context3.t0 = _context3["catch"](0);
+                console.log('Error Loading Tour Guides:', _context3.t0);
+
+              case 11:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[0, 8]]);
+      }));
+
+      function loadTourGuides(_x) {
+        return _loadTourGuides.apply(this, arguments);
+      }
+
+      return loadTourGuides;
+    }(),
+    loadTourTypes: function () {
+      var _loadTourTypes = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
         var url, response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
                 _context4.prev = 0;
-                url = this.backend + "/api/guides?api_token=".concat(this.user.api_token);
+                url = this.backend + '/api/tour-types?api_token=' + this.user.api_token;
                 _context4.next = 4;
                 return axios.get(url);
 
               case 4:
                 response = _context4.sent;
-                this.tourGuides = response.data.data;
+                this.tourTypes = response.data;
                 _context4.next = 11;
                 break;
 
               case 8:
                 _context4.prev = 8;
                 _context4.t0 = _context4["catch"](0);
-                console.log('Error Loading Tour Guides:', _context4.t0);
+                console.log(_context4.t0);
 
               case 11:
               case "end":
@@ -3292,50 +3544,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee4, this, [[0, 8]]);
       }));
 
-      function loadTourGuides(_x) {
-        return _loadTourGuides.apply(this, arguments);
+      function loadTourTypes() {
+        return _loadTourTypes.apply(this, arguments);
       }
 
-      return loadTourGuides;
+      return loadTourTypes;
     }(),
-    computeCommission: function computeCommission() {
-      var _this3 = this;
-
-      var totalCommissions = 0;
-      this.form.sales_commissions.forEach(function (commission, index) {
-        if (commission.type === 1) {
-          _this3.form.sales_commissions[index].amount = commission.percentage * _this3.code1Total;
-        } else if (commission.type === 2) {
-          _this3.form.sales_commissions[index].amount = commission.percentage * _this3.code2Total;
-        } else {
-          _this3.form.sales_commissions[index].amount = commission.percentage * _this3.form.total_agent_sales;
-        }
-
-        totalCommissions = totalCommissions + _this3.form.sales_commissions[index].amount;
-      });
-      this.form.total_commissions = totalCommissions; // this.form.total_agent_sales = this.form.total_sales - this.this.form.total_deductions;
-
-      this.form.gst = this.form.total_commissions * 0.10;
-      this.form.grand_total_commission = this.form.gst + this.form.total_commissions;
-    },
-    computeDeduction: function computeDeduction(product, action) {
-      var _this4 = this;
-
-      var total = 0;
-      this.form.sales_deductions.forEach(function (deduction, index) {
-        if (deduction.type === 1) {
-          _this4.form.sales_deductions[index].amount = _this4.code1Count * _this4.form.sales_deductions[index].multiplier;
-        } else if (deduction.type === 3 && product.quantity >= 1 && product.total === 0) {
-          if (action === 'add') {
-            _this4.form.sales_deductions[index].amount = _this4.form.sales_deductions[index].amount + product.cost;
-          } else {
-            _this4.form.sales_deductions[index].amount = _this4.form.sales_deductions[index].amount - product.cost;
-          }
-        }
-
-        total = total + deduction.amount;
-      });
-      this.form.total_deductions = total;
+    computeDeduction: function computeDeduction(totalDeduction, salesDeductions) {
+      this.form.total_deductions = totalDeduction;
+      this.form.sales_deductions = salesDeductions;
+      this.form.total_agent_sales = this.form.total_sales - this.form.total_deductions;
     },
     selectProduct: function selectProduct(product) {
       /**
@@ -3348,35 +3566,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
        */
       this.form.selected_products.push(product);
       this.form.total_sales = this.form.total_sales + product.total;
-
-      if (product.code === 1) {
-        this.code1Total = this.code1Total + product.total;
-        this.code1Count = this.code1Count + product.quantity;
-      }
-
-      if (product.code === 2) this.code2Total = this.code2Total + product.total; //Compute for Deductions
-
-      this.computeDeduction(product, 'add');
-      this.form.total_agent_sales = this.form.total_sales - this.form.total_deductions; // //Compute for Commisions:
-
-      this.computeCommission();
+      this.$refs.totalCommissions.addCommission(product);
+      this.$refs.deductions.computeDeduction(product, 'add');
     },
     removeSelection: function removeSelection(index) {
       var removedProduct = this.form.selected_products.splice(index, 1);
-
-      if (removedProduct[0].code === 1) {
-        this.code1Count = this.code1Count - removedProduct[0].quantity;
-        this.code1Total = this.code1Total - removedProduct[0].total;
-      }
-
-      if (removedProduct[0].code === 2) {
-        this.code2Total = this.code2Total - removedProduct[0].total;
-      }
-
       this.form.total_sales = this.form.total_sales - removedProduct[0].total;
-      this.computeDeduction(removedProduct[0], 'remove');
-      this.form.total_agent_sales = this.form.total_sales - this.form.total_deductions;
-      this.computeCommission();
+      this.$refs.totalCommissions.deductCommission(removedProduct[0]);
+      this.$refs.deductions.computeDeduction(removedProduct[0], 'deduct');
+    },
+    getSalesCommissions: function getSalesCommissions(salesCommissions, totalCommissions, totalGST, grandTotalCommissions) {
+      this.form.sales_commissions = salesCommissions;
+      this.form.total_commissions = totalCommissions;
+      this.form.gst = totalGST;
+      this.form.grand_total_commission = grandTotalCommissions;
     },
     submit: function () {
       var _submit = _asyncToGenerator(
@@ -3440,6 +3643,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 this.success = false;
 
               case 26:
+                console.log('Form Data', this.form);
+
+              case 27:
               case "end":
                 return _context5.stop();
             }
@@ -3452,13 +3658,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return submit;
-    }()
+    }(),
+    onTourTypeChanged: function onTourTypeChanged() {
+      this.$refs.totalCommissions.loadTourCommissions(this.form.tour_agent_id, this.form.tour_type_id);
+    },
+    onTourAgentChanged: function onTourAgentChanged() {
+      if (this.form.tour_type_id) {
+        this.$refs.totalCommissions.loadTourCommissions(this.form.tour_agent_id, this.form.tour_type_id);
+      }
+    }
   },
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
-      var _this5 = this;
+      var _this2 = this;
 
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
         while (1) {
@@ -3466,13 +3680,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 0:
               this.loadTourAgents();
               this.loadTourGuides();
+              this.loadTourTypes(); // console.log(this.report);
+              //Edit Mode
 
               if (this.edit) {
-                console.log(this.report);
+                // console.log(this.report);
                 this.form.report_number = this.report.report_number;
                 this.form.tour_agent_id = this.report.tour_agent_id;
                 this.loadTourGuides(this.report.tour_agent_id);
                 this.form.tour_guide_id = this.report.tour_guide_id;
+                this.form.tour_type_id = this.report.tour_type_id;
                 this.form.tour_date = this.report.tour_date;
                 this.form.tc_name = this.report.tc_name;
                 this.form.grp_code = this.report.grp_code;
@@ -3483,20 +3700,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 this.form.total_deductions = this.report.total_deductions;
                 this.form.total_commissions = this.report.total_commissions;
                 this.form.gst = this.report.gst;
-                this.form.grand_total_commission = this.report.grand_total_commission; //initialize the sales_commission
-
-                this.report.sales_commissions.forEach(function (ref) {
-                  var salesCommission = {
-                    id: ref.id,
-                    commission_id: ref.commission_id,
-                    name: ref.commission.name,
-                    type: ref.commission.commission_type,
-                    percentage: ref.commission.amount,
-                    amount: ref.amount
-                  };
-
-                  _this5.form.sales_commissions.push(salesCommission);
-                });
+                this.form.grand_total_commission = this.report.grand_total_commission;
+                this.form.sales_commissions = this.report.sales_commissions;
                 this.report.sales_deductions.forEach(function (ref) {
                   var deduction = {
                     id: ref.id,
@@ -3507,8 +3712,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     multiplier: ref.deduction.amount
                   };
 
-                  _this5.form.sales_deductions.push(deduction);
+                  _this2.form.sales_deductions.push(deduction);
                 });
+                this.$refs.deductions.getSalesDeductionsFromParent(this.form.sales_deductions, this.form.total_deductions);
                 this.report.selected_products.forEach(function (ref) {
                   var selectedProduct = {
                     product_id: ref.product_id,
@@ -3522,20 +3728,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   };
 
                   if (ref.product.product_type.code === 1) {
-                    _this5.code1Total = _this5.code1Total + ref.total;
-                    _this5.code1Count = _this5.code1Count + ref.quantity;
+                    _this2.code1Total = _this2.code1Total + ref.total;
+                    _this2.code1Count = _this2.code1Count + ref.quantity;
                   }
 
-                  if (ref.product.product_type.code === 2) _this5.code2Total = _this5.code2Total + ref.total;
+                  if (ref.product.product_type.code === 2) _this2.code2Total = _this2.code2Total + ref.total;
 
-                  _this5.form.selected_products.push(selectedProduct);
+                  _this2.form.selected_products.push(selectedProduct);
+
+                  _this2.totalProducts[ref.product.product_type.code] = _this2.totalProducts[ref.product.product_type.code] + ref.total; // console.log('Looping Throught the selected Products', ref)
                 });
               } else {
-                this.loadSalesCommissionReference();
+                // this.loadSalesCommissionReference();
                 this.loadDeductionsReference();
-              }
+              } // console.log('report number', this.form.report_number);
 
-              console.log('report number', this.form.report_number);
 
             case 4:
             case "end":
@@ -4657,16 +4864,60 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalSales.vue?vue&type=script&lang=js&":
-/*!*********************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TotalSales.vue?vue&type=script&lang=js& ***!
-  \*********************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalCommissions.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TotalCommissions.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui/formated/CurrencyFormat */ "./resources/js/components/ui/formated/CurrencyFormat.vue");
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -4725,11 +4976,384 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'TotalSales',
-  props: ['commissions', 'totalCommissions', 'gst', 'grandTotal', 'totalSales', 'totalDeduction', 'totalAgentSales'],
+  name: 'TotalCommissions',
+  props: ['user', 'backend', 'totalSales', 'totalDeduction', 'totalAgentSales', 'edit', 'salesCommissions', 'tourAgentId', 'tourTypeId', 'totalProductsByCode'],
   components: {
-    CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_0__["default"]
-  }
+    CurrencyFormat: _ui_formated_CurrencyFormat__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      tourCommissions: [],
+      message: 'Loading Data...',
+      error: false,
+      commissionTypes: [],
+      commissions: [],
+      computedCommissions: {},
+      input: {},
+      totalProducts: {},
+      totalByCommission: {},
+      totalAgentCommission: 0,
+      totalGST: 0,
+      grandTotalCommission: 0
+    };
+  },
+  methods: {
+    log: function log(object) {
+      console.log('Loading Views', object);
+    },
+
+    /**
+     * Will load the TourCommissions need in computing the commission
+     * called in the mounted lifecycle.
+     * Values are places in the input data model
+     */
+    loadTourCommissions: function () {
+      var _loadTourCommissions = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(tourAgentId, tourTypeId) {
+        var _this = this;
+
+        var url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                this.message = 'Loading Tour Commission ... '; // Get the Tourcommission associated with the TourAgent and TourType
+
+                url = this.backend + '/api/tour-commissions?api_token=' + this.user.api_token + '&tourAgent=' + tourAgentId + '&tourType=' + tourTypeId;
+                _context.next = 5;
+                return axios.get(url);
+
+              case 5:
+                response = _context.sent;
+                this.tourCommissions = response.data;
+
+                if (this.tourCommissions.length === 0) {
+                  this.message = 'No Tour Commission found please add tour commission for the Tour Agent';
+                } else {
+                  this.message = null;
+                  this.error = false; //Load the Input data model with the correct commission percentage based on the tourCommissions
+
+                  this.commissionTypes.map(function (ct) {
+                    var inputObject = {};
+
+                    _this.commissions.map(function (c) {
+                      inputObject[c.id] = _this.getTourCommissionAmount(ct.id, c.id);
+                    }); // Will use the commisstionType.code for object properties
+                    // For easier reference when computing for the commission based on productType
+                    // ProductType and CommissionType Code correspond accordingly.
+                    // this.input[ct.code] = inputObject;
+
+
+                    _this.$set(_this.input, ct.code, inputObject);
+                  });
+                }
+
+                _context.next = 15;
+                break;
+
+              case 10:
+                _context.prev = 10;
+                _context.t0 = _context["catch"](0);
+                this.message = 'Error loading Tour Commissions, please check with System Adminastrator';
+                this.error = true;
+                console.error('Error getting TourCommission', _context.t0);
+
+              case 15:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[0, 10]]);
+      }));
+
+      function loadTourCommissions(_x, _x2) {
+        return _loadTourCommissions.apply(this, arguments);
+      }
+
+      return loadTourCommissions;
+    }(),
+
+    /**
+     * Initialized the computed commission based on the product selected.
+     * called in the mounted lifecycle
+     * 
+     * this also initializes the totalProducts databa object to dynammically create properties based on commissionTypes.
+     * 
+     */
+    initializeComputedCommission: function initializeComputedCommission() {
+      var _this2 = this;
+
+      /**
+       *  commissions are based on the TourType, CommissionType, Commission/Commission Name
+       * 
+       * Create a computedCommissions object that has the property:
+       *  computedCommission = {
+       *      [commissionType.code] : {
+       *          [commission.id]: [computed commission]
+       *      }
+       *  }
+       *  
+       *  The object can easily be referenced in the template or when computing for the commissions
+       *  using the commissionType.code which is also the same as product.code. When product is added or removed
+       *  computed commission can be accessed using the product.code of the added or removed product.
+       *  
+       * computedCommissions[product.code][commission.id] = <Computation Here>
+       * 
+       */
+      this.commissionTypes.map(function (ct) {
+        //Initializing a commissionType Object
+        var commissionTypeObject = {}; // Looping through the commissions
+
+        _this2.commissions.map(function (c) {
+          //creating a property of Commission.id in the CommissionType object
+          commissionTypeObject[c.id] = 0; // this.totalByCommission[c.id] = 0;
+
+          _this2.$set(_this2.totalByCommission, c.id, 0);
+        }); // Creating a property of commissionType.code in the ComputedCommission object
+        // this.computedCommissions[ct.code] = commissionTypeObject;
+
+
+        _this2.$set(_this2.computedCommissions, ct.code, commissionTypeObject); // this.totalProducts[ct.code] = 0;
+
+
+        _this2.$set(_this2.totalProducts, ct.code, 0);
+      });
+    },
+
+    /**
+     * Computes the total commissions by commission types
+     * This is called in computeCommission
+     * also called in mounted lifecycle when edit mode.
+     */
+    computeTotalCommissions: function computeTotalCommissions() {
+      var _this3 = this;
+
+      var totalAgentCommission = 0;
+      this.commissions.map(function (c) {
+        // Loop Through each commisionTypes adding the same commission for each type
+        var total = 0;
+
+        _this3.commissionTypes.map(function (ct) {
+          total = total + _this3.computedCommissions[ct.code][c.id];
+        });
+
+        _this3.totalByCommission[c.id] = total;
+        totalAgentCommission = totalAgentCommission + _this3.totalByCommission[c.id];
+      });
+      this.totalAgentCommission = totalAgentCommission;
+      this.totalGST = this.totalAgentCommission * 0.10;
+      this.grandTotalCommission = this.totalAgentCommission + this.totalGST;
+    },
+
+    /**
+     * Compute Commission is called whenever a product is added or removed
+     * See addCommission and deductCommission
+     */
+    computeCommissions: function computeCommissions(selectedProduct) {
+      var _this4 = this;
+
+      this.commissions.map(function (c) {
+        _this4.computedCommissions[selectedProduct.code][c.id] = parseFloat((_this4.totalProducts[selectedProduct.code] * _this4.input[selectedProduct.code][c.id]).toFixed(2));
+      });
+      this.computeTotalCommissions();
+      var salesCommissions = this.createSalesCommissions();
+      this.$emit('salesCommissionChanged', salesCommissions, this.totalAgentCommission, this.totalGST, this.grandTotalCommission);
+    },
+
+    /**
+     * Called whenever a product is added
+     * Called from the Parent (SalesReportForm)
+     */
+    addCommission: function addCommission(selectedProduct) {
+      this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] + selectedProduct.total;
+      this.computeCommissions(selectedProduct); // this.createSalesCommissions();
+    },
+
+    /**
+    * Called whenever a product is removed
+    * Called from the Parent (SalesReportForm)
+    */
+    deductCommission: function deductCommission(selectedProduct) {
+      this.totalProducts[selectedProduct.code] = this.totalProducts[selectedProduct.code] - selectedProduct.total;
+      this.computeCommissions(selectedProduct); // this.createSalesCommissions();
+    },
+    changeCommission: function changeCommission(commissionTypeCode, commissionId) {
+      this.computedCommissions[commissionTypeCode][commissionId] = parseFloat((this.input[commissionTypeCode][commissionId] * this.totalProducts[commissionTypeCode]).toFixed(2)); // this.createSalesCommissions();
+
+      this.computeTotalCommissions();
+      var salesCommissions = this.createSalesCommissions();
+      this.$emit('salesCommissionChanged', salesCommissions, this.totalAgentCommission, this.totalGST, this.grandTotalCommission);
+    },
+    findTourCommission: function findTourCommission(commissionTypeId, commissionId) {
+      var tourCommission = this.tourCommissions.filter(function (tc) {
+        return tc.commission_type_id === commissionTypeId && tc.commission_id === commissionId;
+      });
+      return tourCommission[0];
+    },
+    getTourCommissionAmount: function getTourCommissionAmount(commissionTypeId, commissionId) {
+      // const tourCommission = this.tourCommissions.filter(tc => tc.commission_type_id === commissionTypeId && tc.commission_id === commissionId);
+      var tourCommission = this.findTourCommission(commissionTypeId, commissionId);
+      var amount = 0;
+
+      if (tourCommission) {
+        amount = tourCommission.amount;
+      }
+
+      return parseFloat(amount);
+    },
+    findTourCommissionByCode: function findTourCommissionByCode(commissionTypeCode, commissionId) {
+      // const tourCommission = this.tourCommissions.filter(tc => tc.commission_type.code === commissionTypeCode && tc.commission_id === commissionId);
+      var tourCommission = this.tourCommissions.filter(function (tc) {
+        return tc.commission_type.code == commissionTypeCode && tc.commission_id == commissionId;
+      });
+      return tourCommission[0];
+    },
+    createSalesCommissions: function createSalesCommissions() {
+      var _this5 = this;
+
+      var salesCommissions = [];
+
+      if (this.edit) {
+        this.salesCommissions.map(function (sc) {
+          salesCommissions.push(_objectSpread({}, sc, {
+            amount: _this5.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id],
+            percentage: _this5.input[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id]
+          }));
+        });
+      } else {
+        for (var c in this.computedCommissions) {
+          for (var i in this.computedCommissions[c]) {
+            var tourCommission = this.findTourCommissionByCode(c, i);
+
+            if (tourCommission) {
+              salesCommissions.push({
+                tour_commission_id: tourCommission.id,
+                amount: this.computedCommissions[c][i],
+                percentage: this.input[c][i]
+              });
+            }
+          }
+        }
+      }
+
+      console.log('Created Sales Commission', salesCommissions);
+      return salesCommissions;
+    },
+    loadSalesCommissions: function loadSalesCommissions(salesCommissions) {
+      var _this6 = this;
+
+      salesCommissions.map(function (sc) {
+        _this6.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id] = sc.amount;
+      });
+    }
+  },
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+      var _this7 = this;
+
+      var commissionTypeUrl, commissionUrl, commissionTypeResponse, commissionResponse;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              // Start of Getting the required data from the backend
+              this.message = 'Loading Commission Type';
+              commissionTypeUrl = this.backend + '/api/commission-types?api_token=' + this.user.api_token;
+              commissionUrl = this.backend + '/api/commissions?api_token=' + this.user.api_token;
+              _context2.next = 6;
+              return axios.get(commissionTypeUrl);
+
+            case 6:
+              commissionTypeResponse = _context2.sent;
+              _context2.next = 9;
+              return axios.get(commissionUrl);
+
+            case 9:
+              commissionResponse = _context2.sent;
+              this.commissionTypes = commissionTypeResponse.data;
+              this.commissions = commissionResponse.data; // End of Data aquistion from the Backend
+              // Start initializing the data model to be used by the templates and computation
+
+              if (!(this.commissionTypes.length === 0 || this.commissions.length === 0)) {
+                _context2.next = 17;
+                break;
+              }
+
+              this.message = 'No Commission Types or Commissions. Please check database.';
+              this.error = true;
+              _context2.next = 26;
+              break;
+
+            case 17:
+              this.initializeComputedCommission();
+
+              if (!(this.tourAgentId && this.tourTypeId)) {
+                _context2.next = 23;
+                break;
+              }
+
+              _context2.next = 21;
+              return this.loadTourCommissions(this.tourAgentId, this.tourTypeId);
+
+            case 21:
+              _context2.next = 25;
+              break;
+
+            case 23:
+              this.message = "Must have TourAgent and TourTypeLoaded when Editing.";
+              this.error = true;
+
+            case 25:
+              /**
+               *  ####  Edit Mode #####
+               */
+              if (this.edit) {
+                this.salesCommissions.map(function (sc) {
+                  _this7.computedCommissions[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id] = sc.amount; //Set the value of the input data model to the value in the sales commission.
+
+                  _this7.input[sc.tour_commission.commission_type.code][sc.tour_commission.commission.id] = sc.percentage;
+                });
+                this.computeTotalCommissions();
+                this.message = null;
+                this.error = false;
+                this.commissionTypes.map(function (ct) {
+                  _this7.totalProducts[ct.code] = _this7.totalProductsByCode[ct.code];
+                });
+              } else {
+                this.message = 'Commission Types Loaded. Please Select Tour Agent and Tour Type to load the Tour Commission';
+                this.error = false;
+              }
+
+            case 26:
+              _context2.next = 33;
+              break;
+
+            case 28:
+              _context2.prev = 28;
+              _context2.t0 = _context2["catch"](0);
+              this.message = 'Error loading Commissions Types, please check with System Adminastrator';
+              this.error = true;
+              console.error('Error getting TourCommission', _context2.t0);
+
+            case 33:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, this, [[0, 28]]);
+    }));
+
+    function mounted() {
+      return _mounted.apply(this, arguments);
+    }
+
+    return mounted;
+  }()
 });
 
 /***/ }),
@@ -5114,6 +5738,427 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }
       }, _callee2, this, [[0, 10]]);
+    }));
+
+    function mounted() {
+      return _mounted.apply(this, arguments);
+    }
+
+    return mounted;
+  }()
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TourCommissionDashboard.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TourCommissionDashboard.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _commissions_TourTypeComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./commissions/TourTypeComponent */ "./resources/js/components/commissions/TourTypeComponent.vue");
+/* harmony import */ var _commissions_CommissionTypeComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./commissions/CommissionTypeComponent */ "./resources/js/components/commissions/CommissionTypeComponent.vue");
+/* harmony import */ var _commissions_CommissionComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./commissions/CommissionComponent */ "./resources/js/components/commissions/CommissionComponent.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'TourcommissionDashboard',
+  props: ['user', 'backend'],
+  components: {
+    TourTypeComponent: _commissions_TourTypeComponent__WEBPACK_IMPORTED_MODULE_0__["default"],
+    CommissionTypeComponent: _commissions_CommissionTypeComponent__WEBPACK_IMPORTED_MODULE_1__["default"],
+    CommissionComponent: _commissions_CommissionComponent__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  data: function data() {
+    return {
+      selectedView: 'TOUR_TYPE'
+    };
+  },
+  methods: {
+    toggle: function toggle(view) {
+      this.selectedView = view;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TourCommissionList.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TourCommissionList.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui/loader/BarLoader */ "./resources/js/components/ui/loader/BarLoader.vue");
+/* harmony import */ var _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui/loader/CircleLoader */ "./resources/js/components/ui/loader/CircleLoader.vue");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'TourCommissionList',
+  props: ['tour-commissions', 'user', 'backend', 'agent-id'],
+  components: {
+    BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"],
+    CircleLoader: _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  data: function data() {
+    return {
+      commissions: [],
+      tourTypes: [],
+      commissionTypes: [],
+      loading: true,
+      input: {},
+      changedTourCommissions: [],
+      editX: null,
+      editY: null,
+      savingMessage: null,
+      successMessage: null,
+      errorMessage: null
+    };
+  },
+  methods: {
+    filterTourCommissions: function filterTourCommissions(tourTypeId, commissionTypeId, commissionId) {
+      return this.tourCommissions.filter(function (tourCommission) {
+        return tourCommission.commission_type_id === commissionTypeId && tourCommission.tour_type_id === tourTypeId && tourCommission.commission_id === commissionId;
+      });
+    },
+    getTourCommissionAmount: function getTourCommissionAmount(tourTypeId, commissionTypeId, commissionId) {
+      var commissions = this.tourCommissions.filter(function (tourCommission) {
+        return tourCommission.commission_type_id === commissionTypeId && tourCommission.tour_type_id === tourTypeId && tourCommission.commission_id === commissionId;
+      });
+
+      if (commissions.length > 0) {
+        return (commissions[0].amount * 100).toFixed(2);
+      } else {
+        return 0.00;
+      }
+    },
+    onTourCommissionChanged: function onTourCommissionChanged(tourTypeId, commissionTypeId, commissionId) {
+      var data = {
+        tourTypeId: tourTypeId,
+        commissionTypeId: commissionTypeId,
+        commissionId: commissionId
+      };
+      this.changedTourCommissions.push(data);
+    },
+    saveTourCommission: function saveTourCommission(tourTypeId, commissionTypeId) {
+      var _this = this;
+
+      this.changedTourCommissions.map(
+      /*#__PURE__*/
+      function () {
+        var _ref = _asyncToGenerator(
+        /*#__PURE__*/
+        _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(tc) {
+          var tourCommission, url, data, res, _url, _data, _res;
+
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  tourCommission = _this.filterTourCommissions(tc.tourTypeId, tc.commissionTypeId, tc.commissionId)[0];
+
+                  if (!tourCommission) {
+                    _context.next = 18;
+                    break;
+                  }
+
+                  url = _this.backend + '/api/tour-commissions/' + tourCommission.id;
+                  data = {
+                    amount: _this.input[tc.tourTypeId][tc.commissionTypeId][tc.commissionId] / 100,
+                    api_token: _this.user.api_token
+                  };
+                  _context.prev = 4;
+
+                  _this.sendSavingMessage("Updating TourCommissions");
+
+                  _context.next = 8;
+                  return axios.patch(url, data);
+
+                case 8:
+                  res = _context.sent;
+
+                  _this.sendSuccessMessage('Tour Commission successfully updated');
+
+                  _context.next = 16;
+                  break;
+
+                case 12:
+                  _context.prev = 12;
+                  _context.t0 = _context["catch"](4);
+
+                  _this.sendErrorMessage('Error updating Tour Commission, make sure fields are correct. Otherwise report to System Administrator');
+
+                  console.log("Error updating tour commision", err);
+
+                case 16:
+                  _context.next = 32;
+                  break;
+
+                case 18:
+                  _url = _this.backend + '/api/tour-commissions/';
+                  _data = {
+                    tour_agent_id: _this.agentId,
+                    tour_type_id: tc.tourTypeId,
+                    commission_type_id: tc.commissionTypeId,
+                    commission_id: tc.commissionId,
+                    amount: _this.input[tc.tourTypeId][tc.commissionTypeId][tc.commissionId] / 100,
+                    api_token: _this.user.api_token
+                  };
+                  _context.prev = 20;
+
+                  _this.sendSavingMessage("Creating TourCommissions");
+
+                  _context.next = 24;
+                  return axios.post(_url, _data);
+
+                case 24:
+                  _res = _context.sent;
+
+                  _this.sendSuccessMessage('Tour Commission successfully created');
+
+                  _context.next = 32;
+                  break;
+
+                case 28:
+                  _context.prev = 28;
+                  _context.t1 = _context["catch"](20);
+
+                  _this.sendErrorMessage('Error Creating Tour Commission, make sure fields are correct. Otherwise report to System Administrator');
+
+                  console.log("Error Creating tour commision", err);
+
+                case 32:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee, null, [[4, 12], [20, 28]]);
+        }));
+
+        return function (_x) {
+          return _ref.apply(this, arguments);
+        };
+      }()); // //simulate success or failed. Clear the changeCommission array
+      // this.changedTourCommissions.splice(0, this.changedTourCommissions.length);
+
+      console.log(this.changedTourCommissions);
+    },
+    editRow: function editRow(tourTypeIndex, commissionTypeIndex) {
+      this.changedTourCommissions.splice(0, this.changedTourCommissions.length);
+      this.editX = tourTypeIndex;
+      this.editY = commissionTypeIndex;
+    },
+    cancelEdit: function cancelEdit() {
+      this.changedTourCommissions.splice(0, this.changedTourCommissions.length);
+      this.editX = null;
+      this.editY = null;
+    },
+    initializedInput: function initializedInput() {
+      var _this2 = this;
+
+      this.tourTypes.map(function (tourType) {
+        var tourTypeObject = {};
+
+        _this2.commissionTypes.map(function (commissionType) {
+          var commissionTypeObject = {};
+
+          _this2.commissions.map(function (commission) {
+            commissionTypeObject[commission.id] = _this2.getTourCommissionAmount(tourType.id, commissionType.id, commission.id);
+          });
+
+          tourTypeObject[commissionType.id] = commissionTypeObject;
+        });
+
+        _this2.input[tourType.id] = tourTypeObject;
+      });
+      console.log(this.input);
+    },
+    sendSuccessMessage: function sendSuccessMessage(message) {
+      this.savingMessage = null;
+      this.errorMessage = null;
+      this.successMessage = message;
+    },
+    sendErrorMessage: function sendErrorMessage(message) {
+      this.savingMessage = null;
+      this.successMessage = null;
+      this.errorMessage = message;
+    },
+    sendSavingMessage: function sendSavingMessage(message) {
+      this.savingMessage = message;
+      this.errorMessage = null;
+      this.successMessage = null;
+    }
+  },
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+      var tourTypeUrl, commissionTypeUrl, commissionUrl, tourTypeResponse, commissionTypeResponse, commissionResponse;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              tourTypeUrl = this.backend + '/api/tour-types?api_token=' + this.user.api_token;
+              commissionTypeUrl = this.backend + '/api/commission-types?api_token=' + this.user.api_token;
+              commissionUrl = this.backend + '/api/commissions?api_token=' + this.user.api_token;
+              _context2.next = 6;
+              return axios.get(tourTypeUrl);
+
+            case 6:
+              tourTypeResponse = _context2.sent;
+              _context2.next = 9;
+              return axios.get(commissionTypeUrl);
+
+            case 9:
+              commissionTypeResponse = _context2.sent;
+              _context2.next = 12;
+              return axios.get(commissionUrl);
+
+            case 12:
+              commissionResponse = _context2.sent;
+              this.commissions = commissionResponse.data;
+              this.tourTypes = tourTypeResponse.data;
+              this.commissionTypes = commissionTypeResponse.data;
+              this.loading = false;
+              this.initializedInput();
+              console.log(this.tourCommissions);
+              _context2.next = 24;
+              break;
+
+            case 21:
+              _context2.prev = 21;
+              _context2.t0 = _context2["catch"](0);
+              console.log(_context2.t0);
+
+            case 24:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, this, [[0, 21]]);
     }));
 
     function mounted() {
@@ -5634,6 +6679,996 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
     return mounted;
   }()
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/CommissionComponent.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/commissions/CommissionComponent.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ui/loader/BarLoader */ "./resources/js/components/ui/loader/BarLoader.vue");
+/* harmony import */ var _CommissionForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CommissionForm */ "./resources/js/components/commissions/CommissionForm.vue");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'CommissionComponent',
+  props: ['user', 'backend'],
+  components: {
+    BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"],
+    CommissionForm: _CommissionForm__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  data: function data() {
+    return {
+      commissions: [],
+      loading: true,
+      errors: false,
+      selectedCommissionIndex: null,
+      selectedCommission: null
+    };
+  },
+  methods: {
+    commissionSelected: function commissionSelected(index) {
+      this.selectedCommission = this.commissions[index];
+      this.$refs.commissionForm.commissionSelected(this.selectedCommission, index);
+    },
+    commissionInsert: function commissionInsert(commission) {
+      this.commissions.push(commission);
+    },
+    commissionUpdate: function commissionUpdate(commission, index) {
+      this.commissions[index].name = commission.name;
+      this.commissions[index].description = commission.description;
+    },
+    commissionRemove: function commissionRemove(index) {
+      this.commissions.splice(index, 1);
+      this.selectedCommission = null;
+    },
+    clearSelection: function clearSelection() {
+      this.selectedCommissionIndex = null;
+      this.selectedCommission = null;
+    }
+  },
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      var commissionUrl, commissionResponse;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              commissionUrl = this.backend + '/api/commissions?api_token=' + this.user.api_token;
+              _context.next = 4;
+              return axios.get(commissionUrl);
+
+            case 4:
+              commissionResponse = _context.sent;
+              this.commissions = commissionResponse.data;
+              this.loading = false;
+              this.errors = false;
+              _context.next = 15;
+              break;
+
+            case 10:
+              _context.prev = 10;
+              _context.t0 = _context["catch"](0);
+              console.log(_context.t0);
+              this.errors = true;
+              this.loading = true;
+
+            case 15:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this, [[0, 10]]);
+    }));
+
+    function mounted() {
+      return _mounted.apply(this, arguments);
+    }
+
+    return mounted;
+  }()
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/CommissionForm.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/commissions/CommissionForm.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ui/loader/CircleLoader */ "./resources/js/components/ui/loader/CircleLoader.vue");
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'CommissionForm',
+  props: ['user', 'backend'],
+  components: {
+    CircleLoader: _ui_loader_CircleLoader__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      commissionId: null,
+      form: {
+        name: '',
+        description: ''
+      },
+      selected: false,
+      errors: null,
+      selectedIndex: null,
+      inserting: false,
+      deleting: false,
+      updating: false
+    };
+  },
+  methods: {
+    commissionSelected: function commissionSelected(commission, selectedIndex) {
+      this.form.name = commission.name;
+      this.form.description = commission.description;
+      this.commissionId = commission.id;
+      this.selected = true;
+      this.selectedIndex = selectedIndex;
+      this.errors = null;
+    },
+    updateCommission: function () {
+      var _updateCommission = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var url, data, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                url = this.backend + '/api/commissions/' + this.commissionId;
+                data = _objectSpread({}, this.form, {
+                  api_token: this.user.api_token
+                });
+                this.updating = true;
+                _context.next = 6;
+                return axios.patch(url, data);
+
+              case 6:
+                response = _context.sent;
+                this.$emit('commissionUpdated', response.data, this.selectedIndex);
+                this.updating = false;
+                _context.next = 15;
+                break;
+
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context["catch"](0);
+
+                if (_context.t0.response && _context.t0.response.data && _context.t0.response.data.errors) {
+                  this.errors = _context.t0.response.data.errors;
+                  this.errorMessage = "Errors Check required field";
+                  console.log(this.errors);
+                } else {
+                  this.errorMessage = "Error Creating Tour Type. Please check with your System Administrator";
+                  console.log(_context.t0);
+                }
+
+                this.updating = false;
+
+              case 15:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[0, 11]]);
+      }));
+
+      function updateCommission() {
+        return _updateCommission.apply(this, arguments);
+      }
+
+      return updateCommission;
+    }(),
+    deleteCommission: function () {
+      var _deleteCommission = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                url = this.backend + '/api/commissions/' + this.commissionId + '?api_token=' + this.user.api_token;
+                this.deleting = true;
+                _context2.next = 5;
+                return axios["delete"](url);
+
+              case 5:
+                response = _context2.sent;
+                this.$emit('commissionDeleted', this.selectedIndex);
+                this.clearFields();
+                this.selected = null;
+                this.deleting = false;
+                _context2.next = 16;
+                break;
+
+              case 12:
+                _context2.prev = 12;
+                _context2.t0 = _context2["catch"](0);
+
+                if (_context2.t0.response && _context2.t0.response.data && _context2.t0.response.data.errors) {
+                  this.errors = _context2.t0.response.data.errors;
+                  this.errorMessage = "Errors Check required field";
+                  console.log(this.errors);
+                } else {
+                  this.errorMessage = "Error Creating Tour Type. Please check with your System Administrator";
+                  console.log(_context2.t0);
+                }
+
+                this.deleting = false;
+
+              case 16:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 12]]);
+      }));
+
+      function deleteCommission() {
+        return _deleteCommission.apply(this, arguments);
+      }
+
+      return deleteCommission;
+    }(),
+    createCommission: function () {
+      var _createCommission = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        var url, data, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                url = this.backend + '/api/commissions';
+                data = _objectSpread({}, this.form, {
+                  api_token: this.user.api_token
+                });
+                this.inserting = true;
+                _context3.next = 6;
+                return axios.post(url, data);
+
+              case 6:
+                response = _context3.sent;
+                this.$emit('commissionCreated', response.data);
+                this.clearFields();
+                this.inserting = false;
+                _context3.next = 16;
+                break;
+
+              case 12:
+                _context3.prev = 12;
+                _context3.t0 = _context3["catch"](0);
+
+                if (_context3.t0.response && _context3.t0.response.data && _context3.t0.response.data.errors) {
+                  this.errors = _context3.t0.response.data.errors;
+                  this.errorMessage = "Errors Check required field";
+                  console.log(this.errors);
+                } else {
+                  this.errorMessage = "Error Creating Tour Type. Please check with your System Administrator";
+                  console.log(_context3.t0);
+                }
+
+                this.inserting = false;
+
+              case 16:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[0, 12]]);
+      }));
+
+      function createCommission() {
+        return _createCommission.apply(this, arguments);
+      }
+
+      return createCommission;
+    }(),
+    cancel: function cancel() {
+      this.selected = false;
+      this.clearFields();
+      this.$emit('cancel');
+    },
+    clearFields: function clearFields() {
+      this.form.name = '';
+      this.form.description = '';
+      this.errors = null;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/CommissionTypeComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/commissions/CommissionTypeComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ui/loader/BarLoader */ "./resources/js/components/ui/loader/BarLoader.vue");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'CommissionTypeComponent',
+  props: ['user', 'backend'],
+  components: {
+    BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      commissionTypes: [],
+      loading: true,
+      errors: false
+    };
+  },
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      var commissionTypeUrl, commissionTypeResponse;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              commissionTypeUrl = this.backend + '/api/commission-types?api_token=' + this.user.api_token;
+              _context.next = 4;
+              return axios.get(commissionTypeUrl);
+
+            case 4:
+              commissionTypeResponse = _context.sent;
+              this.commissionTypes = commissionTypeResponse.data;
+              this.loading = false;
+              this.errors = false;
+              _context.next = 14;
+              break;
+
+            case 10:
+              _context.prev = 10;
+              _context.t0 = _context["catch"](0);
+              console.log(_context.t0), this.errors = true;
+              this.loading = false;
+
+            case 14:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this, [[0, 10]]);
+    }));
+
+    function mounted() {
+      return _mounted.apply(this, arguments);
+    }
+
+    return mounted;
+  }()
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/TourTypeComponent.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/commissions/TourTypeComponent.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ui/loader/BarLoader */ "./resources/js/components/ui/loader/BarLoader.vue");
+/* harmony import */ var _TourTypeForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TourTypeForm */ "./resources/js/components/commissions/TourTypeForm.vue");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'TourTypeComponent',
+  props: ['user', 'backend'],
+  components: {
+    BarLoader: _ui_loader_BarLoader__WEBPACK_IMPORTED_MODULE_1__["default"],
+    TourTypeForm: _TourTypeForm__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  data: function data() {
+    return {
+      tourTypes: [],
+      loading: true,
+      errors: false,
+      selectedTypeIndex: null,
+      selectedType: null,
+      successMessage: null
+    };
+  },
+  methods: {
+    tourTypeSelected: function tourTypeSelected(index) {
+      this.selectedType = this.tourTypes[this.selectedTypeIndex];
+      this.$refs.tourTypeForm.tourTypeSelected(this.selectedType, index);
+    },
+    clearSelection: function clearSelection() {
+      this.selectedTypeIndex = null;
+      this.selectedType = null;
+    },
+    tourTypeInsert: function tourTypeInsert(data) {
+      this.tourTypes.push(data);
+      this.successMessage = 'Tour Type Successfully Created';
+    },
+    tourTypeUpdate: function tourTypeUpdate(data, index) {
+      this.tourTypes[index].name = data.name;
+      this.tourTypes[index].description = data.description;
+      this.successMessage = 'Tour Type Successfully Updated';
+    },
+    tourTypeDelete: function tourTypeDelete(index) {
+      this.tourTypes.splice(index, 1);
+      this.clearSelection();
+      this.successMessage = 'Tour Type Successfully Deleted';
+    },
+    clearMessage: function clearMessage() {
+      this.successMessage = null;
+    }
+  },
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      var tourTypeUrl, tourTypeResponse;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              tourTypeUrl = this.backend + '/api/tour-types?api_token=' + this.user.api_token;
+              _context.next = 4;
+              return axios.get(tourTypeUrl);
+
+            case 4:
+              tourTypeResponse = _context.sent;
+              this.tourTypes = tourTypeResponse.data;
+              this.loading = false;
+              this.errors = false;
+              _context.next = 15;
+              break;
+
+            case 10:
+              _context.prev = 10;
+              _context.t0 = _context["catch"](0);
+              console.log(_context.t0);
+              this.errors = true;
+              this.loading = false;
+
+            case 15:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this, [[0, 10]]);
+    }));
+
+    function mounted() {
+      return _mounted.apply(this, arguments);
+    }
+
+    return mounted;
+  }()
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/TourTypeForm.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/commissions/TourTypeForm.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'TourTypeForm',
+  props: ['user', 'backend'],
+  data: function data() {
+    return {
+      selectedId: null,
+      selectedIndex: null,
+      form: {
+        name: '',
+        description: ''
+      },
+      selected: false,
+      errors: null,
+      errorMessage: null
+    };
+  },
+  methods: {
+    tourTypeSelected: function tourTypeSelected(tourType, selectedIndex) {
+      this.form.name = tourType.name;
+      this.form.description = tourType.description;
+      this.selectedId = tourType.id;
+      this.selected = true;
+      this.selectedIndex = selectedIndex;
+    },
+    createTourType: function () {
+      var _createTourType = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var url, data, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                url = this.backend + '/api/tour-types';
+                data = _objectSpread({}, this.form, {
+                  api_token: this.user.api_token
+                });
+                _context.next = 5;
+                return axios.post(url, data);
+
+              case 5:
+                response = _context.sent;
+                this.$emit('tourTypeAdded', response.data);
+                this.clearfields();
+                this.errors = null;
+                _context.next = 14;
+                break;
+
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context["catch"](0);
+
+                if (_context.t0.response && _context.t0.response.data && _context.t0.response.data.errors) {
+                  this.errors = _context.t0.response.data.errors;
+                  this.errorMessage = "Errors Check required field";
+                  console.log(this.errors);
+                } else {
+                  this.errorMessage = "Error Creating Tour Type. Please check with your System Administrator";
+                  console.log(_context.t0);
+                }
+
+              case 14:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[0, 11]]);
+      }));
+
+      function createTourType() {
+        return _createTourType.apply(this, arguments);
+      }
+
+      return createTourType;
+    }(),
+    updateTourType: function () {
+      var _updateTourType = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var url, data, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                url = this.backend + '/api/tour-types/' + this.selectedId;
+                data = _objectSpread({}, this.form, {
+                  api_token: this.user.api_token
+                });
+                _context2.next = 5;
+                return axios.patch(url, data);
+
+              case 5:
+                response = _context2.sent;
+                this.$emit('tourTypeUpdated', response.data, this.selectedIndex);
+                _context2.next = 13;
+                break;
+
+              case 9:
+                _context2.prev = 9;
+                _context2.t0 = _context2["catch"](0);
+
+                if (_context2.t0.response && _context2.t0.response.data && _context2.t0.response.data.errors) {
+                  this.errors = _context2.t0.response.data.errors;
+                  console.log(this.errors.response);
+                } else {
+                  this.errors = _context2.t0;
+                  console.log(_context2.t0);
+                }
+
+                this.errorMessage = "Error Updating Tour Type. Please check with your System Administrator";
+
+              case 13:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 9]]);
+      }));
+
+      function updateTourType() {
+        return _updateTourType.apply(this, arguments);
+      }
+
+      return updateTourType;
+    }(),
+    deleteTourType: function () {
+      var _deleteTourType = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        var url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                url = this.backend + '/api/tour-types/' + this.selectedId + '?api_token=' + this.user.api_token;
+                _context3.next = 4;
+                return axios["delete"](url);
+
+              case 4:
+                response = _context3.sent;
+                this.$emit('tourTypeDeleted', this.selectedIndex);
+                this.clearfields();
+                _context3.next = 13;
+                break;
+
+              case 9:
+                _context3.prev = 9;
+                _context3.t0 = _context3["catch"](0);
+
+                if (_context3.t0.response && _context3.t0.response.data && _context3.t0.response.data.errors) {
+                  this.errors = _context3.t0.response.data.errors;
+                  console.log(this.errors.response);
+                } else {
+                  this.errors = _context3.t0;
+                  console.log(_context3.t0);
+                }
+
+                this.errorMessage = "Error Deleting Tour Type. Please check with your System Administrator";
+
+              case 13:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[0, 9]]);
+      }));
+
+      function deleteTourType() {
+        return _deleteTourType.apply(this, arguments);
+      }
+
+      return deleteTourType;
+    }(),
+    cancel: function cancel() {
+      this.$emit('cancel');
+      this.clearfields();
+    },
+    clearfields: function clearfields() {
+      this.selected = false;
+      this.form.name = '';
+      this.form.description = '';
+      this.errors = null;
+    }
+  }
 });
 
 /***/ }),
@@ -26331,74 +28366,129 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass:
-        "flex border border-gray-700 mt-5 items-start text-sm bg-orange-300"
-    },
-    [
-      _vm._m(0),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "flex-1 border-l border-gray-700 " },
-        [
-          _vm._l(_vm.deductions, function(deduction) {
-            return _c(
+  return _c("div", [
+    _vm.loading
+      ? _c(
+          "div",
+          {
+            staticClass:
+              "flex items-center py-4 px-8 bg-gray-600 mt-5 text-white rounded text-sm"
+          },
+          [
+            _c("h3", { staticClass: "mr-1" }, [_vm._v("Loading Deductions")]),
+            _vm._v(" "),
+            _c("circle-loader")
+          ],
+          1
+        )
+      : _c(
+          "div",
+          {
+            staticClass:
+              "flex border border-gray-700 mt-5 items-start text-sm bg-orange-300"
+          },
+          [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
               "div",
-              {
-                key: deduction.id,
-                staticClass: "flex justify-between border-b border-gray-700"
-              },
+              { staticClass: "flex-1 border-l border-gray-700 " },
               [
-                _c(
-                  "div",
-                  { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                  [_vm._v(_vm._s(deduction.name))]
-                ),
+                _vm._l(_vm.deductions, function(deduction, index) {
+                  return _c(
+                    "div",
+                    {
+                      key: deduction.id,
+                      staticClass:
+                        "flex justify-between border-b border-gray-700"
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "flex-1 border-gray-700 border-r px-2 py-1"
+                        },
+                        [_vm._v(_vm._s(deduction.name))]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "w-32  px-2 py-1 text-right" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model.number",
+                              value: _vm.input[deduction.deduction_id],
+                              expression: "input[deduction.deduction_id]",
+                              modifiers: { number: true }
+                            }
+                          ],
+                          staticClass: "bg-transparent text-right w-24",
+                          attrs: { type: "text" },
+                          domProps: {
+                            value: _vm.input[deduction.deduction_id]
+                          },
+                          on: {
+                            change: function($event) {
+                              return _vm.changeDeduction(
+                                deduction.deduction_id,
+                                index
+                              )
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.input,
+                                deduction.deduction_id,
+                                _vm._n($event.target.value)
+                              )
+                            },
+                            blur: function($event) {
+                              return _vm.$forceUpdate()
+                            }
+                          }
+                        })
+                      ])
+                    ]
+                  )
+                }),
                 _vm._v(" "),
                 _c(
                   "div",
-                  { staticClass: "w-32  px-2 py-1" },
+                  {
+                    staticClass:
+                      "flex justify-between font-semibold bg-orange-400"
+                  },
                   [
-                    _c("currency-format", {
-                      attrs: { value: deduction.amount }
-                    })
-                  ],
-                  1
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "flex-1 border-gray-700 border-r  px-2 py-1"
+                      },
+                      [_vm._v("Sub Total")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-32  px-2 py-1 text-right" },
+                      [
+                        _c("currency-format", {
+                          attrs: { value: _vm.total_deductions }
+                        })
+                      ],
+                      1
+                    )
+                  ]
                 )
-              ]
+              ],
+              2
             )
-          }),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between font-semibold bg-orange-400" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r  px-2 py-1" },
-                [_vm._v("Sub Total")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "w-32  px-2 py-1" },
-                [
-                  _c("currency-format", {
-                    attrs: { value: _vm.totalDeductions }
-                  })
-                ],
-                1
-              )
-            ]
-          )
-        ],
-        2
-      )
-    ]
-  )
+          ]
+        )
+  ])
 }
 var staticRenderFns = [
   function() {
@@ -26759,19 +28849,27 @@ var render = function() {
                     "button",
                     {
                       staticClass:
-                        "flex items-center w-full mt-5 py-2 px-4 text-white \n                                rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
+                        "flex items-center w-full mt-5 py-2 px-4 text-white \r\n                                rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
                       on: { click: _vm.updateProduct }
                     },
-                    [_vm._v("\n                Update Product \n            ")]
+                    [
+                      _vm._v(
+                        "\r\n                Update Product \r\n            "
+                      )
+                    ]
                   )
                 : _c(
                     "button",
                     {
                       staticClass:
-                        "flex items-center w-full mt-5 py-2 px-4 text-white\n                             rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
+                        "flex items-center w-full mt-5 py-2 px-4 text-white\r\n                             rounded-full justify-center focus:outline-none bg-indigo-600 hover:bg-indigo-700",
                       on: { click: _vm.createProduct }
                     },
-                    [_vm._v("\n                Add New Product \n            ")]
+                    [
+                      _vm._v(
+                        "\r\n                Add New Product \r\n            "
+                      )
+                    ]
                   )
             ]),
             _vm._v(" "),
@@ -26929,10 +29027,66 @@ var render = function() {
           1
         )
       : _c("div", [
-          _vm._m(0),
+          _c(
+            "form",
+            {
+              attrs: { method: "POST" },
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.searchProduct($event)
+                }
+              }
+            },
+            [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "mb-4 flex items-center border border-gray-700 rounded"
+                },
+                [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "pl-2 font-bold text-gray-800 mr-2",
+                      attrs: { for: "filter" }
+                    },
+                    [_vm._v("Filter")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.search,
+                        expression: "search"
+                      }
+                    ],
+                    staticClass: "py-2 px-4 flex-1 focus:outline-none",
+                    attrs: {
+                      type: "text",
+                      id: "filter",
+                      placeholder: "Product Name"
+                    },
+                    domProps: { value: _vm.search },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.search = $event.target.value
+                      }
+                    }
+                  })
+                ]
+              )
+            ]
+          ),
           _vm._v(" "),
           _c("table", { staticClass: "w-full" }, [
-            _vm._m(1),
+            _vm._m(0),
             _vm._v(" "),
             _c(
               "tbody",
@@ -27141,23 +29295,27 @@ var render = function() {
               )
             ],
             2
-          )
+          ),
+          _vm._v(" "),
+          _vm.processing
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "mt-2 bg-blue-500 text-white text-sm font-semibold px-4 py-2 rounded flex items-center"
+                },
+                [
+                  _c("h2", [_vm._v("Processing")]),
+                  _vm._v(" "),
+                  _c("circle-loader")
+                ],
+                1
+              )
+            : _vm._e()
         ])
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "mb-4" }, [
-      _c("label", { attrs: { for: "filter" } }, [_vm._v("Filter")]),
-      _vm._v(" "),
-      _c("input", {
-        attrs: { type: "text", id: "filter", placeholder: "Product Name" }
-      })
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -27793,7 +29951,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "px-4 flex justify-between mt-5" }, [
+    _c("div", { staticClass: "px-4 flex justify-between mt-5 items-start" }, [
       _c("div", { staticClass: "border border-gray-700 flex-1 mr-4" }, [
         _c("div", { staticClass: "flex" }, [
           _vm._m(0),
@@ -27820,21 +29978,26 @@ var render = function() {
                   placeholder: "Tour Agent Name"
                 },
                 on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.$set(
-                      _vm.form,
-                      "tour_agent_id",
-                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                    )
-                  }
+                  change: [
+                    function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.form,
+                        "tour_agent_id",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    },
+                    _vm.onTourAgentChanged
+                  ]
                 }
               },
               [
@@ -27857,6 +30020,76 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "flex" }, [
           _vm._m(1),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex-1 border-b border-gray-700" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.form.tour_type_id,
+                    expression: "form.tour_type_id"
+                  }
+                ],
+                staticClass:
+                  "w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm",
+                class:
+                  _vm.errors && _vm.errors.tour_type_id ? "bg-red-200" : "",
+                attrs: {
+                  disabled: !_vm.form.tour_agent_id,
+                  type: "text",
+                  id: "agent",
+                  placeholder: "Tour Type Name"
+                },
+                on: {
+                  change: [
+                    function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.form,
+                        "tour_type_id",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    },
+                    _vm.onTourTypeChanged
+                  ]
+                }
+              },
+              [
+                !_vm.form.tour_agent_id
+                  ? _c("option", { attrs: { disabled: "", value: "" } }, [
+                      _vm._v(" --- Please Select Tour Agent First ---")
+                    ])
+                  : _c("option", { attrs: { disabled: "", value: "" } }, [
+                      _vm._v(" --- Select Tour Type ---")
+                    ]),
+                _vm._v(" "),
+                _vm._l(_vm.tourTypes, function(type) {
+                  return _c(
+                    "option",
+                    { key: type.id, domProps: { value: type.id } },
+                    [_vm._v(_vm._s(type.name))]
+                  )
+                })
+              ],
+              2
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "flex" }, [
+          _vm._m(2),
           _vm._v(" "),
           _c(
             "div",
@@ -27933,7 +30166,7 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "flex" }, [
-          _vm._m(2),
+          _vm._m(3),
           _vm._v(" "),
           _c("div", { staticClass: "flex-1 border-gray-700" }, [
             _c(
@@ -27991,7 +30224,7 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "border border-gray-700 flex-1" }, [
         _c("div", { staticClass: "flex" }, [
-          _vm._m(3),
+          _vm._m(4),
           _vm._v(" "),
           _c("div", { staticClass: "flex-1  border-b border-gray-700" }, [
             _c("input", {
@@ -28021,7 +30254,7 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "flex" }, [
-          _vm._m(4),
+          _vm._m(5),
           _vm._v(" "),
           _c("div", { staticClass: "flex-1 border-b border-gray-700" }, [
             _c("input", {
@@ -28050,7 +30283,7 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "flex" }, [
-          _vm._m(5),
+          _vm._m(6),
           _vm._v(" "),
           _c("div", { staticClass: "flex-1 border-gray-700" }, [
             _c("input", {
@@ -28100,7 +30333,7 @@ var render = function() {
           "div",
           { staticClass: "flex-1" },
           [
-            _vm._m(6),
+            _vm._m(7),
             _vm._v(" "),
             _c("selected-product", {
               attrs: {
@@ -28111,22 +30344,33 @@ var render = function() {
             }),
             _vm._v(" "),
             _c("deductions", {
+              ref: "deductions",
               attrs: {
-                deductions: _vm.form.sales_deductions,
-                totalDeductions: _vm.form.total_deductions
-              }
+                totalDeductions: _vm.form.total_deductions,
+                backend: _vm.backend,
+                user: _vm.user,
+                edit: _vm.edit,
+                salesDeductions: _vm.form.sales_deductions
+              },
+              on: { deductionComputed: _vm.computeDeduction }
             }),
             _vm._v(" "),
-            _c("total-sales", {
+            _c("total-commissions", {
+              ref: "totalCommissions",
               attrs: {
-                commissions: _vm.form.sales_commissions,
+                user: _vm.user,
+                backend: _vm.backend,
                 totalSales: _vm.form.total_sales,
                 totalDeduction: _vm.form.total_deductions,
                 totalAgentSales: _vm.form.total_agent_sales,
                 totalCommissions: _vm.form.total_commissions,
-                gst: _vm.form.gst,
-                grandTotal: _vm.form.grand_total_commission
-              }
+                salesCommissions: _vm.form.sales_commissions,
+                tourAgentId: _vm.form.tour_agent_id,
+                tourTypeId: _vm.form.tour_type_id,
+                totalProductsByCode: _vm.totalProducts,
+                edit: _vm.edit
+              },
+              on: { salesCommissionChanged: _vm.getSalesCommissions }
             }),
             _vm._v(" "),
             _c(
@@ -28203,7 +30447,32 @@ var staticRenderFns = [
             staticClass: "text-sm font-semibold text-gray-800 uppercase",
             attrs: { for: "agent" }
           },
-          [_vm._v("Tour Agent")]
+          [
+            _vm._v("Tour Agent "),
+            _c("sup", { staticClass: "text-red-600 font-bold" }, [_vm._v("*")])
+          ]
+        )
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "border-b border-r border-gray-700 w-32 text-center" },
+      [
+        _c(
+          "label",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase",
+            attrs: { for: "agent" }
+          },
+          [
+            _vm._v("Tour Types "),
+            _c("sup", { staticClass: "text-red-600 font-bold" }, [_vm._v("*")])
+          ]
         )
       ]
     )
@@ -28241,7 +30510,10 @@ var staticRenderFns = [
             staticClass: "text-sm font-semibold text-gray-800 uppercase",
             attrs: { for: "guide" }
           },
-          [_vm._v("Guide Name")]
+          [
+            _vm._v("Guide Name "),
+            _c("sup", { staticClass: "text-red-600 font-bold" }, [_vm._v("*")])
+          ]
         )
       ]
     )
@@ -30175,10 +32447,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalSales.vue?vue&type=template&id=90e77e5a&":
-/*!*************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TotalSales.vue?vue&type=template&id=90e77e5a& ***!
-  \*************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalCommissions.vue?vue&type=template&id=2e396b6f&":
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TotalCommissions.vue?vue&type=template&id=2e396b6f& ***!
+  \*******************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -30190,179 +32462,377 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass:
-        "flex border border-gray-700 mt-5 items-start text-sm bg-green-200"
-    },
-    [
-      _c(
-        "div",
-        { staticClass: "flex-1" },
-        [
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("Total Sales")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "w-32  px-2 py-1" },
-                [_c("currency-format", { attrs: { value: _vm.totalSales } })],
-                1
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b-2 border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("Deductions")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "w-32  px-2 py-1" },
-                [
-                  _c("currency-format", {
-                    attrs: { value: _vm.totalDeduction }
-                  })
-                ],
-                1
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("Total Agent Sales")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "w-32  px-2 py-1" },
-                [
-                  _c("currency-format", {
-                    attrs: { value: _vm.totalAgentSales }
-                  })
-                ],
-                1
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _vm._l(_vm.commissions, function(commission) {
-            return _c(
+  return _c("div", [
+    _vm.message
+      ? _c(
+          "div",
+          {
+            staticClass:
+              "flex border border-gray-700 mt-5 items-center text-sm text-white py-4 px-8 rounded",
+            class: _vm.error ? "bg-red-600" : "bg-gray-600"
+          },
+          [_c("p", [_vm._v(" " + _vm._s(_vm.message) + " ")])]
+        )
+      : _c(
+          "div",
+          {
+            staticClass:
+              "flex border border-gray-700 mt-5 items-start text-sm bg-green-200"
+          },
+          [
+            _c(
               "div",
-              {
-                key: commission.id,
-                staticClass: "flex justify-between border-b border-gray-700"
-              },
+              { staticClass: "flex-1" },
               [
                 _c(
                   "div",
-                  { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                  [_vm._v(_vm._s(commission.name))]
+                  {
+                    staticClass: "flex justify-between border-b border-gray-700"
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "flex-1 border-gray-700 border-r px-2 py-1"
+                      },
+                      [_vm._v("Total Sales")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-32  px-2 py-1 text-right" },
+                      [
+                        _c("currency-format", {
+                          attrs: { value: _vm.totalSales }
+                        })
+                      ],
+                      1
+                    )
+                  ]
                 ),
                 _vm._v(" "),
                 _c(
                   "div",
-                  { staticClass: "w-32  px-2 py-1" },
+                  {
+                    staticClass:
+                      "flex justify-between border-b-2 border-gray-700"
+                  },
                   [
-                    _c("currency-format", {
-                      attrs: { value: commission.amount }
-                    })
-                  ],
-                  1
+                    _c(
+                      "div",
+                      {
+                        staticClass: "flex-1 border-gray-700 border-r px-2 py-1"
+                      },
+                      [_vm._v("Deductions")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-32  px-2 py-1 text-right" },
+                      [
+                        _c("currency-format", {
+                          attrs: { value: _vm.totalDeduction }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flex justify-between border-b border-gray-700"
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "flex-1 border-gray-700 border-r px-2 py-1"
+                      },
+                      [_vm._v("Total Agent Sales")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-32  px-2 py-1 text-right" },
+                      [
+                        _c("currency-format", {
+                          attrs: { value: _vm.totalAgentSales }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._l(_vm.commissionTypes, function(type) {
+                  return _c(
+                    "div",
+                    {
+                      key: type.id,
+                      staticClass:
+                        "flex justify-between border-b border-gray-700"
+                    },
+                    [
+                      _c(
+                        "div",
+                        { staticClass: "flex-1 border-gray-700 border-r flex" },
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "border-r border-gray-700 px-2 py-1 w-48"
+                            },
+                            [_vm._v(_vm._s(type.name))]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "flex-1" },
+                            _vm._l(_vm.commissions, function(commission) {
+                              return _c(
+                                "div",
+                                {
+                                  key: commission.id,
+                                  staticClass:
+                                    "border-b border-gray-700 flex items-center justify-between"
+                                },
+                                [
+                                  _c(
+                                    "div",
+                                    { staticClass: "flex-1 px-2 py-1 " },
+                                    [
+                                      _vm._v(
+                                        " " + _vm._s(commission.name) + " "
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass: "flex-1 px-2 py-1 text-right"
+                                    },
+                                    [
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model.number",
+                                            value:
+                                              _vm.input[type.code][
+                                                commission.id
+                                              ],
+                                            expression:
+                                              "input[type.code][commission.id]",
+                                            modifiers: { number: true }
+                                          }
+                                        ],
+                                        staticClass:
+                                          "w-full bg-transparent text-right",
+                                        attrs: { type: "number" },
+                                        domProps: {
+                                          value:
+                                            _vm.input[type.code][commission.id]
+                                        },
+                                        on: {
+                                          change: function($event) {
+                                            return _vm.changeCommission(
+                                              type.code,
+                                              commission.id
+                                            )
+                                          },
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.$set(
+                                              _vm.input[type.code],
+                                              commission.id,
+                                              _vm._n($event.target.value)
+                                            )
+                                          },
+                                          blur: function($event) {
+                                            return _vm.$forceUpdate()
+                                          }
+                                        }
+                                      })
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass:
+                                        "w-32 text-right border-l border-gray-700 px-2 py-1"
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                " +
+                                          _vm._s(
+                                            _vm.computedCommissions[type.code][
+                                              commission.id
+                                            ]
+                                          ) +
+                                          "\n                            "
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            }),
+                            0
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                }),
+                _vm._v(" "),
+                _vm._m(0),
+                _vm._v(" "),
+                _vm._l(_vm.commissions, function(commission) {
+                  return _c(
+                    "div",
+                    {
+                      key: commission.name,
+                      staticClass:
+                        "flex justify-between border-b border-gray-700"
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "flex-1 border-gray-700 border-r px-2 py-1 font-semibold"
+                        },
+                        [_vm._v(" Total " + _vm._s(commission.name) + " ")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "w-32  px-2 py-1 text-right" },
+                        [
+                          _c("currency-format", {
+                            attrs: {
+                              value: _vm.totalByCommission[commission.id]
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ]
+                  )
+                }),
+                _vm._v(" "),
+                _vm._m(1),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flex justify-between border-b border-gray-700"
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "flex-1 border-gray-700 border-r px-2 py-1"
+                      },
+                      [_vm._v("Total Agent Commission")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-32  px-2 py-1 text-right" },
+                      [
+                        _c("currency-format", {
+                          attrs: { value: _vm.totalAgentCommission }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flex justify-between border-b border-gray-700"
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "flex-1 border-gray-700 border-r px-2 py-1"
+                      },
+                      [_vm._v("GST")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-32  px-2 py-1 text-right" },
+                      [
+                        _c("currency-format", {
+                          attrs: { value: _vm.totalGST }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "flex justify-between font-semibold bg-green-400"
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "flex-1 border-gray-700 border-r  px-2 py-1"
+                      },
+                      [_vm._v("Grand Total Agent Commission")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-32  px-2 py-1 text-right" },
+                      [
+                        _c("currency-format", {
+                          attrs: { value: _vm.grandTotalCommission }
+                        })
+                      ],
+                      1
+                    )
+                  ]
                 )
-              ]
+              ],
+              2
             )
-          }),
-          _vm._v(" "),
-          _vm._m(0),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("Total Agent Commission")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "w-32  px-2 py-1" },
-                [
-                  _c("currency-format", {
-                    attrs: { value: _vm.totalCommissions }
-                  })
-                ],
-                1
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between border-b border-gray-700" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" },
-                [_vm._v("GST")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "w-32  px-2 py-1" },
-                [_c("currency-format", { attrs: { value: _vm.gst } })],
-                1
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex justify-between font-semibold bg-green-400" },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-1 border-gray-700 border-r  px-2 py-1" },
-                [_vm._v("Grand Total Agent Commission")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "w-32  px-2 py-1" },
-                [_c("currency-format", { attrs: { value: _vm.grandTotal } })],
-                1
-              )
-            ]
-          )
-        ],
-        2
-      )
-    ]
-  )
+          ]
+        )
+  ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "flex justify-between border-b border-gray-700 h-8" },
+      [
+        _c("div", { staticClass: "flex-1 border-gray-700 border-r px-2 py-1" }),
+        _vm._v(" "),
+        _c("div", { staticClass: "w-32  px-2 py-1" })
+      ]
+    )
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -30895,6 +33365,470 @@ var staticRenderFns = [
     ])
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TourCommissionDashboard.vue?vue&type=template&id=77830356&":
+/*!**************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TourCommissionDashboard.vue?vue&type=template&id=77830356& ***!
+  \**************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "mx-auto w-256 mt-10" }, [
+    _c("div", { staticClass: "flex items-end justify-start" }, [
+      _c(
+        "button",
+        {
+          staticClass:
+            "border-t border-l border-r border-gray-700 text-sm py-2 px-4 focus:outline-none rounded-t mr-1",
+          class:
+            _vm.selectedView === "TOUR_TYPE"
+              ? "bg-white text-black font-semibold"
+              : "bg-gray-700 text-white",
+          on: {
+            click: function($event) {
+              return _vm.toggle("TOUR_TYPE")
+            }
+          }
+        },
+        [_vm._v(" \n          Tour Types \n        ")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "border-t border-l border-r border-gray-700 ext-sm py-2 px-4 focus:outline-none rounded-t mr-1",
+          class:
+            _vm.selectedView === "COMMISSION"
+              ? "bg-white text-black font-semibold"
+              : "bg-gray-700 text-white",
+          on: {
+            click: function($event) {
+              return _vm.toggle("COMMISSION")
+            }
+          }
+        },
+        [_vm._v(" \n          Commissions \n        ")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "border-t border-l border-r border-gray-700 text-sm py-2 px-4 focus:outline-none rounded-t",
+          class:
+            _vm.selectedView === "COMMISSION_TYPE"
+              ? "bg-white text-black font-semibold"
+              : "bg-gray-700 text-white",
+          on: {
+            click: function($event) {
+              return _vm.toggle("COMMISSION_TYPE")
+            }
+          }
+        },
+        [_vm._v(" \n          Commission Types \n        ")]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "flex-1 border-b border-gray-700" })
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "border-l border-r border-b border-gray-600 pt-8" },
+      [
+        _c("div", { staticClass: "px-4 mx-8 mb-16 items-start" }, [
+          _vm.selectedView === "COMMISSION_TYPE"
+            ? _c(
+                "div",
+                { staticClass: " w-64 mr-4 w-" },
+                [
+                  _c("commission-type-component", {
+                    attrs: { user: _vm.user, backend: _vm.backend }
+                  })
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.selectedView === "TOUR_TYPE"
+            ? _c(
+                "div",
+                { staticClass: "flex-1 mr-4 flex-" },
+                [
+                  _c("tour-type-component", {
+                    attrs: { user: _vm.user, backend: _vm.backend }
+                  })
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.selectedView === "COMMISSION"
+            ? _c(
+                "div",
+                { staticClass: "flex-1" },
+                [
+                  _c("commission-component", {
+                    attrs: { user: _vm.user, backend: _vm.backend }
+                  })
+                ],
+                1
+              )
+            : _vm._e()
+        ])
+      ]
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TourCommissionList.vue?vue&type=template&id=6af821cc&":
+/*!*********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TourCommissionList.vue?vue&type=template&id=6af821cc& ***!
+  \*********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _vm.loading
+      ? _c(
+          "div",
+          { staticClass: "w-full h-96 flex items-center justify-center" },
+          [_c("bar-loader", { attrs: { color: "#a0aec0" } })],
+          1
+        )
+      : _c(
+          "div",
+          [
+            _vm.savingMessage
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "bg-blue-700 text-white py-2 px-2 rounded flex items-center"
+                  },
+                  [
+                    _c("h1", { staticClass: "mr-4" }, [
+                      _vm._v(_vm._s(_vm.savingMessage) + " ")
+                    ]),
+                    _vm._v(" "),
+                    _c("circle-loader", { attrs: { color: "#FFFFFF" } })
+                  ],
+                  1
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.successMessage
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "bg-green-700 text-white py-2 px-2 rounded flex items-center justify-between"
+                  },
+                  [
+                    _c("h1", { staticClass: "mr-4" }, [
+                      _vm._v(" " + _vm._s(_vm.successMessage) + "  ")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        on: {
+                          click: function($event) {
+                            _vm.successMessage = null
+                          }
+                        }
+                      },
+                      [_vm._v("X")]
+                    )
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.errorMessage
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "bg-red-700 text-white py-2 px-2 rounded flex items-center justify-between"
+                  },
+                  [
+                    _c("h1", { staticClass: "mr-4" }, [
+                      _vm._v(" " + _vm._s(_vm.errorMessage) + "  ")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        on: {
+                          click: function($event) {
+                            _vm.errorMessage = null
+                          }
+                        }
+                      },
+                      [_vm._v("X")]
+                    )
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm._l(_vm.tourTypes, function(tourType, tourTypeIndex) {
+              return _c("div", { key: tourType.id, staticClass: "mt-5" }, [
+                _c("h1", { staticClass: "text-gray-800 font-light text-lg" }, [
+                  _vm._v(" " + _vm._s(tourType.name) + " ")
+                ]),
+                _vm._v(" "),
+                _c("table", { staticClass: "w-full" }, [
+                  _c("thead", [
+                    _c(
+                      "tr",
+                      {
+                        staticClass:
+                          "bg-gray-300 border border-gray-800 text-sm"
+                      },
+                      [
+                        _c(
+                          "th",
+                          {
+                            staticClass: "py-2 px-2 border border-gray-800 w-40"
+                          },
+                          [_vm._v(" Commission Type ")]
+                        ),
+                        _vm._v(" "),
+                        _vm._l(_vm.commissions, function(commission) {
+                          return _c(
+                            "th",
+                            {
+                              key: commission.id,
+                              staticClass:
+                                "py-2 px-2 border border-gray-800 w-12"
+                            },
+                            [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(commission.name) +
+                                  "\n                        "
+                              )
+                            ]
+                          )
+                        }),
+                        _vm._v(" "),
+                        _c("th", { staticClass: "w-16" })
+                      ],
+                      2
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.commissionTypes, function(
+                      commissionType,
+                      commissionTypeIndex
+                    ) {
+                      return _c(
+                        "tr",
+                        {
+                          key: commissionType.id,
+                          staticClass: "text-sm",
+                          class:
+                            _vm.editX === tourTypeIndex &&
+                            _vm.editY === commissionTypeIndex
+                              ? "bg-yellow-100"
+                              : "bg-white even:bg-gray-100"
+                        },
+                        [
+                          _c(
+                            "td",
+                            {
+                              staticClass:
+                                "py-2 px-4 border border-gray-800 text-sm"
+                            },
+                            [_vm._v(" " + _vm._s(commissionType.name) + "   ")]
+                          ),
+                          _vm._v(" "),
+                          _vm._l(_vm.commissions, function(commission) {
+                            return _c(
+                              "td",
+                              {
+                                key: commission.id,
+                                staticClass:
+                                  "border border-gray-800 text-sm text-right"
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model.number",
+                                      value:
+                                        _vm.input[tourType.id][
+                                          commissionType.id
+                                        ][commission.id],
+                                      expression:
+                                        "input[tourType.id][commissionType.id][commission.id]",
+                                      modifiers: { number: true }
+                                    }
+                                  ],
+                                  staticClass:
+                                    "bg-transparent outline-none text-xs text-right py-2 px-1 w-16",
+                                  class:
+                                    _vm.editX === tourTypeIndex &&
+                                    _vm.editY === commissionTypeIndex
+                                      ? "text-gray-900 font-semibold"
+                                      : "text-gray-700",
+                                  attrs: {
+                                    type: "text",
+                                    disabled: !(
+                                      _vm.editX === tourTypeIndex &&
+                                      _vm.editY === commissionTypeIndex
+                                    )
+                                  },
+                                  domProps: {
+                                    value:
+                                      _vm.input[tourType.id][commissionType.id][
+                                        commission.id
+                                      ]
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      return _vm.onTourCommissionChanged(
+                                        tourType.id,
+                                        commissionType.id,
+                                        commission.id
+                                      )
+                                    },
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.input[tourType.id][
+                                          commissionType.id
+                                        ],
+                                        commission.id,
+                                        _vm._n($event.target.value)
+                                      )
+                                    },
+                                    blur: function($event) {
+                                      return _vm.$forceUpdate()
+                                    }
+                                  }
+                                })
+                              ]
+                            )
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            {
+                              staticClass:
+                                "border border-gray-800 text-sm px-1 w-32"
+                            },
+                            [
+                              _c("div", { staticClass: "w-full  flex" }, [
+                                _vm.editX === tourTypeIndex &&
+                                _vm.editY === commissionTypeIndex
+                                  ? _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "text-white text-xs bg-blue-500 py-1 px-2 w-full rounded focus:outline-none mr-1",
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.saveTourCommission(
+                                              tourType.id,
+                                              commissionType.id
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                    Save\n                            "
+                                        )
+                                      ]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _vm.editX === tourTypeIndex &&
+                                _vm.editY === commissionTypeIndex
+                                  ? _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "text-white text-xs bg-gray-600 py-1 px-2 w-full rounded focus:outline-none",
+                                        on: { click: _vm.cancelEdit }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                Cancel\n                            "
+                                        )
+                                      ]
+                                    )
+                                  : _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "text-white text-xs bg-yellow-700 py-1 px-2 w-full rounded mr-1 focus:outline-none",
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.editRow(
+                                              tourTypeIndex,
+                                              commissionTypeIndex
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                Edit\n                            "
+                                        )
+                                      ]
+                                    )
+                              ])
+                            ]
+                          )
+                        ],
+                        2
+                      )
+                    }),
+                    0
+                  )
+                ])
+              ])
+            })
+          ],
+          2
+        )
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -31492,6 +34426,850 @@ var staticRenderFns = [
         ]
       )
     ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/CommissionComponent.vue?vue&type=template&id=c37f34e0&":
+/*!**********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/commissions/CommissionComponent.vue?vue&type=template&id=c37f34e0& ***!
+  \**********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _vm.loading
+      ? _c(
+          "div",
+          { staticClass: "w-full h-32 flex items-center justify-center" },
+          [_c("bar-loader", { attrs: { color: "#a0aec0" } })],
+          1
+        )
+      : _c(
+          "div",
+          [
+            _c("table", { staticClass: "w-full" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.commissions, function(commission, index) {
+                  return _c(
+                    "tr",
+                    {
+                      key: commission.id,
+                      staticClass: "bg-white even:bg-gray-100 text-sm"
+                    },
+                    [
+                      _c(
+                        "td",
+                        {
+                          staticClass:
+                            "py-2 px-4 border border-gray-800 text-sm"
+                        },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.selectedCommissionIndex,
+                                expression: "selectedCommissionIndex"
+                              }
+                            ],
+                            attrs: {
+                              type: "radio",
+                              id: commission.id,
+                              name: "commissionSelection"
+                            },
+                            domProps: {
+                              value: index,
+                              checked: _vm._q(
+                                _vm.selectedCommissionIndex,
+                                index
+                              )
+                            },
+                            on: {
+                              change: [
+                                function($event) {
+                                  _vm.selectedCommissionIndex = index
+                                },
+                                function($event) {
+                                  return _vm.commissionSelected(index)
+                                }
+                              ]
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("label", { attrs: { for: commission.id } }, [
+                            _vm._v(_vm._s(commission.name))
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        {
+                          staticClass:
+                            "py-2 px-4 border border-gray-800 text-sm"
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(commission.description) +
+                              "\n                    "
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                }),
+                0
+              )
+            ]),
+            _vm._v(" "),
+            _c("commission-form", {
+              ref: "commissionForm",
+              attrs: { user: _vm.user, backend: _vm.backend },
+              on: {
+                commissionCreated: _vm.commissionInsert,
+                commissionDeleted: _vm.commissionRemove,
+                commissionUpdated: _vm.commissionUpdate,
+                cancel: _vm.clearSelection
+              }
+            })
+          ],
+          1
+        )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", { staticClass: "bg-gray-300 border border-gray-800 text-sm" }, [
+        _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+          _vm._v("Name")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+          _vm._v("Description")
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/CommissionForm.vue?vue&type=template&id=18404001&":
+/*!*****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/commissions/CommissionForm.vue?vue&type=template&id=18404001& ***!
+  \*****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "mt-5 mb-2" }, [
+      _c("h1", { staticClass: "font-semibold text-blue-800" }, [
+        _vm.selected
+          ? _c("span", [_vm._v("Update/Delete Commissions")])
+          : _c("span", [_vm._v("Add New Commission")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "border border-gray-700" }, [
+        _c("div", { staticClass: "flex" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "flex-1 border-b border-gray-700",
+              class: _vm.errors && _vm.errors.name ? "bg-red-200" : ""
+            },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.form.name,
+                    expression: "form.name"
+                  }
+                ],
+                staticClass:
+                  "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm bg-transparent",
+                attrs: { type: "text", placeholder: "Commission Name" },
+                domProps: { value: _vm.form.name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.form, "name", $event.target.value)
+                  }
+                }
+              })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "flex" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex-1 border-gray-700" }, [
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.form.description,
+                  expression: "form.description"
+                }
+              ],
+              staticClass:
+                "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm",
+              attrs: {
+                placeholder: "Commission Description",
+                name: "description",
+                id: "description",
+                rows: "2"
+              },
+              domProps: { value: _vm.form.description },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.form, "description", $event.target.value)
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.errors !== null
+        ? _c("div", [
+            _c("h3", { staticClass: "text-red-700 text-sm font-semibold" })
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.selected === true
+        ? _c("div", [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center \n                    focus:outline-none bg-blue-600 text-sm hover:bg-blue-700",
+                on: { click: _vm.updateCommission }
+              },
+              [
+                _vm.updating
+                  ? _c(
+                      "div",
+                      { staticClass: "flex items-center justify-center" },
+                      [
+                        _c("h3", { staticClass: "mr-1" }, [
+                          _vm._v("Updating Commission")
+                        ]),
+                        _vm._v(" "),
+                        _c("circle-loader")
+                      ],
+                      1
+                    )
+                  : _c("div", [_vm._v(" Update Commission")])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center \n                    focus:outline-none bg-red-600 text-sm hover:bg-red-700",
+                on: { click: _vm.deleteCommission }
+              },
+              [
+                _vm.deleting
+                  ? _c(
+                      "div",
+                      { staticClass: "flex items-center justify-center" },
+                      [
+                        _c("h3", { staticClass: "mr-1" }, [
+                          _vm._v("Deleting Commission")
+                        ]),
+                        _vm._v(" "),
+                        _c("circle-loader")
+                      ],
+                      1
+                    )
+                  : _c("div", [_vm._v("Delete Commission")])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center \n                            focus:outline-none bg-gray-600 text-sm hover:bg-gray-700",
+                on: { click: _vm.cancel }
+              },
+              [_vm._v("\n                Cancel\n            ")]
+            )
+          ])
+        : _c("div", [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center \n                            focus:outline-none bg-blue-600 text-sm hover:bg-blue-700",
+                on: { click: _vm.createCommission }
+              },
+              [
+                _vm.inserting
+                  ? _c(
+                      "div",
+                      { staticClass: "flex items-center justify-center" },
+                      [
+                        _c("h3", { staticClass: "mr-1" }, [
+                          _vm._v("Creating Commission")
+                        ]),
+                        _vm._v(" "),
+                        _c("circle-loader")
+                      ],
+                      1
+                    )
+                  : _c("div", [_vm._v("Add Commission")])
+              ]
+            )
+          ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "border-b border-r py-2  border-gray-700 w-32 text-center"
+      },
+      [
+        _c(
+          "label",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase",
+            attrs: { for: "agent" }
+          },
+          [
+            _vm._v("\n                        Name "),
+            _c("sup", { staticClass: "text-red-600 font-bold" }, [_vm._v("*")])
+          ]
+        )
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "border-r py-2  border-gray-700 w-32 text-center" },
+      [
+        _c(
+          "label",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase",
+            attrs: { for: "guide" }
+          },
+          [_vm._v("Description")]
+        )
+      ]
+    )
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/CommissionTypeComponent.vue?vue&type=template&id=91ff4214&":
+/*!**************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/commissions/CommissionTypeComponent.vue?vue&type=template&id=91ff4214& ***!
+  \**************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _vm.loading
+      ? _c(
+          "div",
+          { staticClass: "w-full h-32 flex items-center justify-center" },
+          [_c("bar-loader", { attrs: { color: "#a0aec0" } })],
+          1
+        )
+      : _c("div", [
+          _c("table", { staticClass: "w-full" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.commissionTypes, function(commissionType) {
+                return _c(
+                  "tr",
+                  {
+                    key: commissionType.id,
+                    staticClass: "bg-white even:bg-gray-100 text-sm"
+                  },
+                  [
+                    _c(
+                      "td",
+                      {
+                        staticClass: "py-2 px-4 border border-gray-800 text-sm"
+                      },
+                      [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(commissionType.name) +
+                            "\n                    "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      {
+                        staticClass: "py-2 px-4 border border-gray-800 text-sm"
+                      },
+                      [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(commissionType.code) +
+                            "\n                    "
+                        )
+                      ]
+                    )
+                  ]
+                )
+              }),
+              0
+            )
+          ])
+        ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", { staticClass: "bg-gray-300 border border-gray-800 text-sm" }, [
+        _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+          _vm._v("Name")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+          _vm._v("Code")
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/TourTypeComponent.vue?vue&type=template&id=16a964ae&":
+/*!********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/commissions/TourTypeComponent.vue?vue&type=template&id=16a964ae& ***!
+  \********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _vm.loading
+      ? _c(
+          "div",
+          { staticClass: "w-full h-32 flex items-center justify-center" },
+          [_c("bar-loader", { attrs: { color: "#a0aec0" } })],
+          1
+        )
+      : _c(
+          "div",
+          [
+            _c("table", { staticClass: "w-full" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.tourTypes, function(tourType, index) {
+                  return _c(
+                    "tr",
+                    {
+                      key: tourType.id,
+                      staticClass: "bg-white even:bg-gray-100 text-sm"
+                    },
+                    [
+                      _c(
+                        "td",
+                        {
+                          staticClass:
+                            "py-2 px-4 border border-gray-800 text-sm"
+                        },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.selectedTypeIndex,
+                                expression: "selectedTypeIndex"
+                              }
+                            ],
+                            attrs: {
+                              type: "radio",
+                              id: tourType.id,
+                              name: "selection"
+                            },
+                            domProps: {
+                              value: index,
+                              checked: _vm._q(_vm.selectedTypeIndex, index)
+                            },
+                            on: {
+                              change: [
+                                function($event) {
+                                  _vm.selectedTypeIndex = index
+                                },
+                                function($event) {
+                                  return _vm.tourTypeSelected(index)
+                                }
+                              ]
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("label", { attrs: { for: tourType.id } }, [
+                            _vm._v(_vm._s(tourType.name) + "  ")
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        {
+                          staticClass:
+                            "py-2 px-4 border border-gray-800 text-sm"
+                        },
+                        [
+                          _vm._v(
+                            " \n                            " +
+                              _vm._s(tourType.description) +
+                              " \n                        "
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                }),
+                0
+              )
+            ]),
+            _vm._v(" "),
+            _vm.successMessage
+              ? _c("div", [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "px-4 py-2 border-green-500 bg-green-700 text-white font-semibold rounded my-2 flex items-center justify-between text-sm"
+                    },
+                    [
+                      _c("div", [_vm._v(_vm._s(_vm.successMessage))]),
+                      _vm._v(" "),
+                      _c("button", { on: { click: _vm.clearMessage } }, [
+                        _vm._v("X")
+                      ])
+                    ]
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c("tour-type-form", {
+              ref: "tourTypeForm",
+              attrs: { user: _vm.user, backend: _vm.backend },
+              on: {
+                tourTypeAdded: _vm.tourTypeInsert,
+                tourTypeUpdated: _vm.tourTypeUpdate,
+                tourTypeDeleted: _vm.tourTypeDelete,
+                cancel: _vm.clearSelection
+              }
+            })
+          ],
+          1
+        )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", { staticClass: "bg-gray-300 border border-gray-800 text-sm" }, [
+        _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+          _vm._v("Name")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "py-2 px-2 border border-gray-800" }, [
+          _vm._v("Description")
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/TourTypeForm.vue?vue&type=template&id=4988ec48&":
+/*!***************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/commissions/TourTypeForm.vue?vue&type=template&id=4988ec48& ***!
+  \***************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "mt-5 mb-2" }, [
+      _c("h1", { staticClass: "font-light" }, [
+        _vm.selected
+          ? _c("span", [_vm._v("Update/Delete Tour Type")])
+          : _c("span", [_vm._v("Add New Tour Type")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "border border-gray-700" }, [
+        _c("div", { staticClass: "flex" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "flex-1 border-b border-gray-700",
+              class: _vm.errors && _vm.errors.name ? "bg-red-200" : ""
+            },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.form.name,
+                    expression: "form.name"
+                  }
+                ],
+                staticClass:
+                  "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm bg-transparent",
+                attrs: { type: "text", placeholder: "Tour Type Name" },
+                domProps: { value: _vm.form.name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.form, "name", $event.target.value)
+                  }
+                }
+              })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "flex" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex-1 border-gray-700" }, [
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.form.description,
+                  expression: "form.description"
+                }
+              ],
+              staticClass:
+                "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm",
+              attrs: {
+                placeholder: "Tour Type Description",
+                name: "description",
+                id: "description",
+                rows: "2"
+              },
+              domProps: { value: _vm.form.description },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.form, "description", $event.target.value)
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.errors !== null
+        ? _c("div", [
+            _c("h3", { staticClass: "text-red-700 text-sm font-semibold" })
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.selected === true
+        ? _c("div", [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center \n                    focus:outline-none bg-blue-600 text-sm hover:bg-blue-700",
+                on: { click: _vm.updateTourType }
+              },
+              [_vm._v("\n                Update Tour Type\n            ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center \n                    focus:outline-none bg-red-600 text-sm hover:bg-red-700",
+                on: { click: _vm.deleteTourType }
+              },
+              [_vm._v("\n                Delete Tour Type\n            ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center \n                            focus:outline-none bg-gray-600 text-sm hover:bg-gray-700",
+                on: { click: _vm.cancel }
+              },
+              [_vm._v("\n                Cancel\n            ")]
+            )
+          ])
+        : _c("div", [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full items-center mt-2 py-2 px-4 text-white rounded justify-center \n                            focus:outline-none bg-blue-600 text-sm hover:bg-blue-700",
+                on: { click: _vm.createTourType }
+              },
+              [_vm._v("\n            Add Tour Type\n            ")]
+            )
+          ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "border-b border-r py-2  border-gray-700 w-32 text-center"
+      },
+      [
+        _c(
+          "label",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase",
+            attrs: { for: "agent" }
+          },
+          [
+            _vm._v("\n                        Type Name "),
+            _c("sup", { staticClass: "text-red-600 font-bold" }, [_vm._v("*")])
+          ]
+        )
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "border-r py-2  border-gray-700 w-32 text-center" },
+      [
+        _c(
+          "label",
+          {
+            staticClass: "text-sm font-semibold text-gray-800 uppercase",
+            attrs: { for: "guide" }
+          },
+          [_vm._v("Description")]
+        )
+      ]
+    )
   }
 ]
 render._withStripped = true
@@ -44172,6 +47950,8 @@ Vue.component('tour-guide-form', __webpack_require__(/*! ./components/TourGuideF
 Vue.component('user-list', __webpack_require__(/*! ./components/UserList.vue */ "./resources/js/components/UserList.vue")["default"]);
 Vue.component('summary-report-form', __webpack_require__(/*! ./components/SummaryReportForm.vue */ "./resources/js/components/SummaryReportForm.vue")["default"]);
 Vue.component('summary-report-list', __webpack_require__(/*! ./components/SummaryReportList.vue */ "./resources/js/components/SummaryReportList.vue")["default"]);
+Vue.component('tour-commission-list', __webpack_require__(/*! ./components/TourCommissionList.vue */ "./resources/js/components/TourCommissionList.vue")["default"]);
+Vue.component('tour-commission-dashboard', __webpack_require__(/*! ./components/TourCommissionDashboard.vue */ "./resources/js/components/TourCommissionDashboard.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -45000,17 +48780,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/TotalSales.vue":
-/*!************************************************!*\
-  !*** ./resources/js/components/TotalSales.vue ***!
-  \************************************************/
+/***/ "./resources/js/components/TotalCommissions.vue":
+/*!******************************************************!*\
+  !*** ./resources/js/components/TotalCommissions.vue ***!
+  \******************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _TotalSales_vue_vue_type_template_id_90e77e5a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TotalSales.vue?vue&type=template&id=90e77e5a& */ "./resources/js/components/TotalSales.vue?vue&type=template&id=90e77e5a&");
-/* harmony import */ var _TotalSales_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TotalSales.vue?vue&type=script&lang=js& */ "./resources/js/components/TotalSales.vue?vue&type=script&lang=js&");
+/* harmony import */ var _TotalCommissions_vue_vue_type_template_id_2e396b6f___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TotalCommissions.vue?vue&type=template&id=2e396b6f& */ "./resources/js/components/TotalCommissions.vue?vue&type=template&id=2e396b6f&");
+/* harmony import */ var _TotalCommissions_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TotalCommissions.vue?vue&type=script&lang=js& */ "./resources/js/components/TotalCommissions.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -45020,9 +48800,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _TotalSales_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _TotalSales_vue_vue_type_template_id_90e77e5a___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _TotalSales_vue_vue_type_template_id_90e77e5a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _TotalCommissions_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TotalCommissions_vue_vue_type_template_id_2e396b6f___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TotalCommissions_vue_vue_type_template_id_2e396b6f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -45032,38 +48812,38 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/TotalSales.vue"
+component.options.__file = "resources/js/components/TotalCommissions.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/components/TotalSales.vue?vue&type=script&lang=js&":
-/*!*************************************************************************!*\
-  !*** ./resources/js/components/TotalSales.vue?vue&type=script&lang=js& ***!
-  \*************************************************************************/
+/***/ "./resources/js/components/TotalCommissions.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/TotalCommissions.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalSales_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./TotalSales.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalSales.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalSales_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalCommissions_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./TotalCommissions.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalCommissions.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalCommissions_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/components/TotalSales.vue?vue&type=template&id=90e77e5a&":
-/*!*******************************************************************************!*\
-  !*** ./resources/js/components/TotalSales.vue?vue&type=template&id=90e77e5a& ***!
-  \*******************************************************************************/
+/***/ "./resources/js/components/TotalCommissions.vue?vue&type=template&id=2e396b6f&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/TotalCommissions.vue?vue&type=template&id=2e396b6f& ***!
+  \*************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalSales_vue_vue_type_template_id_90e77e5a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./TotalSales.vue?vue&type=template&id=90e77e5a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalSales.vue?vue&type=template&id=90e77e5a&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalSales_vue_vue_type_template_id_90e77e5a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalCommissions_vue_vue_type_template_id_2e396b6f___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./TotalCommissions.vue?vue&type=template&id=2e396b6f& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TotalCommissions.vue?vue&type=template&id=2e396b6f&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalCommissions_vue_vue_type_template_id_2e396b6f___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalSales_vue_vue_type_template_id_90e77e5a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TotalCommissions_vue_vue_type_template_id_2e396b6f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -45202,6 +48982,144 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourAgentList_vue_vue_type_template_id_5af31820___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourAgentList_vue_vue_type_template_id_5af31820___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/TourCommissionDashboard.vue":
+/*!*************************************************************!*\
+  !*** ./resources/js/components/TourCommissionDashboard.vue ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TourCommissionDashboard_vue_vue_type_template_id_77830356___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TourCommissionDashboard.vue?vue&type=template&id=77830356& */ "./resources/js/components/TourCommissionDashboard.vue?vue&type=template&id=77830356&");
+/* harmony import */ var _TourCommissionDashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TourCommissionDashboard.vue?vue&type=script&lang=js& */ "./resources/js/components/TourCommissionDashboard.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TourCommissionDashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TourCommissionDashboard_vue_vue_type_template_id_77830356___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TourCommissionDashboard_vue_vue_type_template_id_77830356___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/TourCommissionDashboard.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/TourCommissionDashboard.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/TourCommissionDashboard.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TourCommissionDashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./TourCommissionDashboard.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TourCommissionDashboard.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TourCommissionDashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/TourCommissionDashboard.vue?vue&type=template&id=77830356&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/components/TourCommissionDashboard.vue?vue&type=template&id=77830356& ***!
+  \********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourCommissionDashboard_vue_vue_type_template_id_77830356___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./TourCommissionDashboard.vue?vue&type=template&id=77830356& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TourCommissionDashboard.vue?vue&type=template&id=77830356&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourCommissionDashboard_vue_vue_type_template_id_77830356___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourCommissionDashboard_vue_vue_type_template_id_77830356___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/TourCommissionList.vue":
+/*!********************************************************!*\
+  !*** ./resources/js/components/TourCommissionList.vue ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TourCommissionList_vue_vue_type_template_id_6af821cc___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TourCommissionList.vue?vue&type=template&id=6af821cc& */ "./resources/js/components/TourCommissionList.vue?vue&type=template&id=6af821cc&");
+/* harmony import */ var _TourCommissionList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TourCommissionList.vue?vue&type=script&lang=js& */ "./resources/js/components/TourCommissionList.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TourCommissionList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TourCommissionList_vue_vue_type_template_id_6af821cc___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TourCommissionList_vue_vue_type_template_id_6af821cc___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/TourCommissionList.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/TourCommissionList.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/TourCommissionList.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TourCommissionList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./TourCommissionList.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TourCommissionList.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TourCommissionList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/TourCommissionList.vue?vue&type=template&id=6af821cc&":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/components/TourCommissionList.vue?vue&type=template&id=6af821cc& ***!
+  \***************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourCommissionList_vue_vue_type_template_id_6af821cc___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./TourCommissionList.vue?vue&type=template&id=6af821cc& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TourCommissionList.vue?vue&type=template&id=6af821cc&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourCommissionList_vue_vue_type_template_id_6af821cc___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourCommissionList_vue_vue_type_template_id_6af821cc___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -45409,6 +49327,351 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserList_vue_vue_type_template_id_3c9e9bf4___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserList_vue_vue_type_template_id_3c9e9bf4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/CommissionComponent.vue":
+/*!*********************************************************************!*\
+  !*** ./resources/js/components/commissions/CommissionComponent.vue ***!
+  \*********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CommissionComponent_vue_vue_type_template_id_c37f34e0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CommissionComponent.vue?vue&type=template&id=c37f34e0& */ "./resources/js/components/commissions/CommissionComponent.vue?vue&type=template&id=c37f34e0&");
+/* harmony import */ var _CommissionComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CommissionComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/commissions/CommissionComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CommissionComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CommissionComponent_vue_vue_type_template_id_c37f34e0___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CommissionComponent_vue_vue_type_template_id_c37f34e0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/commissions/CommissionComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/CommissionComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/components/commissions/CommissionComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./CommissionComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/CommissionComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/CommissionComponent.vue?vue&type=template&id=c37f34e0&":
+/*!****************************************************************************************************!*\
+  !*** ./resources/js/components/commissions/CommissionComponent.vue?vue&type=template&id=c37f34e0& ***!
+  \****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionComponent_vue_vue_type_template_id_c37f34e0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./CommissionComponent.vue?vue&type=template&id=c37f34e0& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/CommissionComponent.vue?vue&type=template&id=c37f34e0&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionComponent_vue_vue_type_template_id_c37f34e0___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionComponent_vue_vue_type_template_id_c37f34e0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/CommissionForm.vue":
+/*!****************************************************************!*\
+  !*** ./resources/js/components/commissions/CommissionForm.vue ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CommissionForm_vue_vue_type_template_id_18404001___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CommissionForm.vue?vue&type=template&id=18404001& */ "./resources/js/components/commissions/CommissionForm.vue?vue&type=template&id=18404001&");
+/* harmony import */ var _CommissionForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CommissionForm.vue?vue&type=script&lang=js& */ "./resources/js/components/commissions/CommissionForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CommissionForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CommissionForm_vue_vue_type_template_id_18404001___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CommissionForm_vue_vue_type_template_id_18404001___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/commissions/CommissionForm.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/CommissionForm.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/commissions/CommissionForm.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./CommissionForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/CommissionForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/CommissionForm.vue?vue&type=template&id=18404001&":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/components/commissions/CommissionForm.vue?vue&type=template&id=18404001& ***!
+  \***********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionForm_vue_vue_type_template_id_18404001___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./CommissionForm.vue?vue&type=template&id=18404001& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/CommissionForm.vue?vue&type=template&id=18404001&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionForm_vue_vue_type_template_id_18404001___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionForm_vue_vue_type_template_id_18404001___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/CommissionTypeComponent.vue":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/commissions/CommissionTypeComponent.vue ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CommissionTypeComponent_vue_vue_type_template_id_91ff4214___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CommissionTypeComponent.vue?vue&type=template&id=91ff4214& */ "./resources/js/components/commissions/CommissionTypeComponent.vue?vue&type=template&id=91ff4214&");
+/* harmony import */ var _CommissionTypeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CommissionTypeComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/commissions/CommissionTypeComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CommissionTypeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CommissionTypeComponent_vue_vue_type_template_id_91ff4214___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CommissionTypeComponent_vue_vue_type_template_id_91ff4214___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/commissions/CommissionTypeComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/CommissionTypeComponent.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/components/commissions/CommissionTypeComponent.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionTypeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./CommissionTypeComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/CommissionTypeComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionTypeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/CommissionTypeComponent.vue?vue&type=template&id=91ff4214&":
+/*!********************************************************************************************************!*\
+  !*** ./resources/js/components/commissions/CommissionTypeComponent.vue?vue&type=template&id=91ff4214& ***!
+  \********************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionTypeComponent_vue_vue_type_template_id_91ff4214___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./CommissionTypeComponent.vue?vue&type=template&id=91ff4214& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/CommissionTypeComponent.vue?vue&type=template&id=91ff4214&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionTypeComponent_vue_vue_type_template_id_91ff4214___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommissionTypeComponent_vue_vue_type_template_id_91ff4214___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/TourTypeComponent.vue":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/commissions/TourTypeComponent.vue ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TourTypeComponent_vue_vue_type_template_id_16a964ae___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TourTypeComponent.vue?vue&type=template&id=16a964ae& */ "./resources/js/components/commissions/TourTypeComponent.vue?vue&type=template&id=16a964ae&");
+/* harmony import */ var _TourTypeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TourTypeComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/commissions/TourTypeComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TourTypeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TourTypeComponent_vue_vue_type_template_id_16a964ae___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TourTypeComponent_vue_vue_type_template_id_16a964ae___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/commissions/TourTypeComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/TourTypeComponent.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/components/commissions/TourTypeComponent.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./TourTypeComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/TourTypeComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/TourTypeComponent.vue?vue&type=template&id=16a964ae&":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/components/commissions/TourTypeComponent.vue?vue&type=template&id=16a964ae& ***!
+  \**************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeComponent_vue_vue_type_template_id_16a964ae___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./TourTypeComponent.vue?vue&type=template&id=16a964ae& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/TourTypeComponent.vue?vue&type=template&id=16a964ae&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeComponent_vue_vue_type_template_id_16a964ae___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeComponent_vue_vue_type_template_id_16a964ae___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/TourTypeForm.vue":
+/*!**************************************************************!*\
+  !*** ./resources/js/components/commissions/TourTypeForm.vue ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TourTypeForm_vue_vue_type_template_id_4988ec48___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TourTypeForm.vue?vue&type=template&id=4988ec48& */ "./resources/js/components/commissions/TourTypeForm.vue?vue&type=template&id=4988ec48&");
+/* harmony import */ var _TourTypeForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TourTypeForm.vue?vue&type=script&lang=js& */ "./resources/js/components/commissions/TourTypeForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TourTypeForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TourTypeForm_vue_vue_type_template_id_4988ec48___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TourTypeForm_vue_vue_type_template_id_4988ec48___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/commissions/TourTypeForm.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/TourTypeForm.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/components/commissions/TourTypeForm.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./TourTypeForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/TourTypeForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/commissions/TourTypeForm.vue?vue&type=template&id=4988ec48&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/components/commissions/TourTypeForm.vue?vue&type=template&id=4988ec48& ***!
+  \*********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeForm_vue_vue_type_template_id_4988ec48___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./TourTypeForm.vue?vue&type=template&id=4988ec48& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/commissions/TourTypeForm.vue?vue&type=template&id=4988ec48&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeForm_vue_vue_type_template_id_4988ec48___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TourTypeForm_vue_vue_type_template_id_4988ec48___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -45915,8 +50178,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/andy/Projects/Laravel/sales-reporting/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/andy/Projects/Laravel/sales-reporting/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! G:\WoolHouse\reporting-app\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! G:\WoolHouse\reporting-app\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

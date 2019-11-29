@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Commission;
+use App\CommissionType;
 use App\SalesReport;
 use Illuminate\Http\Request;
 
@@ -54,16 +56,34 @@ class SalesReportController extends Controller
     public function show(SalesReport $sale)
     {
 
+        // dd($sale->salesCommissions);
+        $commissionTypes = CommissionType::all();
+        $commissions = Commission::all();
+
+     
         $selectedProducts = $sale->selectedProducts;
         $salesDeductions = $sale->salesDeductions;
         $salesCommissions = $sale->salesCommissions;
 
-        // foreach ($selectedProducts as $product) {
-        //     dump($product->product->name);
-        // }
+        $totalByCommissions = array();
 
+        foreach ($commissions as $commission) {
+            $total = 0;
 
-        return view('sales.show', compact('sale', 'selectedProducts', 'salesDeductions', 'salesCommissions'));
+            foreach ($salesCommissions as $salesCommission) {
+                if($salesCommission->tourCommission->commission->id == $commission->id){
+                    $total = $total + $salesCommission->amount;
+                }
+           }
+
+           $totalByCommissions[$commission->name] = $total;
+
+        //    array_push($totalByCommissions, $commission->name => $total);
+        }
+
+        // dd($totalByCommissions);
+
+        return view('sales.show', compact('sale', 'commissionTypes', 'totalByCommissions', 'selectedProducts', 'salesDeductions', 'salesCommissions'));
     }
 
     /**

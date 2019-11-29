@@ -19,10 +19,14 @@
     <div class="mt-10 w-144 mx-auto">
         @include('agents._agent-info')
     </div>
+    
+    <div class="mx-auto w-288 mt-5 mb-16">
+        <h1 class="mb-2 text-lg font-semibold text-blue-700" >Commisions Matrix</h1>
+        <tour-commission-list 
+                :user="{{ auth()->user() }}"  
+                backend="{{ env('APP_URL')}}" 
+                :tour-commissions="{{ $tourCommissions }}"
+                :agent-id="{{$agent->id}}" ></tour-commission-list>
+    </div>
 @endsection
 
-{{-- 
-<div class="w-144">
-        <h1 class="mb-2 text-lg font-light" >Tour Guide List</h1>
-        <tour-guide-list  :user="{{ auth()->user() }}" backend="{{ env('APP_URL')}}"></tour-guide-list>
-    </div> --}}
