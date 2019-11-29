@@ -3,6 +3,10 @@
 namespace Tests\Feature;
 
 use App\Commission;
+use App\CommissionType;
+use App\TourAgent;
+use App\TourCommission;
+use App\TourType;
 use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -17,6 +21,10 @@ class CommissionFeatureTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
+        factory(TourAgent::class,2)->create();
+        factory(CommissionType::class,2)->create();
+        factory(TourType::class,3)->create();
+
         $user = factory(User::class)->create();
 
         $commission = factory(Commission::class)->raw();
@@ -26,6 +34,7 @@ class CommissionFeatureTest extends TestCase
 
         
         $this->assertCount(1, Commission::all());
+        $this->assertCount(12, TourCommission::all());
 
 
     }
@@ -37,12 +46,26 @@ class CommissionFeatureTest extends TestCase
 
 
         $commission = factory(Commission::class)->create();
+        factory(TourCommission::class, 5)->create([
+            'commission_id' => $commission->id
+        ]);
+
+         //Haystack
+         $commissionHay = factory(Commission::class)->create();
+         factory(TourCommission::class, 3)->create([
+             'commission_id' => $commissionHay->id
+         ]);
+
+        //There should be 2 commissions and 8 Tourcommissions Before delete
+        $this->assertCount(2, Commission::all());
+        $this->assertCount(8, TourCommission::all());
 
         $this->delete('/api/commissions/' . $commission->id . '?api_token=' . $user->api_token )
             ->assertStatus(200);
 
 
-        $this->assertCount(0, Commission::all());
+        $this->assertCount(1, Commission::all());
+        $this->assertCount(3, TourCommission::all());
 
 
     }

@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Commission;
+use App\CommissionType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\TourAgent;
+use App\TourCommission;
+use App\TourType;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 class CommissionController extends Controller
@@ -22,9 +27,42 @@ class CommissionController extends Controller
 
     public function store()
     {
-        $commission = Commission::create($this->validateData());
 
-        return response($commission, Response::HTTP_CREATED);
+        DB::beginTransaction();
+
+        try {
+            
+            $commission = Commission::create($this->validateData());
+
+            $tourTypes = TourType::all();
+            $tourAgents = TourAgent::all();
+            $commissionTypes = CommissionType::all();
+
+            foreach ($tourAgents as $tourAgent) {
+                foreach ($tourTypes as $tourType) {
+                    foreach ($commissionTypes as $commissionType) {
+                        TourCommission::create([
+                            'tour_agent_id' => $tourAgent->id,
+                            'tour_type_id' => $tourType->id,
+                            'commission_type_id' => $commissionType->id,
+                            'commission_id' => $commission->id,
+                            'amount' => 0
+                        ]);
+                    }                    
+                }
+            }
+
+            DB::commit();
+
+            return response($commission, Response::HTTP_CREATED);
+
+        } catch (Exception $e) {
+
+            DB::rollBack();
+            return response(['error' => $e], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+
     }
 
     public function update(Commission $commission)
@@ -37,9 +75,27 @@ class CommissionController extends Controller
 
     public function destroy(Commission $commission)
     {
-        $commission->delete();
+        DB::beginTransaction();
 
-        return response([], Response::HTTP_OK);
+        try {
+            
+            $commission->tourCommissions->each(function($tourCommission){
+                $tourCommission->delete();
+            });
+
+            $commission->delete();
+
+            DB::commit();
+            
+            return response([], Response::HTTP_OK);
+
+        } catch (Exception $e) {
+            
+            DB::rollBack();
+            return response(['error' => $e], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    
     }
 
 
