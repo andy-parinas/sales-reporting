@@ -4429,6 +4429,56 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'SummaryReportForm',
   props: ['user', 'backend', 'edit', 'summary', 'items'],
@@ -4453,7 +4503,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         balance: 0
       },
       errors: null,
-      noResults: false
+      noResults: false,
+      selectedReport: null,
+      tourGuides: [],
+      tourAgents: [],
+      commissions: [],
+      postUrl: '',
+      selectedTourAgent: '',
+      selectedTourGuide: '',
+      selectedCommission: ''
     };
   },
   watch: {
@@ -4654,10 +4712,149 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return updateReport;
-    }()
+    }(),
+    loadTourAgents: function () {
+      var _loadTourAgents = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+        var url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.prev = 0;
+                url = this.backend + '/api/agents?api_token=' + this.user.api_token;
+                _context4.next = 4;
+                return axios.get(url);
+
+              case 4:
+                response = _context4.sent;
+                this.tourAgents = response.data.data;
+                _context4.next = 11;
+                break;
+
+              case 8:
+                _context4.prev = 8;
+                _context4.t0 = _context4["catch"](0);
+                console.log('Error Loading Tour Agents:', _context4.t0);
+
+              case 11:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this, [[0, 8]]);
+      }));
+
+      function loadTourAgents() {
+        return _loadTourAgents.apply(this, arguments);
+      }
+
+      return loadTourAgents;
+    }(),
+    loadTourGuides: function () {
+      var _loadTourGuides = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+        var url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.prev = 0;
+                url = this.backend + "/api/guides?api_token=".concat(this.user.api_token);
+                _context5.next = 4;
+                return axios.get(url);
+
+              case 4:
+                response = _context5.sent;
+                this.tourGuides = response.data.data;
+                _context5.next = 11;
+                break;
+
+              case 8:
+                _context5.prev = 8;
+                _context5.t0 = _context5["catch"](0);
+                console.log('Error Loading Tour Guides:', _context5.t0);
+
+              case 11:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, this, [[0, 8]]);
+      }));
+
+      function loadTourGuides() {
+        return _loadTourGuides.apply(this, arguments);
+      }
+
+      return loadTourGuides;
+    }(),
+    loadCommissions: function () {
+      var _loadCommissions = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+        var url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                _context6.prev = 0;
+                url = this.backend + '/api/commissions?api_token=' + this.user.api_token;
+                _context6.next = 4;
+                return axios.get(url);
+
+              case 4:
+                response = _context6.sent;
+                this.commissions = response.data;
+                _context6.next = 11;
+                break;
+
+              case 8:
+                _context6.prev = 8;
+                _context6.t0 = _context6["catch"](0);
+                console.log('Error Loading Tour Commissions:', _context6.t0);
+
+              case 11:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6, this, [[0, 8]]);
+      }));
+
+      function loadCommissions() {
+        return _loadCommissions.apply(this, arguments);
+      }
+
+      return loadCommissions;
+    }(),
+    tourAgentSelected: function tourAgentSelected() {
+      console.log(this.selectedTourAgent);
+    },
+    tourGuideSelected: function tourGuideSelected() {
+      console.log(this.selectedTourGuide);
+    },
+    commissionSelected: function commissionSelected() {
+      console.log(this.selectedCommission);
+    },
+    selectReport: function selectReport(report) {
+      if (report === 'TOUR_GUIDE') {
+        this.selectedCommission = 'TG';
+      }
+
+      if (report === 'TOUR_AGENT') {
+        this.selectedCommission = '';
+      }
+    }
   },
   mounted: function mounted() {
     var _this2 = this;
+
+    this.loadTourAgents();
+    this.loadTourGuides();
+    this.loadCommissions();
 
     if (this.edit) {
       this.items.forEach(function (item) {
@@ -31478,6 +31675,279 @@ var render = function() {
         ]),
     _vm._v(" "),
     _c("div", { staticClass: "mx-auto w-288" }, [
+      _c("div", { staticClass: "mt-10" }, [
+        _c("div", { staticClass: "flex items-center" }, [
+          _vm._m(5),
+          _vm._v(" "),
+          _c("div", { staticClass: "mr-5" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.selectedReport,
+                  expression: "selectedReport"
+                }
+              ],
+              attrs: { type: "radio", name: "selection", value: "TOUR_AGENT" },
+              domProps: { checked: _vm._q(_vm.selectedReport, "TOUR_AGENT") },
+              on: {
+                click: function($event) {
+                  return _vm.selectReport("TOUR_AGENT")
+                },
+                change: function($event) {
+                  _vm.selectedReport = "TOUR_AGENT"
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("label", [_vm._v(" Tour Agent ")])
+          ]),
+          _vm._v(" "),
+          _c("div", [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.selectedReport,
+                  expression: "selectedReport"
+                }
+              ],
+              attrs: { type: "radio", name: "selection", value: "TOUR_GUIDE" },
+              domProps: { checked: _vm._q(_vm.selectedReport, "TOUR_GUIDE") },
+              on: {
+                click: function($event) {
+                  return _vm.selectReport("TOUR_GUIDE")
+                },
+                change: function($event) {
+                  _vm.selectedReport = "TOUR_GUIDE"
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("label", [_vm._v(" Tour Guide ")])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", [
+        _c("div", { staticClass: "mt-10 flex items-center" }, [
+          _vm.selectedReport === "TOUR_AGENT"
+            ? _c("div", { staticClass: "flex items-center flex-1 mr-5" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "w-32 mr-2 text-right",
+                    attrs: { for: "agent" }
+                  },
+                  [_vm._v("Tour Agent")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.selectedTourAgent,
+                        expression: "selectedTourAgent"
+                      }
+                    ],
+                    staticClass:
+                      "w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800",
+                    attrs: {
+                      type: "text",
+                      id: "agent",
+                      placeholder: "Tour Agent Name"
+                    },
+                    on: {
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.selectedTourAgent = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        },
+                        _vm.tourAgentSelected
+                      ]
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { disabled: "", value: "" } }, [
+                      _vm._v(" --- Select Tour Agent ---")
+                    ]),
+                    _vm._v(" "),
+                    _vm._l(_vm.tourAgents, function(agent) {
+                      return _c(
+                        "option",
+                        { key: agent.id, domProps: { value: agent.id } },
+                        [_vm._v(_vm._s(agent.name))]
+                      )
+                    })
+                  ],
+                  2
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.selectedReport === "TOUR_GUIDE"
+            ? _c("div", { staticClass: "flex items-center flex-1" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "mr-2 w-32 text-right",
+                    attrs: { for: "guide" }
+                  },
+                  [_vm._v("Tour Guides")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.selectedTourGuide,
+                        expression: "selectedTourGuide"
+                      }
+                    ],
+                    staticClass:
+                      "w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800",
+                    attrs: {
+                      type: "text",
+                      id: "guide",
+                      placeholder: "Guide Name"
+                    },
+                    on: {
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.selectedTourGuide = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        },
+                        _vm.tourGuideSelected
+                      ]
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { disabled: "", value: "" } }, [
+                      _vm._v(" --- Select Tour Guide ---")
+                    ]),
+                    _vm._v(" "),
+                    _vm._l(_vm.tourGuides, function(guide) {
+                      return _c(
+                        "option",
+                        { key: guide.id, domProps: { value: guide.id } },
+                        [_vm._v(_vm._s(guide.name))]
+                      )
+                    })
+                  ],
+                  2
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.selectedReport
+            ? _c("div", { staticClass: "flex items-center flex-1" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "mr-2 w-32 text-right",
+                    attrs: { for: "commission" }
+                  },
+                  [_vm._v("Commissions")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.selectedCommission,
+                        expression: "selectedCommission"
+                      }
+                    ],
+                    staticClass:
+                      "w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800",
+                    attrs: {
+                      type: "text",
+                      id: "commission",
+                      placeholder: "Commission"
+                    },
+                    on: {
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.selectedCommission = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        },
+                        _vm.commissionSelected
+                      ]
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { disabled: "", value: "" } }, [
+                      _vm._v(" --- Select Tour Agent ---")
+                    ]),
+                    _vm._v(" "),
+                    _vm._l(_vm.commissions, function(commission) {
+                      return _c(
+                        "option",
+                        {
+                          key: commission.id,
+                          attrs: {
+                            disabled:
+                              (_vm.selectedReport === "TOUR_AGENT" &&
+                                commission.name === "TG") ||
+                              (_vm.selectedReport === "TOUR_GUIDE" &&
+                                commission.name !== "TG")
+                          },
+                          domProps: {
+                            selected:
+                              commission.name === "TG" &&
+                              _vm.selectedReport === "TOUR_GUIDE",
+                            value: commission.name
+                          }
+                        },
+                        [_vm._v(_vm._s(commission.name))]
+                      )
+                    })
+                  ],
+                  2
+                )
+              ])
+            : _vm._e()
+        ])
+      ]),
+      _vm._v(" "),
       !_vm.edit
         ? _c(
             "div",
@@ -31488,7 +31958,7 @@ var render = function() {
             },
             [
               _c("div", { staticClass: "flex" }, [
-                _vm._m(5),
+                _vm._m(6),
                 _vm._v(" "),
                 _c("div", { staticClass: "flex-1 border-gray-700" }, [
                   _c("input", {
@@ -31505,7 +31975,7 @@ var render = function() {
                     attrs: {
                       type: "text",
                       id: "date",
-                      placeholder: "Product Name"
+                      placeholder: "Report Title"
                     },
                     domProps: { value: _vm.summaryReport.title },
                     on: {
@@ -31528,7 +31998,7 @@ var render = function() {
         : _vm._e(),
       _vm._v(" "),
       _c("table", { staticClass: "w-full mt-5" }, [
-        _vm._m(6),
+        _vm._m(7),
         _vm._v(" "),
         _c(
           "tbody",
@@ -32013,6 +32483,14 @@ var staticRenderFns = [
         )
       ]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "mr-5" }, [
+      _c("h1", [_vm._v("Generate Report For")])
+    ])
   },
   function() {
     var _vm = this

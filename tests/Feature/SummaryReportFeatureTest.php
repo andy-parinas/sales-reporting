@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\SalesReport;
 use App\SummaryReport;
 use App\SummaryReportItem;
+use App\TourAgent;
+use App\TourGuide;
 use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -16,10 +18,14 @@ class SummaryReportFeatureTest extends TestCase
 
 
     /** @test */
-    public function can_create_summary_report_via_api()
+    public function can_create_summary_report_via_api_for_tour_agent()
     {
+        
         $this->withoutExceptionHandling();
         $user = factory(User::class)->create();
+
+        $tourAgent = factory(TourAgent::class)->create();
+
         
         $daily = factory(SalesReport::class, 2)->create();
 
@@ -33,19 +39,60 @@ class SummaryReportFeatureTest extends TestCase
         // dd($report);
 
         $data = array_merge($report, ['summary_items' => $summaryItems]);
-        // dd($data);
+      
 
-        $this->post('/api/summaries', array_merge($data, ['api_token' => $user->api_token]))
-            ->assertStatus(201);
+        $response = $this->post('/api/summaries?reportable=AGENT&id=' . $tourAgent->id , array_merge($data, ['api_token' => $user->api_token]));
 
+        // dd(json_decode($response->content())->reportable_type);
+        $result = json_decode($response->content());
+
+        $response->assertStatus(201);
         $this->assertCount(1, SummaryReport::all());
         $this->assertCount(2, SummaryReportItem::all());
+        $this->assertEquals("App\TourAgent", $result->reportable_type);
     }
+
+     /** @test */
+     public function can_create_summary_report_via_api_for_tour_guide()
+     {
+         
+         $this->withoutExceptionHandling();
+         $user = factory(User::class)->create();
+ 
+         $tourGuide = factory(TourGuide::class)->create();
+ 
+         
+         $daily = factory(SalesReport::class, 2)->create();
+ 
+         $summaryItems = [
+            [ 'sales_report_id' => $daily[0]->id],
+            [ 'sales_report_id' => $daily[1]->id],
+         ];
+ 
+         $report = factory(SummaryReport::class)->raw();
+ 
+         // dd($report);
+ 
+         $data = array_merge($report, ['summary_items' => $summaryItems]);
+       
+ 
+         $response = $this->post('/api/summaries?reportable=GUIDE&id=' . $tourGuide->id , array_merge($data, ['api_token' => $user->api_token]));
+ 
+        //  dd(json_decode($response->content()));
+         $result = json_decode($response->content());
+
+         $response->assertStatus(201);
+         $this->assertCount(1, SummaryReport::all());
+         $this->assertCount(2, SummaryReportItem::all());
+         $this->assertEquals("App\TourGuide", $result->reportable_type);
+     }
 
 
     /** @test */
     public function can_list_summary_reports_via_api()
     {
+        // dd("Test");
+
         $this->withoutExceptionHandling();
         $user = factory(User::class)->create();
 

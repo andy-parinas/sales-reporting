@@ -20,4 +20,9 @@ class TourAgent extends Model
         return $this->hasMany(TourCommission::class);
     }
 
+    public function reports()
+    {
+        return $this->morphMany(SummaryReport::class, 'reportable');
+    }
+
 }

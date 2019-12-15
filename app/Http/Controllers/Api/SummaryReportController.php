@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\SummaryReport;
+use App\TourAgent;
+use App\TourGuide;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -47,16 +50,35 @@ class SummaryReportController extends Controller
         
     }
 
-    public function store()
+    public function store(Request $request)
     {
         $data = $this->validateSummaryData();
+        $reportable = null;
 
-        // dd($data);
+        if($request->has('reportable') && $request->has('id')){
+
+            if($request['reportable'] == 'AGENT'){
+                $reportable = TourAgent::find($request['id']);
+            }
+
+            if($request['reportable'] == 'GUIDE'){
+                $reportable = TourGuide::find($request['id']);
+            }
+
+        }
+
+        if($reportable == null){
+            return response(['error' => 'Agent or Guide not found'], Response::HTTP_NOT_FOUND);
+        }
+
+
+
         DB::beginTransaction();
 
         try {
             
-            $summary = SummaryReport::create($data);
+            // $summary = SummaryReport::create($data);
+            $summary = $reportable->reports()->create($data);
 
             $summary->summaryReportItems()->createMany(request('summary_items'));
 

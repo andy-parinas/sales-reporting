@@ -80,6 +80,56 @@
             </div>
         </div>
         <div class="mx-auto w-288">
+            <div class="mt-10">            
+                <div class="flex items-center">
+                    <div class="mr-5">
+                        <h1>Generate Report For</h1>
+                    </div>
+                    <div class="mr-5">
+                        <input type="radio" name="selection" value="TOUR_AGENT" v-model="selectedReport" @click="selectReport('TOUR_AGENT')">
+                        <label > Tour Agent </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="selection" value="TOUR_GUIDE" v-model="selectedReport" @click="selectReport('TOUR_GUIDE')" >
+                        <label > Tour Guide </label>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="mt-10 flex items-center">
+                    <div class="flex items-center flex-1 mr-5"  v-if="selectedReport === 'TOUR_AGENT'">
+                        <label class="w-32 mr-2 text-right" for="agent">Tour Agent</label>
+                        <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800" 
+                                type="text" id="agent" placeholder="Tour Agent Name" @change="tourAgentSelected" v-model="selectedTourAgent" >
+
+                            <option disabled value="" > --- Select Tour Agent ---</option>
+                            <option v-for="agent in tourAgents" :key="agent.id"
+                                :value="agent.id">{{ agent.name }}</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center flex-1" v-if="selectedReport === 'TOUR_GUIDE'">
+                        <label class="mr-2 w-32 text-right" for="guide">Tour Guides</label>
+                        <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800"   
+                                type="text" id="guide" placeholder="Guide Name" @change="tourGuideSelected" v-model="selectedTourGuide" >
+                            <option disabled value="" > --- Select Tour Guide ---</option>
+                            <option v-for="guide in tourGuides" :key="guide.id"
+                                :value="guide.id">{{ guide.name }}</option>
+                        </select>
+                    </div>
+                     <div class="flex items-center flex-1" v-if="selectedReport">
+                        <label class="mr-2 w-32 text-right" for="commission">Commissions</label>
+                        <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800" 
+                                type="text" id="commission" placeholder="Commission" @change="commissionSelected" v-model="selectedCommission" >
+
+                            <option disabled value="" > --- Select Tour Agent ---</option>
+                            <option v-for="commission in commissions" :key="commission.id"
+                                :selected="commission.name === 'TG' && selectedReport==='TOUR_GUIDE'"
+                                :disabled="(selectedReport==='TOUR_AGENT' && commission.name === 'TG') || (selectedReport==='TOUR_GUIDE' && commission.name !== 'TG')"
+                                :value="commission.name">{{ commission.name }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div v-if="!edit" class="border border-gray-700 mt-10 mb-5 " :class="errors && errors.title ? 'bg-red-200' : 'bg-green-200'"> 
                 <div class="flex">
                     <div class="border-r py-1  border-gray-700 w-32 text-center">
@@ -87,7 +137,7 @@
                     </div>
                     <div  class="flex-1 border-gray-700" >
                         <input class="w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm bg-transparent"
-                            type="text" id="date" placeholder="Product Name" 
+                            type="text" id="date" placeholder="Report Title" 
                             v-model="summaryReport.title">
                     </div>
                 </div>
@@ -239,7 +289,15 @@ export default {
                 balance: 0
             },
             errors: null,
-            noResults: false
+            noResults: false,
+            selectedReport: null,
+            tourGuides: [],
+            tourAgents: [],
+            commissions: [],
+            postUrl: '',
+            selectedTourAgent: '',
+            selectedTourGuide: '',
+            selectedCommission: ''
         }
     },
     watch: {
@@ -377,10 +435,80 @@ export default {
                     console.log(error);
                 }
             }
+        },
+
+        loadTourAgents: async function(){
+
+            try {
+                const url = this.backend + '/api/agents?api_token=' + this.user.api_token;
+                const response = await axios.get(url);
+
+                this.tourAgents = response.data.data;
+
+
+            } catch (error) {
+                console.log('Error Loading Tour Agents:', error);
+            }
+
+        },
+        loadTourGuides: async function(){
+
+              try {
+                
+                const url = this.backend + `/api/guides?api_token=${this.user.api_token}`;
+                const response = await axios.get(url);
+
+                this.tourGuides = response.data.data;
+
+            } catch (error) {
+                console.log('Error Loading Tour Guides:', error);
+            }
+
+        },
+        loadCommissions: async function(){
+
+            try {
+                
+                const url = this.backend + '/api/commissions?api_token=' + this.user.api_token
+                const response = await axios.get(url);
+
+                this.commissions = response.data;
+
+
+            } catch (error) {
+                console.log('Error Loading Tour Commissions:', error);
+            }
+
+        },
+
+        tourAgentSelected: function(){
+            console.log(this.selectedTourAgent);
+        },
+
+        tourGuideSelected: function(){
+            console.log(this.selectedTourGuide);
+        },
+        commissionSelected: function(){
+            console.log(this.selectedCommission);
+        },
+        selectReport: function(report){
+            if(report === 'TOUR_GUIDE'){
+                this.selectedCommission = 'TG';
+            }
+
+            if(report === 'TOUR_AGENT' ){
+                this.selectedCommission = '';
+            }
         }
     },
 
     mounted(){
+
+        this.loadTourAgents();
+
+        this.loadTourGuides();
+
+        this.loadCommissions();
 
         if(this.edit){
 

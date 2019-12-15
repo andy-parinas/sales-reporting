@@ -20,7 +20,9 @@ class SummaryReport extends Model
         'total',
         'return',
         'duvet_deduction',
-        'balance'
+        'balance',
+        'reportable_id',
+        'reportable_type'
     ];
 
 
@@ -28,4 +30,13 @@ class SummaryReport extends Model
     {
         return $this->hasMany(SummaryReportItem::class);
     }
+
+    
+
+    public function reportable()
+    {
+        return $this->morphTo();
+    }
+
+
 }

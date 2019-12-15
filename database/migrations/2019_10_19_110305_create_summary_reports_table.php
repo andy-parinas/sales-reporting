@@ -29,6 +29,8 @@ class CreateSummaryReportsTable extends Migration
             $table->float('return')->default(0);
             $table->float('duvet_deduction')->default(0);
             $table->float('balance');
+            $table->unsignedBigInteger('reportable_id');
+            $table->string('reportable_type');
             $table->timestamps();
         });
     }
