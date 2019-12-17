@@ -4544,7 +4544,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context.prev = 0;
                 this.noResults = false;
                 this.errors = null;
-                url = this.backend + '/api/sales/date?api_token=' + this.user.api_token + '&from=' + this.summaryReport.from_date + '&to=' + this.summaryReport.to_date;
+                url = this.backend + '/api/sales/date?api_token=' + this.user.api_token + '&from=' + this.summaryReport.from_date + '&to=' + this.summaryReport.to_date + '&agent=' + this.selectedTourAgent + '&guide=' + this.selectedTourGuide;
                 _context.next = 6;
                 return axios.get(url);
 
@@ -4850,10 +4850,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     selectReport: function selectReport(report) {
       if (report === 'TOUR_GUIDE') {
         this.selectedCommission = 'TG';
+        this.selectedTourAgent = '';
       }
 
       if (report === 'TOUR_AGENT') {
         this.selectedCommission = '';
+        this.selectedTourGuide = '';
       }
     }
   },

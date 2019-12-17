@@ -327,7 +327,8 @@ export default {
                 this.errors = null;
                 
                 const url = this.backend + '/api/sales/date?api_token=' + this.user.api_token + 
-                    '&from=' + this.summaryReport.from_date + '&to=' + this.summaryReport.to_date;
+                    '&from=' + this.summaryReport.from_date + '&to=' + this.summaryReport.to_date + 
+                    '&agent=' + this.selectedTourAgent + '&guide=' + this.selectedTourGuide;
 
                 const response = await axios.get(url);
 
@@ -515,10 +516,12 @@ export default {
         selectReport: function(report){
             if(report === 'TOUR_GUIDE'){
                 this.selectedCommission = 'TG';
+                this.selectedTourAgent = '';
             }
 
             if(report === 'TOUR_AGENT' ){
                 this.selectedCommission = '';
+                this.selectedTourGuide = '';
             }
         }
     },

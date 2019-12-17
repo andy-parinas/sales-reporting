@@ -67,8 +67,14 @@ class SalesReportController extends Controller
             $from = date($request['from']);
             $to = date($request['to']);
 
-            // $reports = SalesReport::whereBetween("tour_date", [$from, $to])->with('salesCommissions')->get();
-            $reports = SalesReport::whereBetween("tour_date", [$from, $to])->get();
+            $reports = SalesReport::whereBetween("tour_date", [$from, $to]);
+
+            if($request->has('agent') || $request->has('guide')){
+
+                $reports  = $reports->where('tour_agent_id', $request['agent'])->orWhere('tour_guide_id', $request['guide']);
+            }
+
+            $reports = $reports->get();
 
             return SalesReportListResource::collection($reports);
 
