@@ -40,46 +40,7 @@
 
 
         <!-- IF Form is on Create Mode -->
-        <div v-else class="w-144 mx-auto" >
-            <div class="flex items-center justify-center">
-                <div class="px-4 flex justify-between mt-5">
-                    <div class="border border-gray-700 flex-1 mr-4">
-                        <div class="flex">
-                            <div class="border-r border-gray-700 w-32 text-center py-2 ">
-                                <label class="text-sm font-semibold text-gray-800 uppercase" for="date">From</label>
-                            </div>
-                            <div class="flex-1 border-gray-700" :class="errors && errors.from_date ? 'bg-red-200' : ''">
-                                <input class="w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm bg-transparent" 
-                                    type="date" id="date" 
-                                    placeholder="Tour Date" v-model="summaryReport.from_date">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="border border-gray-700 flex-1 mr-4">
-                        <div class="flex">
-                            <div class="border-r border-gray-700 w-32 text-center  py-2">
-                                <label class="text-sm font-semibold text-gray-800 uppercase" for="date">To</label>
-                            </div>
-                            <div class="flex-1border-gray-700" :class="errors && errors.to_date ? 'bg-red-200' : ''">
-                                <input class="w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm bg-transparent"
-                                    type="date" id="date" 
-                                    placeholder="Tour Date" v-model="summaryReport.to_date" >
-                            </div>
-                        </div>
-                    </div>
-                    <button class="bg-blue-600 py-2 px-2 text-white rounded" @click="getSalesReport" >Go</button>
-                </div>
-            </div>
-            <div v-if="noResults" class="mt-2 mb-3  flex items-center justify-center">
-                <h1 class="text-red-700 font-semibold text-lg mr-3">No Results Found</h1>
-                <h3 class="text-gray-800">Please select another date range</h3>
-            </div>
-            <div  v-if="errors" class="mt-2 mb-3  flex items-center justify-center">
-                <h1 class="text-red-700 font-semibold text-lg mr-3">Error Connecting</h1>
-                <h3 class="text-gray-800">Please check your internet or report to I.T.</h3>
-            </div>
-        </div>
-        <div class="mx-auto w-288">
+        <div v-else class="mx-auto w-288">
             <div class="mt-10">            
                 <div class="flex items-center">
                     <div class="mr-5">
@@ -97,8 +58,8 @@
             </div>
             <div>
                 <div class="mt-10 flex items-center">
-                    <div class="flex items-center flex-1 mr-5"  v-if="selectedReport === 'TOUR_AGENT'">
-                        <label class="w-32 mr-2 text-right" for="agent">Tour Agent</label>
+                    <div   v-if="selectedReport === 'TOUR_AGENT'" class="flex items-center flex-1 mr-5">
+                        <label class="w-32 mr-2" for="agent">Tour Agent</label>
                         <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800" 
                                 type="text" id="agent" placeholder="Tour Agent Name" @change="tourAgentSelected" v-model="selectedTourAgent" >
 
@@ -107,8 +68,8 @@
                                 :value="agent.id">{{ agent.name }}</option>
                         </select>
                     </div>
-                    <div class="flex items-center flex-1" v-if="selectedReport === 'TOUR_GUIDE'">
-                        <label class="mr-2 w-32 text-right" for="guide">Tour Guides</label>
+                    <div  v-if="selectedReport === 'TOUR_GUIDE'" class="flex items-center flex-1  mr-5">
+                        <label class="mr-2 w-32" for="guide">Tour Guides</label>
                         <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800"   
                                 type="text" id="guide" placeholder="Guide Name" @change="tourGuideSelected" v-model="selectedTourGuide" >
                             <option disabled value="" > --- Select Tour Guide ---</option>
@@ -116,8 +77,8 @@
                                 :value="guide.id">{{ guide.name }}</option>
                         </select>
                     </div>
-                     <div class="flex items-center flex-1" v-if="selectedReport">
-                        <label class="mr-2 w-32 text-right" for="commission">Commissions</label>
+                     <div  v-if="selectedReport" class="flex items-center flex-1">
+                        <label class="mr-2 w-32" for="commission">Commissions</label>
                         <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800" 
                                 type="text" id="commission" placeholder="Commission" @change="commissionSelected" v-model="selectedCommission" >
 
@@ -129,7 +90,40 @@
                         </select>
                     </div>
                 </div>
+
+                <div v-if="selectedReport">
+                    <div  class="flex items-center mt-5">
+                        <div class="flex items-center flex-1 mr-5">
+                            <label class="w-32 mr-2" for="agent">From Date</label>
+                            <input class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800 uppercase"  
+                                        type="date" id="date" 
+                                        placeholder="Tour Date" v-model="summaryReport.from_date">
+                        </div>
+                        <div class="flex items-center flex-1">
+                            <label class="w-32 mr-2" for="agent">To Date</label>
+                            <input class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800 uppercase" 
+                                        type="date" id="date" 
+                                        placeholder="Tour Date" v-model="summaryReport.to_date" >
+                        </div>
+                    </div>
+                    <div class="flex mt-5">
+                        <button class="bg-blue-600 py-2 px-2 text-white rounded flex-1" @click="getSalesReport" >Generate Report</button>
+                    </div>
+                    <div v-if="noResults" class="mt-2 mb-3  flex items-center justify-center">
+                        <h1 class="text-red-700 font-semibold text-lg mr-3">No Results Found</h1>
+                        <h3 class="text-gray-800">Please select another date range</h3>
+                    </div>
+                    <div  v-if="errors" class="mt-2 mb-3  flex items-center justify-center">
+                        <h1 class="text-red-700 font-semibold text-lg mr-3">Error Connecting</h1>
+                        <h3 class="text-gray-800">Please check your internet or report to I.T.</h3>
+                    </div>
+
+                </div>
+
             </div>
+
+
+            
             <div v-if="!edit" class="border border-gray-700 mt-10 mb-5 " :class="errors && errors.title ? 'bg-red-200' : 'bg-green-200'"> 
                 <div class="flex">
                     <div class="border-r py-1  border-gray-700 w-32 text-center">
@@ -148,47 +142,48 @@
                         <th class="py-2 px-2 border-r border-gray-800 w-32">
                             Date
                         </th>
-                        <th class="py-2 px-2 border-r border-gray-800 w-32">
+                        <!-- <th class="py-2 px-2 border-r border-gray-800 w-32">
                             GRP/Code
-                        </th><th class="py-2 px-2 border-r border-gray-800 w-40">
+                        </th> -->
+                        <!-- <th class="py-2 px-2 border-r border-gray-800 w-40">
                             Guide Name
-                        </th>
+                        </th> -->
                         <th class="py-2 px-2 border-r border-gray-800 w-16">A</th>
                         <th class="py-2 px-2 border-r border-gray-800 w-16">C</th>
                         <th class="py-2 px-2 border-r border-gray-800 w-16">TC</th>
                         <th class="py-2 px-2 border-r border-gray-800 w-24 text-right">Sales</th>
-                        <th class="py-2 px-2 border-r border-gray-800 w-24 text-right">Commission</th>
-                        <th class="py-2 px-2 border-r border-gray-800 w-24 text-right">GST</th>
-                        <th class="py-2 px-2 border-r border-gray-800 w-32 text-right">Total</th>
+                        <th class="py-2 px-2 border-r border-gray-800 w-24 text-right"> {{selectedCommission || 'Commmission'}}</th>
+                        <!-- <th class="py-2 px-2 border-r border-gray-800 w-24 text-right">GST</th>
+                        <th class="py-2 px-2 border-r border-gray-800 w-32 text-right">Total</th> -->
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in summary_items" :key="item.id"
+                    <tr v-for="item in summaryReport.summary_items" :key="item.id"
                         class="bg-white text-xs">
                         <td class="py-2 px-4 border border-gray-800"> {{ item.tour_date }} </td>
-                        <td class="py-2 px-4 border border-gray-800"> {{ item.grp_code }} </td>
-                        <td class="py-2 px-4 border border-gray-800"> {{ item.tour_guide }} </td>
+                        <!-- <td class="py-2 px-4 border border-gray-800"> {{ item.grp_code }} </td>
+                        <td class="py-2 px-4 border border-gray-800"> {{ item.tour_guide }} </td> -->
                         <td class="py-2 px-4 border border-gray-800"> {{ item.adult_count }} </td>
                         <td class="py-2 px-4 border border-gray-800"> {{ item.children_count }} </td>
                         <td class="py-2 px-4 border border-gray-800"> 0 </td>
                         <td class="py-2 px-4 border border-gray-800 text-right"> {{ item.total_agent_sales }} </td>
-                        <td class="py-2 px-4 border border-gray-800 text-right"> {{ item.total_commissions }} </td>
-                        <td class="py-2 px-4 border border-gray-800 text-right"> {{ item.gst }} </td>
-                        <td class="py-2 px-4 border border-gray-800 text-right"> {{ item.grand_total_commission }} </td>
+                        <td class="py-2 px-4 border border-gray-800 text-right"> {{ item.commission }} </td>
+                        <!-- <td class="py-2 px-4 border border-gray-800 text-right"> {{ item.gst }} </td>
+                        <td class="py-2 px-4 border border-gray-800 text-right"> {{ item.grand_total_commission }} </td> -->
                     </tr>
                     <tr class="bg-blue-200 text-xs">
-                        <td class="py-2 px-4 border border-gray-800"></td>
-                        <td class="py-2 px-4 border border-gray-800"></td>
+                        <!-- <td class="py-2 px-4 border border-gray-800"></td>
+                        <td class="py-2 px-4 border border-gray-800"></td> -->
                         <td class="py-2 px-4 border border-gray-800">TOTAL</td>
                         <td class="py-2 px-4 border border-gray-800"> {{ summaryReport.adult_count_total }} </td>
                         <td class="py-2 px-4 border border-gray-800"> {{ summaryReport.children_count_total }} </td>
                         <td class="py-2 px-4 border border-gray-800"> 0 </td>
                         <td class="py-2 px-4 border border-gray-800 text-right"> {{ summaryReport.sales_total }} </td>
                         <td class="py-2 px-4 border border-gray-800 text-right"> {{ summaryReport.agent_commissions_total }} </td>
-                        <td class="py-2 px-4 border border-gray-800 text-right"> {{ summaryReport.gst_total }} </td>
-                        <td class="py-2 px-4 border border-gray-800 text-right"> {{ summaryReport.total }} </td>
+                        <!-- <td class="py-2 px-4 border border-gray-800 text-right"> {{ summaryReport.gst_total }} </td>
+                        <td class="py-2 px-4 border border-gray-800 text-right"> {{ summaryReport.total }} </td> -->
                     </tr>
-                    <tr  class="text-xs">
+                    <!-- <tr  class="text-xs">
                         <td class="py-2 px-4"></td>
                         <td class="py-2 px-4"></td>
                         <td class="py-2 px-4"></td>
@@ -257,7 +252,7 @@
                                 Submit 
                             </button>
                         </td>
-                    </tr>
+                    </tr> -->
                 </tbody>
             </table>
         </div>
@@ -323,6 +318,7 @@ export default {
             this.summaryReport.agent_commissions_total = 0;
             this.summaryReport.gst_total = 0;
             this.summaryReport.total = 0;
+            this.summaryReport.summary_items = [];
         },
         getSalesReport: async function(){
             try {
@@ -364,22 +360,47 @@ export default {
                 
                 this.summary_items.forEach(item => {
 
-                    const summaryItem = {
-                        sales_report_id: item.id
+                   
+
+                    this.summaryReport.adult_count_total = this.summaryReport.adult_count_total + item.adult_count;
+                    this.summaryReport.children_count_total = this.summaryReport.children_count_total + item.children_count;
+                    this.summaryReport.sales_total = parseFloat((this.summaryReport.sales_total + item.total_agent_sales).toFixed(2));
+                    // this.summaryReport.agent_commissions_total = this.summaryReport.agent_commissions_total + item.total_commissions;
+                    this.summaryReport.gst_total = this.summaryReport.gst_total + item.gst;
+                    this.summaryReport.total = parseFloat((this.summaryReport.total + item.grand_total_commission).toFixed(2));
+                    this.summaryReport.balance = this.summaryReport.total - (this.summaryReport.return + this.summaryReport.duvet_deduction);
+
+                    let itemCommission = 0;
+
+                    // console.log(item)
+
+                    item.sales_commissions.forEach(sc => {
+
+                        if(sc.tour_commission.commission.name === this.selectedCommission){
+                            itemCommission = itemCommission + sc.amount
+                        }
+
+                    })
+
+                    this.summaryReport.agent_commissions_total = parseFloat((this.summaryReport.agent_commissions_total + itemCommission).toFixed(2));
+
+
+                     const summaryItem = {
+                        sales_report_id: item.id,
+                        tour_date: item.tour_date,
+                        adult_count: item.adult_count,
+                        children_count: item.children_count,
+                        total_agent_sales: item.total_agent_sales,
+                        commission: parseFloat(itemCommission.toFixed(2))
                     }
 
                     this.summaryReport.summary_items.push(summaryItem);
 
-                    this.summaryReport.adult_count_total = this.summaryReport.adult_count_total + item.adult_count;
-                    this.summaryReport.children_count_total = this.summaryReport.children_count_total + item.children_count;
-                    this.summaryReport.sales_total = this.summaryReport.sales_total + item.total_agent_sales;
-                    this.summaryReport.agent_commissions_total = this.summaryReport.agent_commissions_total + item.total_commissions;
-                    this.summaryReport.gst_total = this.summaryReport.gst_total + item.gst;
-                    this.summaryReport.total = this.summaryReport.total + item.grand_total_commission;
-                    this.summaryReport.balance = this.summaryReport.total - (this.summaryReport.return + this.summaryReport.duvet_deduction);
+
                 });
 
-                console.log(this.summaryReport.summary_items);
+                console.log('Summary Items', this.summaryReport.summary_items);
+
             }
         },
         createReport: async function(){

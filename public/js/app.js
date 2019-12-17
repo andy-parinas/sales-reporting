@@ -4474,11 +4474,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'SummaryReportForm',
   props: ['user', 'backend', 'edit', 'summary', 'items'],
@@ -4535,6 +4530,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.summaryReport.agent_commissions_total = 0;
       this.summaryReport.gst_total = 0;
       this.summaryReport.total = 0;
+      this.summaryReport.summary_items = [];
     },
     getSalesReport: function () {
       var _getSalesReport = _asyncToGenerator(
@@ -4598,21 +4594,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       if (this.summary_items.length > 0) {
         this.summary_items.forEach(function (item) {
+          _this.summaryReport.adult_count_total = _this.summaryReport.adult_count_total + item.adult_count;
+          _this.summaryReport.children_count_total = _this.summaryReport.children_count_total + item.children_count;
+          _this.summaryReport.sales_total = parseFloat((_this.summaryReport.sales_total + item.total_agent_sales).toFixed(2)); // this.summaryReport.agent_commissions_total = this.summaryReport.agent_commissions_total + item.total_commissions;
+
+          _this.summaryReport.gst_total = _this.summaryReport.gst_total + item.gst;
+          _this.summaryReport.total = parseFloat((_this.summaryReport.total + item.grand_total_commission).toFixed(2));
+          _this.summaryReport.balance = _this.summaryReport.total - (_this.summaryReport["return"] + _this.summaryReport.duvet_deduction);
+          var itemCommission = 0; // console.log(item)
+
+          item.sales_commissions.forEach(function (sc) {
+            if (sc.tour_commission.commission.name === _this.selectedCommission) {
+              itemCommission = itemCommission + sc.amount;
+            }
+          });
+          _this.summaryReport.agent_commissions_total = parseFloat((_this.summaryReport.agent_commissions_total + itemCommission).toFixed(2));
           var summaryItem = {
-            sales_report_id: item.id
+            sales_report_id: item.id,
+            tour_date: item.tour_date,
+            adult_count: item.adult_count,
+            children_count: item.children_count,
+            total_agent_sales: item.total_agent_sales,
+            commission: parseFloat(itemCommission.toFixed(2))
           };
 
           _this.summaryReport.summary_items.push(summaryItem);
-
-          _this.summaryReport.adult_count_total = _this.summaryReport.adult_count_total + item.adult_count;
-          _this.summaryReport.children_count_total = _this.summaryReport.children_count_total + item.children_count;
-          _this.summaryReport.sales_total = _this.summaryReport.sales_total + item.total_agent_sales;
-          _this.summaryReport.agent_commissions_total = _this.summaryReport.agent_commissions_total + item.total_commissions;
-          _this.summaryReport.gst_total = _this.summaryReport.gst_total + item.gst;
-          _this.summaryReport.total = _this.summaryReport.total + item.grand_total_commission;
-          _this.summaryReport.balance = _this.summaryReport.total - (_this.summaryReport["return"] + _this.summaryReport.duvet_deduction);
         });
-        console.log(this.summaryReport.summary_items);
+        console.log('Summary Items', this.summaryReport.summary_items);
       }
     },
     createReport: function () {
@@ -31529,68 +31537,338 @@ var render = function() {
             ]
           )
         ])
-      : _c("div", { staticClass: "w-144 mx-auto" }, [
-          _c("div", { staticClass: "flex items-center justify-center" }, [
-            _c("div", { staticClass: "px-4 flex justify-between mt-5" }, [
-              _c("div", { staticClass: "border border-gray-700 flex-1 mr-4" }, [
-                _c("div", { staticClass: "flex" }, [
-                  _vm._m(3),
-                  _vm._v(" "),
-                  _c(
-                    "div",
+      : _c("div", { staticClass: "mx-auto w-288" }, [
+          _c("div", { staticClass: "mt-10" }, [
+            _c("div", { staticClass: "flex items-center" }, [
+              _vm._m(3),
+              _vm._v(" "),
+              _c("div", { staticClass: "mr-5" }, [
+                _c("input", {
+                  directives: [
                     {
-                      staticClass: "flex-1 border-gray-700",
-                      class:
-                        _vm.errors && _vm.errors.from_date ? "bg-red-200" : ""
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.selectedReport,
+                      expression: "selectedReport"
+                    }
+                  ],
+                  attrs: {
+                    type: "radio",
+                    name: "selection",
+                    value: "TOUR_AGENT"
+                  },
+                  domProps: {
+                    checked: _vm._q(_vm.selectedReport, "TOUR_AGENT")
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.selectReport("TOUR_AGENT")
                     },
-                    [
-                      _c("input", {
+                    change: function($event) {
+                      _vm.selectedReport = "TOUR_AGENT"
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("label", [_vm._v(" Tour Agent ")])
+              ]),
+              _vm._v(" "),
+              _c("div", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.selectedReport,
+                      expression: "selectedReport"
+                    }
+                  ],
+                  attrs: {
+                    type: "radio",
+                    name: "selection",
+                    value: "TOUR_GUIDE"
+                  },
+                  domProps: {
+                    checked: _vm._q(_vm.selectedReport, "TOUR_GUIDE")
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.selectReport("TOUR_GUIDE")
+                    },
+                    change: function($event) {
+                      _vm.selectedReport = "TOUR_GUIDE"
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("label", [_vm._v(" Tour Guide ")])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", [
+            _c("div", { staticClass: "mt-10 flex items-center" }, [
+              _vm.selectedReport === "TOUR_AGENT"
+                ? _c("div", { staticClass: "flex items-center flex-1 mr-5" }, [
+                    _c(
+                      "label",
+                      { staticClass: "w-32 mr-2", attrs: { for: "agent" } },
+                      [_vm._v("Tour Agent")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "select",
+                      {
                         directives: [
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.summaryReport.from_date,
-                            expression: "summaryReport.from_date"
+                            value: _vm.selectedTourAgent,
+                            expression: "selectedTourAgent"
                           }
                         ],
                         staticClass:
-                          "w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm bg-transparent",
+                          "w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800",
                         attrs: {
-                          type: "date",
-                          id: "date",
-                          placeholder: "Tour Date"
+                          type: "text",
+                          id: "agent",
+                          placeholder: "Tour Agent Name"
                         },
-                        domProps: { value: _vm.summaryReport.from_date },
                         on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.summaryReport,
-                              "from_date",
-                              $event.target.value
-                            )
-                          }
+                          change: [
+                            function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.selectedTourAgent = $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            },
+                            _vm.tourAgentSelected
+                          ]
                         }
-                      })
-                    ]
-                  )
-                ])
-              ]),
+                      },
+                      [
+                        _c("option", { attrs: { disabled: "", value: "" } }, [
+                          _vm._v(" --- Select Tour Agent ---")
+                        ]),
+                        _vm._v(" "),
+                        _vm._l(_vm.tourAgents, function(agent) {
+                          return _c(
+                            "option",
+                            { key: agent.id, domProps: { value: agent.id } },
+                            [_vm._v(_vm._s(agent.name))]
+                          )
+                        })
+                      ],
+                      2
+                    )
+                  ])
+                : _vm._e(),
               _vm._v(" "),
-              _c("div", { staticClass: "border border-gray-700 flex-1 mr-4" }, [
-                _c("div", { staticClass: "flex" }, [
-                  _vm._m(4),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass: "flex-1border-gray-700",
-                      class:
-                        _vm.errors && _vm.errors.to_date ? "bg-red-200" : ""
-                    },
-                    [
+              _vm.selectedReport === "TOUR_GUIDE"
+                ? _c("div", { staticClass: "flex items-center flex-1  mr-5" }, [
+                    _c(
+                      "label",
+                      { staticClass: "mr-2 w-32", attrs: { for: "guide" } },
+                      [_vm._v("Tour Guides")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.selectedTourGuide,
+                            expression: "selectedTourGuide"
+                          }
+                        ],
+                        staticClass:
+                          "w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800",
+                        attrs: {
+                          type: "text",
+                          id: "guide",
+                          placeholder: "Guide Name"
+                        },
+                        on: {
+                          change: [
+                            function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.selectedTourGuide = $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            },
+                            _vm.tourGuideSelected
+                          ]
+                        }
+                      },
+                      [
+                        _c("option", { attrs: { disabled: "", value: "" } }, [
+                          _vm._v(" --- Select Tour Guide ---")
+                        ]),
+                        _vm._v(" "),
+                        _vm._l(_vm.tourGuides, function(guide) {
+                          return _c(
+                            "option",
+                            { key: guide.id, domProps: { value: guide.id } },
+                            [_vm._v(_vm._s(guide.name))]
+                          )
+                        })
+                      ],
+                      2
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.selectedReport
+                ? _c("div", { staticClass: "flex items-center flex-1" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "mr-2 w-32",
+                        attrs: { for: "commission" }
+                      },
+                      [_vm._v("Commissions")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.selectedCommission,
+                            expression: "selectedCommission"
+                          }
+                        ],
+                        staticClass:
+                          "w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800",
+                        attrs: {
+                          type: "text",
+                          id: "commission",
+                          placeholder: "Commission"
+                        },
+                        on: {
+                          change: [
+                            function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.selectedCommission = $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            },
+                            _vm.commissionSelected
+                          ]
+                        }
+                      },
+                      [
+                        _c("option", { attrs: { disabled: "", value: "" } }, [
+                          _vm._v(" --- Select Tour Agent ---")
+                        ]),
+                        _vm._v(" "),
+                        _vm._l(_vm.commissions, function(commission) {
+                          return _c(
+                            "option",
+                            {
+                              key: commission.id,
+                              attrs: {
+                                disabled:
+                                  (_vm.selectedReport === "TOUR_AGENT" &&
+                                    commission.name === "TG") ||
+                                  (_vm.selectedReport === "TOUR_GUIDE" &&
+                                    commission.name !== "TG")
+                              },
+                              domProps: {
+                                selected:
+                                  commission.name === "TG" &&
+                                  _vm.selectedReport === "TOUR_GUIDE",
+                                value: commission.name
+                              }
+                            },
+                            [_vm._v(_vm._s(commission.name))]
+                          )
+                        })
+                      ],
+                      2
+                    )
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _vm.selectedReport
+              ? _c("div", [
+                  _c("div", { staticClass: "flex items-center mt-5" }, [
+                    _c(
+                      "div",
+                      { staticClass: "flex items-center flex-1 mr-5" },
+                      [
+                        _c(
+                          "label",
+                          { staticClass: "w-32 mr-2", attrs: { for: "agent" } },
+                          [_vm._v("From Date")]
+                        ),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.summaryReport.from_date,
+                              expression: "summaryReport.from_date"
+                            }
+                          ],
+                          staticClass:
+                            "w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800 uppercase",
+                          attrs: {
+                            type: "date",
+                            id: "date",
+                            placeholder: "Tour Date"
+                          },
+                          domProps: { value: _vm.summaryReport.from_date },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.summaryReport,
+                                "from_date",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "flex items-center flex-1" }, [
+                      _c(
+                        "label",
+                        { staticClass: "w-32 mr-2", attrs: { for: "agent" } },
+                        [_vm._v("To Date")]
+                      ),
+                      _vm._v(" "),
                       _c("input", {
                         directives: [
                           {
@@ -31601,7 +31879,7 @@ var render = function() {
                           }
                         ],
                         staticClass:
-                          "w-full focus:outline-none py-2 px-2 uppercase text-gray-800 text-sm bg-transparent",
+                          "w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800 uppercase",
                         attrs: {
                           type: "date",
                           id: "date",
@@ -31621,421 +31899,267 @@ var render = function() {
                           }
                         }
                       })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "flex mt-5" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass:
+                          "bg-blue-600 py-2 px-2 text-white rounded flex-1",
+                        on: { click: _vm.getSalesReport }
+                      },
+                      [_vm._v("Generate Report")]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _vm.noResults
+                    ? _c(
+                        "div",
+                        {
+                          staticClass:
+                            "mt-2 mb-3  flex items-center justify-center"
+                        },
+                        [
+                          _c(
+                            "h1",
+                            {
+                              staticClass:
+                                "text-red-700 font-semibold text-lg mr-3"
+                            },
+                            [_vm._v("No Results Found")]
+                          ),
+                          _vm._v(" "),
+                          _c("h3", { staticClass: "text-gray-800" }, [
+                            _vm._v("Please select another date range")
+                          ])
+                        ]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.errors
+                    ? _c(
+                        "div",
+                        {
+                          staticClass:
+                            "mt-2 mb-3  flex items-center justify-center"
+                        },
+                        [
+                          _c(
+                            "h1",
+                            {
+                              staticClass:
+                                "text-red-700 font-semibold text-lg mr-3"
+                            },
+                            [_vm._v("Error Connecting")]
+                          ),
+                          _vm._v(" "),
+                          _c("h3", { staticClass: "text-gray-800" }, [
+                            _vm._v(
+                              "Please check your internet or report to I.T."
+                            )
+                          ])
+                        ]
+                      )
+                    : _vm._e()
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          !_vm.edit
+            ? _c(
+                "div",
+                {
+                  staticClass: "border border-gray-700 mt-10 mb-5 ",
+                  class:
+                    _vm.errors && _vm.errors.title
+                      ? "bg-red-200"
+                      : "bg-green-200"
+                },
+                [
+                  _c("div", { staticClass: "flex" }, [
+                    _vm._m(4),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "flex-1 border-gray-700" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.summaryReport.title,
+                            expression: "summaryReport.title"
+                          }
+                        ],
+                        staticClass:
+                          "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm bg-transparent",
+                        attrs: {
+                          type: "text",
+                          id: "date",
+                          placeholder: "Report Title"
+                        },
+                        domProps: { value: _vm.summaryReport.title },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.summaryReport,
+                              "title",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ])
+                  ])
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _c("table", { staticClass: "w-full mt-5" }, [
+            _c("thead", [
+              _c(
+                "tr",
+                {
+                  staticClass:
+                    "text-left bg-gray-300 border border-gray-800 text-xs"
+                },
+                [
+                  _c(
+                    "th",
+                    { staticClass: "py-2 px-2 border-r border-gray-800 w-32" },
+                    [
+                      _vm._v(
+                        "\n                          Date\n                      "
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    { staticClass: "py-2 px-2 border-r border-gray-800 w-16" },
+                    [_vm._v("A")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    { staticClass: "py-2 px-2 border-r border-gray-800 w-16" },
+                    [_vm._v("C")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    { staticClass: "py-2 px-2 border-r border-gray-800 w-16" },
+                    [_vm._v("TC")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticClass:
+                        "py-2 px-2 border-r border-gray-800 w-24 text-right"
+                    },
+                    [_vm._v("Sales")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticClass:
+                        "py-2 px-2 border-r border-gray-800 w-24 text-right"
+                    },
+                    [
+                      _vm._v(
+                        " " + _vm._s(_vm.selectedCommission || "Commmission")
+                      )
                     ]
                   )
-                ])
-              ]),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "bg-blue-600 py-2 px-2 text-white rounded",
-                  on: { click: _vm.getSalesReport }
-                },
-                [_vm._v("Go")]
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _vm.noResults
-            ? _c(
-                "div",
-                { staticClass: "mt-2 mb-3  flex items-center justify-center" },
-                [
-                  _c(
-                    "h1",
-                    { staticClass: "text-red-700 font-semibold text-lg mr-3" },
-                    [_vm._v("No Results Found")]
-                  ),
-                  _vm._v(" "),
-                  _c("h3", { staticClass: "text-gray-800" }, [
-                    _vm._v("Please select another date range")
-                  ])
                 ]
               )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.errors
-            ? _c(
-                "div",
-                { staticClass: "mt-2 mb-3  flex items-center justify-center" },
-                [
-                  _c(
-                    "h1",
-                    { staticClass: "text-red-700 font-semibold text-lg mr-3" },
-                    [_vm._v("Error Connecting")]
-                  ),
-                  _vm._v(" "),
-                  _c("h3", { staticClass: "text-gray-800" }, [
-                    _vm._v("Please check your internet or report to I.T.")
-                  ])
-                ]
-              )
-            : _vm._e()
-        ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "mx-auto w-288" }, [
-      _c("div", { staticClass: "mt-10" }, [
-        _c("div", { staticClass: "flex items-center" }, [
-          _vm._m(5),
-          _vm._v(" "),
-          _c("div", { staticClass: "mr-5" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.selectedReport,
-                  expression: "selectedReport"
-                }
-              ],
-              attrs: { type: "radio", name: "selection", value: "TOUR_AGENT" },
-              domProps: { checked: _vm._q(_vm.selectedReport, "TOUR_AGENT") },
-              on: {
-                click: function($event) {
-                  return _vm.selectReport("TOUR_AGENT")
-                },
-                change: function($event) {
-                  _vm.selectedReport = "TOUR_AGENT"
-                }
-              }
-            }),
+            ]),
             _vm._v(" "),
-            _c("label", [_vm._v(" Tour Agent ")])
-          ]),
-          _vm._v(" "),
-          _c("div", [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.selectedReport,
-                  expression: "selectedReport"
-                }
-              ],
-              attrs: { type: "radio", name: "selection", value: "TOUR_GUIDE" },
-              domProps: { checked: _vm._q(_vm.selectedReport, "TOUR_GUIDE") },
-              on: {
-                click: function($event) {
-                  return _vm.selectReport("TOUR_GUIDE")
-                },
-                change: function($event) {
-                  _vm.selectedReport = "TOUR_GUIDE"
-                }
-              }
-            }),
-            _vm._v(" "),
-            _c("label", [_vm._v(" Tour Guide ")])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", [
-        _c("div", { staticClass: "mt-10 flex items-center" }, [
-          _vm.selectedReport === "TOUR_AGENT"
-            ? _c("div", { staticClass: "flex items-center flex-1 mr-5" }, [
-                _c(
-                  "label",
-                  {
-                    staticClass: "w-32 mr-2 text-right",
-                    attrs: { for: "agent" }
-                  },
-                  [_vm._v("Tour Agent")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.selectedTourAgent,
-                        expression: "selectedTourAgent"
-                      }
-                    ],
-                    staticClass:
-                      "w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800",
-                    attrs: {
-                      type: "text",
-                      id: "agent",
-                      placeholder: "Tour Agent Name"
-                    },
-                    on: {
-                      change: [
-                        function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.selectedTourAgent = $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        },
-                        _vm.tourAgentSelected
-                      ]
-                    }
-                  },
-                  [
-                    _c("option", { attrs: { disabled: "", value: "" } }, [
-                      _vm._v(" --- Select Tour Agent ---")
-                    ]),
-                    _vm._v(" "),
-                    _vm._l(_vm.tourAgents, function(agent) {
-                      return _c(
-                        "option",
-                        { key: agent.id, domProps: { value: agent.id } },
-                        [_vm._v(_vm._s(agent.name))]
-                      )
-                    })
-                  ],
-                  2
-                )
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.selectedReport === "TOUR_GUIDE"
-            ? _c("div", { staticClass: "flex items-center flex-1" }, [
-                _c(
-                  "label",
-                  {
-                    staticClass: "mr-2 w-32 text-right",
-                    attrs: { for: "guide" }
-                  },
-                  [_vm._v("Tour Guides")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.selectedTourGuide,
-                        expression: "selectedTourGuide"
-                      }
-                    ],
-                    staticClass:
-                      "w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800",
-                    attrs: {
-                      type: "text",
-                      id: "guide",
-                      placeholder: "Guide Name"
-                    },
-                    on: {
-                      change: [
-                        function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.selectedTourGuide = $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        },
-                        _vm.tourGuideSelected
-                      ]
-                    }
-                  },
-                  [
-                    _c("option", { attrs: { disabled: "", value: "" } }, [
-                      _vm._v(" --- Select Tour Guide ---")
-                    ]),
-                    _vm._v(" "),
-                    _vm._l(_vm.tourGuides, function(guide) {
-                      return _c(
-                        "option",
-                        { key: guide.id, domProps: { value: guide.id } },
-                        [_vm._v(_vm._s(guide.name))]
-                      )
-                    })
-                  ],
-                  2
-                )
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.selectedReport
-            ? _c("div", { staticClass: "flex items-center flex-1" }, [
-                _c(
-                  "label",
-                  {
-                    staticClass: "mr-2 w-32 text-right",
-                    attrs: { for: "commission" }
-                  },
-                  [_vm._v("Commissions")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.selectedCommission,
-                        expression: "selectedCommission"
-                      }
-                    ],
-                    staticClass:
-                      "w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800",
-                    attrs: {
-                      type: "text",
-                      id: "commission",
-                      placeholder: "Commission"
-                    },
-                    on: {
-                      change: [
-                        function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.selectedCommission = $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        },
-                        _vm.commissionSelected
-                      ]
-                    }
-                  },
-                  [
-                    _c("option", { attrs: { disabled: "", value: "" } }, [
-                      _vm._v(" --- Select Tour Agent ---")
-                    ]),
-                    _vm._v(" "),
-                    _vm._l(_vm.commissions, function(commission) {
-                      return _c(
-                        "option",
+            _c(
+              "tbody",
+              [
+                _vm._l(_vm.summaryReport.summary_items, function(item) {
+                  return _c(
+                    "tr",
+                    { key: item.id, staticClass: "bg-white text-xs" },
+                    [
+                      _c(
+                        "td",
+                        { staticClass: "py-2 px-4 border border-gray-800" },
+                        [_vm._v(" " + _vm._s(item.tour_date) + " ")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        { staticClass: "py-2 px-4 border border-gray-800" },
+                        [_vm._v(" " + _vm._s(item.adult_count) + " ")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        { staticClass: "py-2 px-4 border border-gray-800" },
+                        [_vm._v(" " + _vm._s(item.children_count) + " ")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        { staticClass: "py-2 px-4 border border-gray-800" },
+                        [_vm._v(" 0 ")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
                         {
-                          key: commission.id,
-                          attrs: {
-                            disabled:
-                              (_vm.selectedReport === "TOUR_AGENT" &&
-                                commission.name === "TG") ||
-                              (_vm.selectedReport === "TOUR_GUIDE" &&
-                                commission.name !== "TG")
-                          },
-                          domProps: {
-                            selected:
-                              commission.name === "TG" &&
-                              _vm.selectedReport === "TOUR_GUIDE",
-                            value: commission.name
-                          }
+                          staticClass:
+                            "py-2 px-4 border border-gray-800 text-right"
                         },
-                        [_vm._v(_vm._s(commission.name))]
+                        [_vm._v(" " + _vm._s(item.total_agent_sales) + " ")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        {
+                          staticClass:
+                            "py-2 px-4 border border-gray-800 text-right"
+                        },
+                        [_vm._v(" " + _vm._s(item.commission) + " ")]
                       )
-                    })
-                  ],
-                  2
-                )
-              ])
-            : _vm._e()
-        ])
-      ]),
-      _vm._v(" "),
-      !_vm.edit
-        ? _c(
-            "div",
-            {
-              staticClass: "border border-gray-700 mt-10 mb-5 ",
-              class:
-                _vm.errors && _vm.errors.title ? "bg-red-200" : "bg-green-200"
-            },
-            [
-              _c("div", { staticClass: "flex" }, [
-                _vm._m(6),
+                    ]
+                  )
+                }),
                 _vm._v(" "),
-                _c("div", { staticClass: "flex-1 border-gray-700" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.summaryReport.title,
-                        expression: "summaryReport.title"
-                      }
-                    ],
-                    staticClass:
-                      "w-full focus:outline-none py-2  pl-10 text-gray-800 text-sm bg-transparent",
-                    attrs: {
-                      type: "text",
-                      id: "date",
-                      placeholder: "Report Title"
-                    },
-                    domProps: { value: _vm.summaryReport.title },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.summaryReport,
-                          "title",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ])
-              ])
-            ]
-          )
-        : _vm._e(),
-      _vm._v(" "),
-      _c("table", { staticClass: "w-full mt-5" }, [
-        _vm._m(7),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          [
-            _vm._l(_vm.summary_items, function(item) {
-              return _c(
-                "tr",
-                { key: item.id, staticClass: "bg-white text-xs" },
-                [
+                _c("tr", { staticClass: "bg-blue-200 text-xs" }, [
                   _c(
                     "td",
                     { staticClass: "py-2 px-4 border border-gray-800" },
-                    [_vm._v(" " + _vm._s(item.tour_date) + " ")]
+                    [_vm._v("TOTAL")]
                   ),
                   _vm._v(" "),
                   _c(
                     "td",
                     { staticClass: "py-2 px-4 border border-gray-800" },
-                    [_vm._v(" " + _vm._s(item.grp_code) + " ")]
+                    [
+                      _vm._v(
+                        " " + _vm._s(_vm.summaryReport.adult_count_total) + " "
+                      )
+                    ]
                   ),
                   _vm._v(" "),
                   _c(
                     "td",
                     { staticClass: "py-2 px-4 border border-gray-800" },
-                    [_vm._v(" " + _vm._s(item.tour_guide) + " ")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    { staticClass: "py-2 px-4 border border-gray-800" },
-                    [_vm._v(" " + _vm._s(item.adult_count) + " ")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    { staticClass: "py-2 px-4 border border-gray-800" },
-                    [_vm._v(" " + _vm._s(item.children_count) + " ")]
+                    [
+                      _vm._v(
+                        " " +
+                          _vm._s(_vm.summaryReport.children_count_total) +
+                          " "
+                      )
+                    ]
                   ),
                   _vm._v(" "),
                   _c(
@@ -32049,7 +32173,7 @@ var render = function() {
                     {
                       staticClass: "py-2 px-4 border border-gray-800 text-right"
                     },
-                    [_vm._v(" " + _vm._s(item.total_agent_sales) + " ")]
+                    [_vm._v(" " + _vm._s(_vm.summaryReport.sales_total) + " ")]
                   ),
                   _vm._v(" "),
                   _c(
@@ -32057,332 +32181,20 @@ var render = function() {
                     {
                       staticClass: "py-2 px-4 border border-gray-800 text-right"
                     },
-                    [_vm._v(" " + _vm._s(item.total_commissions) + " ")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    {
-                      staticClass: "py-2 px-4 border border-gray-800 text-right"
-                    },
-                    [_vm._v(" " + _vm._s(item.gst) + " ")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    {
-                      staticClass: "py-2 px-4 border border-gray-800 text-right"
-                    },
-                    [_vm._v(" " + _vm._s(item.grand_total_commission) + " ")]
+                    [
+                      _vm._v(
+                        " " +
+                          _vm._s(_vm.summaryReport.agent_commissions_total) +
+                          " "
+                      )
+                    ]
                   )
-                ]
-              )
-            }),
-            _vm._v(" "),
-            _c("tr", { staticClass: "bg-blue-200 text-xs" }, [
-              _c("td", { staticClass: "py-2 px-4 border border-gray-800" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4 border border-gray-800" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4 border border-gray-800" }, [
-                _vm._v("TOTAL")
-              ]),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4 border border-gray-800" }, [
-                _vm._v(" " + _vm._s(_vm.summaryReport.adult_count_total) + " ")
-              ]),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4 border border-gray-800" }, [
-                _vm._v(
-                  " " + _vm._s(_vm.summaryReport.children_count_total) + " "
-                )
-              ]),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4 border border-gray-800" }, [
-                _vm._v(" 0 ")
-              ]),
-              _vm._v(" "),
-              _c(
-                "td",
-                { staticClass: "py-2 px-4 border border-gray-800 text-right" },
-                [_vm._v(" " + _vm._s(_vm.summaryReport.sales_total) + " ")]
-              ),
-              _vm._v(" "),
-              _c(
-                "td",
-                { staticClass: "py-2 px-4 border border-gray-800 text-right" },
-                [
-                  _vm._v(
-                    " " +
-                      _vm._s(_vm.summaryReport.agent_commissions_total) +
-                      " "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "td",
-                { staticClass: "py-2 px-4 border border-gray-800 text-right" },
-                [_vm._v(" " + _vm._s(_vm.summaryReport.gst_total) + " ")]
-              ),
-              _vm._v(" "),
-              _c(
-                "td",
-                { staticClass: "py-2 px-4 border border-gray-800 text-right" },
-                [_vm._v(" " + _vm._s(_vm.summaryReport.total) + " ")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("tr", { staticClass: "text-xs" }, [
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c(
-                "td",
-                {
-                  staticClass:
-                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
-                },
-                [_vm._v("Return")]
-              ),
-              _vm._v(" "),
-              _c(
-                "td",
-                {
-                  staticClass:
-                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
-                },
-                [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model.number",
-                        value: _vm.summaryReport.return,
-                        expression: "summaryReport.return",
-                        modifiers: { number: true }
-                      }
-                    ],
-                    staticClass: "w-full bg-transparent px-2 text-right",
-                    attrs: { type: "text", placeholder: "0" },
-                    domProps: { value: _vm.summaryReport.return },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.summaryReport,
-                          "return",
-                          _vm._n($event.target.value)
-                        )
-                      },
-                      blur: function($event) {
-                        return _vm.$forceUpdate()
-                      }
-                    }
-                  })
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("tr", { staticClass: "bg-white text-xs" }, [
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c(
-                "td",
-                {
-                  staticClass:
-                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
-                },
-                [_vm._v("Deduction")]
-              ),
-              _vm._v(" "),
-              _c(
-                "td",
-                {
-                  staticClass:
-                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
-                },
-                [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model.number",
-                        value: _vm.summaryReport.duvet_deduction,
-                        expression: "summaryReport.duvet_deduction",
-                        modifiers: { number: true }
-                      }
-                    ],
-                    staticClass: "w-full bg-transparent px-2 text-right",
-                    attrs: { type: "text", placeholder: "0" },
-                    domProps: { value: _vm.summaryReport.duvet_deduction },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.summaryReport,
-                          "duvet_deduction",
-                          _vm._n($event.target.value)
-                        )
-                      },
-                      blur: function($event) {
-                        return _vm.$forceUpdate()
-                      }
-                    }
-                  })
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("tr", { staticClass: "bg-white text-xs" }, [
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c(
-                "td",
-                {
-                  staticClass:
-                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
-                },
-                [_vm._v("Balance")]
-              ),
-              _vm._v(" "),
-              _c(
-                "td",
-                {
-                  staticClass:
-                    "bg-yellow-300 py-2 px-4 border border-gray-800 text-right"
-                },
-                [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model.number",
-                        value: _vm.summaryReport.balance,
-                        expression: "summaryReport.balance",
-                        modifiers: { number: true }
-                      }
-                    ],
-                    staticClass: "w-full bg-transparent px-2 text-right",
-                    attrs: { type: "text", placeholder: "0", disabled: "" },
-                    domProps: { value: _vm.summaryReport.balance },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.summaryReport,
-                          "balance",
-                          _vm._n($event.target.value)
-                        )
-                      },
-                      blur: function($event) {
-                        return _vm.$forceUpdate()
-                      }
-                    }
-                  })
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("tr", { staticClass: "bg-white text-xs" }, [
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "py-2 px-4", attrs: { colspan: "2" } }, [
-                _vm.edit
-                  ? _c(
-                      "button",
-                      {
-                        staticClass:
-                          "flex items-center w-full mt-5 py-2 px-4 text-white bg-indigo-600\n                                      rounded-full justify-center focus:outline-none hover:bg-indigo-700",
-                        on: { click: _vm.updateReport }
-                      },
-                      [
-                        _vm._v(
-                          " \n                              Update \n                          "
-                        )
-                      ]
-                    )
-                  : _c(
-                      "button",
-                      {
-                        staticClass:
-                          "flex items-center w-full mt-5 py-2 px-4 text-white bg-indigo-600\n                                      rounded-full justify-center focus:outline-none hover:bg-indigo-700",
-                        on: { click: _vm.createReport }
-                      },
-                      [
-                        _vm._v(
-                          " \n                              Submit \n                          "
-                        )
-                      ]
-                    )
-              ])
-            ])
-          ],
-          2
-        )
-      ])
-    ])
+                ])
+              ],
+              2
+            )
+          ])
+        ])
   ])
 }
 var staticRenderFns = [
@@ -32450,44 +32262,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "border-r border-gray-700 w-32 text-center py-2 " },
-      [
-        _c(
-          "label",
-          {
-            staticClass: "text-sm font-semibold text-gray-800 uppercase",
-            attrs: { for: "date" }
-          },
-          [_vm._v("From")]
-        )
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "border-r border-gray-700 w-32 text-center  py-2" },
-      [
-        _c(
-          "label",
-          {
-            staticClass: "text-sm font-semibold text-gray-800 uppercase",
-            attrs: { for: "date" }
-          },
-          [_vm._v("To")]
-        )
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "mr-5" }, [
       _c("h1", [_vm._v("Generate Report For")])
     ])
@@ -32510,77 +32284,6 @@ var staticRenderFns = [
         )
       ]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c(
-        "tr",
-        { staticClass: "text-left bg-gray-300 border border-gray-800 text-xs" },
-        [
-          _c("th", { staticClass: "py-2 px-2 border-r border-gray-800 w-32" }, [
-            _vm._v("\n                          Date\n                      ")
-          ]),
-          _vm._v(" "),
-          _c("th", { staticClass: "py-2 px-2 border-r border-gray-800 w-32" }, [
-            _vm._v(
-              "\n                          GRP/Code\n                      "
-            )
-          ]),
-          _c("th", { staticClass: "py-2 px-2 border-r border-gray-800 w-40" }, [
-            _vm._v(
-              "\n                          Guide Name\n                      "
-            )
-          ]),
-          _vm._v(" "),
-          _c("th", { staticClass: "py-2 px-2 border-r border-gray-800 w-16" }, [
-            _vm._v("A")
-          ]),
-          _vm._v(" "),
-          _c("th", { staticClass: "py-2 px-2 border-r border-gray-800 w-16" }, [
-            _vm._v("C")
-          ]),
-          _vm._v(" "),
-          _c("th", { staticClass: "py-2 px-2 border-r border-gray-800 w-16" }, [
-            _vm._v("TC")
-          ]),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticClass: "py-2 px-2 border-r border-gray-800 w-24 text-right"
-            },
-            [_vm._v("Sales")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticClass: "py-2 px-2 border-r border-gray-800 w-24 text-right"
-            },
-            [_vm._v("Commission")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticClass: "py-2 px-2 border-r border-gray-800 w-24 text-right"
-            },
-            [_vm._v("GST")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticClass: "py-2 px-2 border-r border-gray-800 w-32 text-right"
-            },
-            [_vm._v("Total")]
-          )
-        ]
-      )
-    ])
   }
 ]
 render._withStripped = true
