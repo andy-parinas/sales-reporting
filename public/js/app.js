@@ -4490,7 +4490,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         children_count_total: 0,
         tc_count: 0,
         sales_total: 0,
-        agent_commissions_total: 0,
+        commission_id: 0,
+        commission: 0,
         gst_total: 0,
         total: 0,
         "return": 0,
@@ -4527,7 +4528,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.summaryReport.adult_count_total = 0;
       this.summaryReport.tc_count = 0;
       this.summaryReport.sales_total = 0;
-      this.summaryReport.agent_commissions_total = 0;
+      this.summaryReport.commission = 0;
       this.summaryReport.gst_total = 0;
       this.summaryReport.total = 0;
       this.summaryReport.summary_items = [];
@@ -4604,11 +4605,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           var itemCommission = 0; // console.log(item)
 
           item.sales_commissions.forEach(function (sc) {
-            if (sc.tour_commission.commission.name === _this.selectedCommission) {
+            if (sc.tour_commission.commission.id === _this.summaryReport.commission_id) {
               itemCommission = itemCommission + sc.amount;
             }
           });
-          _this.summaryReport.agent_commissions_total = parseFloat((_this.summaryReport.agent_commissions_total + itemCommission).toFixed(2));
+          _this.summaryReport.commission = parseFloat((_this.summaryReport.commission + itemCommission).toFixed(2));
           var summaryItem = {
             sales_report_id: item.id,
             tour_date: item.tour_date,
@@ -4849,7 +4850,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     selectReport: function selectReport(report) {
       if (report === 'TOUR_GUIDE') {
-        this.selectedCommission = 'TG';
+        this.selectedCommission = '';
         this.selectedTourAgent = '';
       }
 
@@ -31754,8 +31755,8 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.selectedCommission,
-                            expression: "selectedCommission"
+                            value: _vm.summaryReport.commission_id,
+                            expression: "summaryReport.commission_id"
                           }
                         ],
                         staticClass:
@@ -31776,9 +31777,13 @@ var render = function() {
                                   var val = "_value" in o ? o._value : o.value
                                   return val
                                 })
-                              _vm.selectedCommission = $event.target.multiple
-                                ? $$selectedVal
-                                : $$selectedVal[0]
+                              _vm.$set(
+                                _vm.summaryReport,
+                                "commission_id",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
                             },
                             _vm.commissionSelected
                           ]
@@ -31786,7 +31791,7 @@ var render = function() {
                       },
                       [
                         _c("option", { attrs: { disabled: "", value: "" } }, [
-                          _vm._v(" --- Select Tour Agent ---")
+                          _vm._v(" --- Select Commission ---")
                         ]),
                         _vm._v(" "),
                         _vm._l(_vm.commissions, function(commission) {
@@ -31805,7 +31810,7 @@ var render = function() {
                                 selected:
                                   commission.name === "TG" &&
                                   _vm.selectedReport === "TOUR_GUIDE",
-                                value: commission.name
+                                value: commission.id
                               }
                             },
                             [_vm._v(_vm._s(commission.name))]
@@ -32021,66 +32026,7 @@ var render = function() {
             : _vm._e(),
           _vm._v(" "),
           _c("table", { staticClass: "w-full mt-5" }, [
-            _c("thead", [
-              _c(
-                "tr",
-                {
-                  staticClass:
-                    "text-left bg-gray-300 border border-gray-800 text-xs"
-                },
-                [
-                  _c(
-                    "th",
-                    { staticClass: "py-2 px-2 border-r border-gray-800 w-32" },
-                    [
-                      _vm._v(
-                        "\n                          Date\n                      "
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "th",
-                    { staticClass: "py-2 px-2 border-r border-gray-800 w-16" },
-                    [_vm._v("A")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "th",
-                    { staticClass: "py-2 px-2 border-r border-gray-800 w-16" },
-                    [_vm._v("C")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "th",
-                    { staticClass: "py-2 px-2 border-r border-gray-800 w-16" },
-                    [_vm._v("TC")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "th",
-                    {
-                      staticClass:
-                        "py-2 px-2 border-r border-gray-800 w-24 text-right"
-                    },
-                    [_vm._v("Sales")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "th",
-                    {
-                      staticClass:
-                        "py-2 px-2 border-r border-gray-800 w-24 text-right"
-                    },
-                    [
-                      _vm._v(
-                        " " + _vm._s(_vm.selectedCommission || "Commmission")
-                      )
-                    ]
-                  )
-                ]
-              )
-            ]),
+            _vm._m(5),
             _vm._v(" "),
             _c(
               "tbody",
@@ -32286,6 +32232,50 @@ var staticRenderFns = [
         )
       ]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c(
+        "tr",
+        { staticClass: "text-left bg-gray-300 border border-gray-800 text-xs" },
+        [
+          _c("th", { staticClass: "py-2 px-2 border-r border-gray-800 w-32" }, [
+            _vm._v("\n                          Date\n                      ")
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "py-2 px-2 border-r border-gray-800 w-16" }, [
+            _vm._v("A")
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "py-2 px-2 border-r border-gray-800 w-16" }, [
+            _vm._v("C")
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "py-2 px-2 border-r border-gray-800 w-16" }, [
+            _vm._v("TC")
+          ]),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticClass: "py-2 px-2 border-r border-gray-800 w-24 text-right"
+            },
+            [_vm._v("Sales")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticClass: "py-2 px-2 border-r border-gray-800 w-24 text-right"
+            },
+            [_vm._v("Commmission")]
+          )
+        ]
+      )
+    ])
   }
 ]
 render._withStripped = true

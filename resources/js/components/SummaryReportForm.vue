@@ -80,13 +80,13 @@
                      <div  v-if="selectedReport" class="flex items-center flex-1">
                         <label class="mr-2 w-32" for="commission">Commissions</label>
                         <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800" 
-                                type="text" id="commission" placeholder="Commission" @change="commissionSelected" v-model="selectedCommission" >
+                                type="text" id="commission" placeholder="Commission" @change="commissionSelected" v-model="summaryReport.commission_id" >
 
-                            <option disabled value="" > --- Select Tour Agent ---</option>
+                            <option disabled value="" > --- Select Commission ---</option>
                             <option v-for="commission in commissions" :key="commission.id"
                                 :selected="commission.name === 'TG' && selectedReport==='TOUR_GUIDE'"
                                 :disabled="(selectedReport==='TOUR_AGENT' && commission.name === 'TG') || (selectedReport==='TOUR_GUIDE' && commission.name !== 'TG')"
-                                :value="commission.name">{{ commission.name }}</option>
+                                :value="commission.id">{{ commission.name }}</option>
                         </select>
                     </div>
                 </div>
@@ -152,7 +152,7 @@
                         <th class="py-2 px-2 border-r border-gray-800 w-16">C</th>
                         <th class="py-2 px-2 border-r border-gray-800 w-16">TC</th>
                         <th class="py-2 px-2 border-r border-gray-800 w-24 text-right">Sales</th>
-                        <th class="py-2 px-2 border-r border-gray-800 w-24 text-right"> {{selectedCommission || 'Commmission'}}</th>
+                        <th class="py-2 px-2 border-r border-gray-800 w-24 text-right">Commmission</th>
                         <!-- <th class="py-2 px-2 border-r border-gray-800 w-24 text-right">GST</th>
                         <th class="py-2 px-2 border-r border-gray-800 w-32 text-right">Total</th> -->
                     </tr>
@@ -276,7 +276,8 @@ export default {
                 children_count_total: 0,
                 tc_count: 0,
                 sales_total: 0,
-                agent_commissions_total: 0,
+                commission_id: 0,
+                commission: 0,
                 gst_total: 0,
                 total: 0,
                 return: 0,
@@ -315,7 +316,7 @@ export default {
             this.summaryReport.adult_count_total = 0;
             this.summaryReport.tc_count = 0;
             this.summaryReport.sales_total = 0;
-            this.summaryReport.agent_commissions_total = 0;
+            this.summaryReport.commission = 0;
             this.summaryReport.gst_total = 0;
             this.summaryReport.total = 0;
             this.summaryReport.summary_items = [];
@@ -377,13 +378,13 @@ export default {
 
                     item.sales_commissions.forEach(sc => {
 
-                        if(sc.tour_commission.commission.name === this.selectedCommission){
+                        if(sc.tour_commission.commission.id === this.summaryReport.commission_id){
                             itemCommission = itemCommission + sc.amount
                         }
 
                     })
 
-                    this.summaryReport.agent_commissions_total = parseFloat((this.summaryReport.agent_commissions_total + itemCommission).toFixed(2));
+                    this.summaryReport.commission = parseFloat((this.summaryReport.commission + itemCommission).toFixed(2));
 
 
                      const summaryItem = {
@@ -515,7 +516,7 @@ export default {
         },
         selectReport: function(report){
             if(report === 'TOUR_GUIDE'){
-                this.selectedCommission = 'TG';
+                this.selectedCommission = '';
                 this.selectedTourAgent = '';
             }
 
