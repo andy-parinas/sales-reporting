@@ -52,10 +52,12 @@ class SummaryReportController extends Controller
      */
     public function show(SummaryReport $summary)
     {
-
+        $selected_commission = $summary->selectedCommission;
         $items = $summary->summaryReportItems;
         
-        return view('summaries.show', compact('summary', 'items'));
+        // dd(compact('summary', 'items', 'selected_commission'));
+
+        return view('summaries.show', compact('summary', 'items', 'selected_commission'));
 
     }
 

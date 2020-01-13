@@ -40,5 +40,10 @@ class SummaryReport extends Model
         return $this->morphTo();
     }
 
+    public function selectedCommission()
+    {
+        return $this->belongsTo(Commission::class, 'commission_id');
+    }
+
 
 }

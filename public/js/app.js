@@ -4398,6 +4398,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'SummaryReportForm',
   props: ['user', 'backend', 'edit', 'summary', 'items'],
@@ -4811,21 +4812,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 response = _context7.sent;
                 this.saving = false;
                 this.success = true;
-                this.errors = null;
-                _context7.next = 16;
+                this.errors = null; // console.log('Response', response);
+
+                window.location.href = '/summaries/' + response.data.id;
+                _context7.next = 17;
                 break;
 
-              case 13:
-                _context7.prev = 13;
+              case 14:
+                _context7.prev = 14;
                 _context7.t0 = _context7["catch"](0);
                 console.error(_context7.t0);
 
-              case 16:
+              case 17:
               case "end":
                 return _context7.stop();
             }
           }
-        }, _callee7, this, [[0, 13]]);
+        }, _callee7, this, [[0, 14]]);
       }));
 
       function createSummaryReport() {
@@ -32124,6 +32127,8 @@ var render = function() {
                   [
                     _vm.saving
                       ? _c("span", [_vm._v("Creating Report")])
+                      : _vm.success
+                      ? _c("span", [_vm._v("Report Successfully Created")])
                       : _c("span", [_vm._v("Create Report")])
                   ]
                 )

@@ -176,6 +176,7 @@
                 <button class="py-2 px-2 text-white rounded flex-1" @click="createSummaryReport"
                     :class="success? 'bg-green-600' : 'bg-blue-600'" >
                     <span v-if="saving" >Creating Report</span>
+                    <span v-else-if="success" >Report Successfully Created</span>
                     <span v-else >Create Report</span>
                 </button>
             </div>
@@ -480,6 +481,10 @@ export default {
                 this.saving = false;
                 this.success = true;
                 this.errors = null;
+
+                // console.log('Response', response);
+
+                window.location.href = '/summaries/' + response.data.id;
 
             } catch (error) {
                 

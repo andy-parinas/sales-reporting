@@ -28,6 +28,14 @@
             </div>
             <div class="flex">
                 <div class="border-b border-r border-gray-700 w-48 text-center">
+                    <div  class="text-sm font-semibold text-gray-800 uppercase py-1" for="agent">Selected Commission</div>
+                </div>
+                <div  class="flex-1 border-b border-gray-700 py-1 pl-10 text-sm text-gray-800" >
+                    {{ $selected_commission->name}}
+                </div>
+            </div>
+            <div class="flex">
+                <div class="border-b border-r border-gray-700 w-48 text-center">
                     <div  class="text-sm font-semibold text-gray-800 uppercase py-1" for="agent">Report Number </div>
                 </div>
                 <div  class="flex-1 border-b border-gray-700 py-1 pl-10 text-sm text-gray-800 " >
