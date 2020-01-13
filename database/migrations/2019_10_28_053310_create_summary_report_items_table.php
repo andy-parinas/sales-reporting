@@ -17,6 +17,7 @@ class CreateSummaryReportItemsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('summary_report_id');
             $table->unsignedBigInteger('sales_report_id');
+            $table->float('commission'); //This is the selected commission from the summary. For convinience so we don't need to do queries and loops.
             $table->timestamps();
 
             $table->foreign('summary_report_id')->references('id')->on('summary_reports')->onDelete('cascade');

@@ -32359,7 +32359,7 @@ var render = function() {
                         },
                         [
                           _c("span", { staticClass: "mr-1" }, [
-                            _vm._v("Report Number")
+                            _vm._v("Commission")
                           ]),
                           _vm._v(" "),
                           _vm.sortCol === "report_number" &&
@@ -32461,7 +32461,7 @@ var render = function() {
                         },
                         [
                           _c("span", { staticClass: "mr-1" }, [
-                            _vm._v("Total")
+                            _vm._v("Sales Total")
                           ]),
                           _vm._v(" "),
                           _vm.sortCol === "total" && _vm.sortDir === "asc"
@@ -32497,7 +32497,7 @@ var render = function() {
                         },
                         [
                           _c("span", { staticClass: "mr-1" }, [
-                            _vm._v("Balance")
+                            _vm._v("Commission Total")
                           ]),
                           _vm._v(" "),
                           _vm.sortCol === "balance" && _vm.sortDir === "asc"
@@ -32544,7 +32544,7 @@ var render = function() {
                     _c(
                       "td",
                       { staticClass: "py-2 px-4 border border-gray-800" },
-                      [_vm._v(" " + _vm._s(summary.report_number) + " ")]
+                      [_vm._v(" " + _vm._s(summary.name) + " ")]
                     ),
                     _vm._v(" "),
                     _c(
@@ -32565,7 +32565,12 @@ var render = function() {
                         staticClass:
                           "py-2 px-4 border border-gray-800 text-right"
                       },
-                      [_vm._v(" " + _vm._s(summary.total) + " ")]
+                      [
+                        _c("currency-format", {
+                          attrs: { value: summary.sales_total }
+                        })
+                      ],
+                      1
                     ),
                     _vm._v(" "),
                     _c(
@@ -32574,7 +32579,12 @@ var render = function() {
                         staticClass:
                           "py-2 px-4 border border-gray-800 text-right"
                       },
-                      [_vm._v(" " + _vm._s(summary.balance) + " ")]
+                      [
+                        _c("currency-format", {
+                          attrs: { value: summary.commission }
+                        })
+                      ],
+                      1
                     )
                   ]
                 )

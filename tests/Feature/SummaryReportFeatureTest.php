@@ -30,9 +30,9 @@ class SummaryReportFeatureTest extends TestCase
         $daily = factory(SalesReport::class, 2)->create();
 
         $summaryItems = [
-           [ 'sales_report_id' => $daily[0]->id],
-           [ 'sales_report_id' => $daily[1]->id],
-        ];
+            [ 'sales_report_id' => $daily[0]->id, 'commission' => 1000],
+            [ 'sales_report_id' => $daily[1]->id, 'commission' => 1000],
+         ];
 
         $report = factory(SummaryReport::class)->raw();
 
@@ -65,8 +65,8 @@ class SummaryReportFeatureTest extends TestCase
          $daily = factory(SalesReport::class, 2)->create();
  
          $summaryItems = [
-            [ 'sales_report_id' => $daily[0]->id],
-            [ 'sales_report_id' => $daily[1]->id],
+            [ 'sales_report_id' => $daily[0]->id, 'commission' => 1000],
+            [ 'sales_report_id' => $daily[1]->id, 'commission' => 1000],
          ];
  
          $report = factory(SummaryReport::class)->raw();

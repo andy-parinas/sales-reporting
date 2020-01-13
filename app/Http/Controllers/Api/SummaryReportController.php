@@ -24,7 +24,7 @@ class SummaryReportController extends Controller
     {
         if(($request->has('sort') && $request->has('direction')) || $request->has('search')){
 
-            $query = DB::table('summary_reports')->select('*');
+            $query = DB::table('summary_reports')->join('commissions', 'summary_reports.commission_id', '=', 'commissions.id')->select('*');
 
             if($request->has('search')){
                 $query->where('report_number', 'like', '%' . $request['search'] . '%');
@@ -42,7 +42,7 @@ class SummaryReportController extends Controller
 
         }else {
 
-            return DB::table('summary_reports')->select('*')
+            return DB::table('summary_reports')->join('commissions', 'summary_reports.commission_id', '=', 'commissions.id')->select('*')
                 ->orderBy('report_number', 'desc')
                 ->paginate(10);
         }

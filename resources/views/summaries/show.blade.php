@@ -55,82 +55,31 @@
                     <th class="py-2 px-2 border-r border-gray-800 w-32">
                         Date
                     </th>
-                    <th class="py-2 px-2 border-r border-gray-800 w-32">
-                        GRP/Code
-                    </th><th class="py-2 px-2 border-r border-gray-800 w-32">
-                        Guide Name
-                    </th>
                     <th class="py-2 px-2 border-r border-gray-800 w-16">A</th>
                     <th class="py-2 px-2 border-r border-gray-800 w-16">C</th>
                     <th class="py-2 px-2 border-r border-gray-800 w-16">TC</th>
                     <th class="py-2 px-2 border-r border-gray-800 w-32 text-right">Sales</th>
                     <th class="py-2 px-2 border-r border-gray-800 w-32 text-right">Commission</th>
-                    <th class="py-2 px-2 border-r border-gray-800 w-32 text-right">GST</th>
-                    <th class="py-2 px-2 border-r border-gray-800 w-32 text-right">Total</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($items as $item)
                 <tr class="bg-white text-xs">
                     <td class="py-2 px-4 border border-gray-800"> {{ $item->salesReport->tour_date }} </td>
-                    <td class="py-2 px-4 border border-gray-800"> {{ $item->salesReport->grp_code }} </td>
-                    <td class="py-2 px-4 border border-gray-800"> {{ $item->salesReport->tourGuide->name }} </td>
                     <td class="py-2 px-4 border border-gray-800"> {{ $item->salesReport->adult_count }} </td>
                     <td class="py-2 px-4 border border-gray-800"> {{ $item->salesReport->children_count }} </td>
                     <td class="py-2 px-4 border border-gray-800"> 0 </td>
                     <td class="py-2 px-4 border border-gray-800 text-right"> {{ $item->salesReport->total_agent_sales }} </td>
-                    <td class="py-2 px-4 border border-gray-800 text-right"> {{ $item->salesReport->total_commissions }} </td>
-                    <td class="py-2 px-4 border border-gray-800 text-right"> {{ $item->salesReport->gst }} </td>
-                    <td class="py-2 px-4 border border-gray-800 text-right"> {{ $item->salesReport->grand_total_commission }} </td>
+                    <td class="py-2 px-4 border border-gray-800 text-right"> {{ $item->commission }} </td>
                 </tr>
                 @endforeach
                 <tr class="bg-blue-200 text-xs">
-                    <td class="py-2 px-4 border border-gray-800"></td>
-                    <td class="py-2 px-4 border border-gray-800"></td>
                     <td class="py-2 px-4 border border-gray-800">TOTAL</td>
                     <td class="py-2 px-4 border border-gray-800"> {{ $summary->adult_count_total }} </td>
                     <td class="py-2 px-4 border border-gray-800"> {{ $summary->children_count_total }} </td>
                     <td class="py-2 px-4 border border-gray-800"> 0 </td>
                     <td class="py-2 px-4 border border-gray-800 text-right"> {{ $summary->sales_total }} </td>
-                    <td class="py-2 px-4 border border-gray-800 text-right"> {{ $summary->agent_commissions_total }} </td>
-                    <td class="py-2 px-4 border border-gray-800 text-right"> {{ $summary->gst_total }} </td>
-                    <td class="py-2 px-4 border border-gray-800 text-right"> {{ $summary->total }} </td>
-                </tr>
-                <tr  class="text-xs">
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">Return</td>
-                    <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">{{$summary->return}}</td>
-                </tr>
-                    <tr  class="bg-white text-xs">
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">Deduction</td>
-                    <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">{{$summary->duvet_deduction}}</td>
-                </tr>
-                <tr  class="bg-white text-xs">
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="py-2 px-4"></td>
-                    <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">Balance</td>
-                    <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">{{$summary->balance}}</td>
+                    <td class="py-2 px-4 border border-gray-800 text-right"> {{ $summary->commission }} </td>
                 </tr>
             </tbody>
         </table>

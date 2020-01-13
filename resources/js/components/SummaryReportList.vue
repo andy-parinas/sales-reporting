@@ -26,7 +26,7 @@
                             <button class="text-gray-800 font-bold flex w-full focus:outline-none hover:text-gray-700"
                                 :class="sortDir == 'desc' ? 'items-start' : 'items-end'"
                                 @click="sort('report_number')">
-                                <span class="mr-1">Report Number</span>
+                                <span class="mr-1">Commission</span>
                                 <sort-up v-if="sortCol==='report_number' && sortDir==='asc'" ></sort-up>
                                 <sort-down v-else-if="sortCol==='report_number' && sortDir==='desc'"></sort-down>
                             </button>
@@ -56,7 +56,7 @@
                                 :class="sortDir == 'desc' ? 'items-start' : 'items-end'"
                                 @click="sort('total')">
 
-                                <span class="mr-1">Total</span>
+                                <span class="mr-1">Sales Total</span>
                                 <sort-up v-if="sortCol==='total' && sortDir==='asc'" ></sort-up>
                                 <sort-down v-else-if="sortCol==='total' && sortDir==='desc'"></sort-down>
 
@@ -67,7 +67,7 @@
                                 :class="sortDir == 'desc' ? 'items-start' : 'items-end'"
                                 @click="sort('balance')">
 
-                                <span class="mr-1">Balance</span>
+                                <span class="mr-1">Commission Total</span>
                                 <sort-up v-if="sortCol==='balance' && sortDir==='asc'" ></sort-up>
                                 <sort-down v-else-if="sortCol==='balance' && sortDir==='desc'"></sort-down>
 
@@ -80,11 +80,11 @@
                         <td class="py-2 px-4 border border-gray-800"> 
                             <a :href="'/summaries/' + summary.id" class="text-blue-700 font-semibold hover:text-blue-800"> {{ summary.title}} </a>
                         </td>
-                        <td class="py-2 px-4 border border-gray-800"> {{ summary.report_number }} </td>
+                        <td class="py-2 px-4 border border-gray-800"> {{ summary.name }} </td>
                         <td class="py-2 px-4 border border-gray-800"> {{ summary.from_date }} </td>
                         <td class="py-2 px-4 border border-gray-800"> {{ summary.to_date }} </td>
-                        <td class="py-2 px-4 border border-gray-800 text-right"> {{ summary.total }} </td>
-                        <td class="py-2 px-4 border border-gray-800 text-right"> {{ summary.balance }} </td>
+                        <td class="py-2 px-4 border border-gray-800 text-right"> <currency-format :value="summary.sales_total" ></currency-format> </td>
+                        <td class="py-2 px-4 border border-gray-800 text-right"> <currency-format :value="summary.commission" ></currency-format> </td>
                     </tr>
                 </tbody>
              </table>
