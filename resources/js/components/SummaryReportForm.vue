@@ -86,7 +86,7 @@
                             <option v-for="commission in commissions" :key="commission.id"
                                 :selected="commission.name === 'TG' && selectedReport==='TOUR_GUIDE'"
                                 :disabled="(selectedReport==='TOUR_AGENT' && commission.name === 'TG') || (selectedReport==='TOUR_GUIDE' && commission.name !== 'TG')"
-                                :value="commission.id">{{ commission.name }}</option>
+                                :value="commission.id">{{ commission.name }} </option>
                         </select>
                     </div>
                 </div>
@@ -142,34 +142,23 @@
                         <th class="py-2 px-2 border-r border-gray-800 w-32">
                             Date
                         </th>
-                        <!-- <th class="py-2 px-2 border-r border-gray-800 w-32">
-                            GRP/Code
-                        </th> -->
-                        <!-- <th class="py-2 px-2 border-r border-gray-800 w-40">
-                            Guide Name
-                        </th> -->
+
                         <th class="py-2 px-2 border-r border-gray-800 w-16">A</th>
                         <th class="py-2 px-2 border-r border-gray-800 w-16">C</th>
                         <th class="py-2 px-2 border-r border-gray-800 w-16">TC</th>
                         <th class="py-2 px-2 border-r border-gray-800 w-24 text-right">Sales</th>
                         <th class="py-2 px-2 border-r border-gray-800 w-24 text-right">Commmission</th>
-                        <!-- <th class="py-2 px-2 border-r border-gray-800 w-24 text-right">GST</th>
-                        <th class="py-2 px-2 border-r border-gray-800 w-32 text-right">Total</th> -->
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="item in summaryReport.summary_items" :key="item.id"
                         class="bg-white text-xs">
                         <td class="py-2 px-4 border border-gray-800"> {{ item.tour_date }} </td>
-                        <!-- <td class="py-2 px-4 border border-gray-800"> {{ item.grp_code }} </td>
-                        <td class="py-2 px-4 border border-gray-800"> {{ item.tour_guide }} </td> -->
                         <td class="py-2 px-4 border border-gray-800"> {{ item.adult_count }} </td>
                         <td class="py-2 px-4 border border-gray-800"> {{ item.children_count }} </td>
                         <td class="py-2 px-4 border border-gray-800"> 0 </td>
                         <td class="py-2 px-4 border border-gray-800 text-right"> {{ item.total_agent_sales }} </td>
                         <td class="py-2 px-4 border border-gray-800 text-right"> {{ item.commission }} </td>
-                        <!-- <td class="py-2 px-4 border border-gray-800 text-right"> {{ item.gst }} </td>
-                        <td class="py-2 px-4 border border-gray-800 text-right"> {{ item.grand_total_commission }} </td> -->
                     </tr>
                     <tr class="bg-blue-200 text-xs">
                         <!-- <td class="py-2 px-4 border border-gray-800"></td>
@@ -179,82 +168,17 @@
                         <td class="py-2 px-4 border border-gray-800"> {{ summaryReport.children_count_total }} </td>
                         <td class="py-2 px-4 border border-gray-800"> 0 </td>
                         <td class="py-2 px-4 border border-gray-800 text-right"> {{ summaryReport.sales_total }} </td>
-                        <td class="py-2 px-4 border border-gray-800 text-right"> {{ summaryReport.agent_commissions_total }} </td>
-                        <!-- <td class="py-2 px-4 border border-gray-800 text-right"> {{ summaryReport.gst_total }} </td>
-                        <td class="py-2 px-4 border border-gray-800 text-right"> {{ summaryReport.total }} </td> -->
+                        <td class="py-2 px-4 border border-gray-800 text-right"> {{ summaryReport.commission }} </td>
                     </tr>
-                    <!-- <tr  class="text-xs">
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">Return</td>
-                        <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">
-                            <input type="text" class="w-full bg-transparent px-2 text-right"
-                                placeholder="0"
-                                v-model.number="summaryReport.return">
-                        </td>
-                    </tr>
-                     <tr  class="bg-white text-xs">
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">Deduction</td>
-                        <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">
-                            <input type="text" class="w-full bg-transparent px-2 text-right"
-                                placeholder="0"
-                                v-model.number="summaryReport.duvet_deduction">
-                        </td>
-                    </tr>
-                    <tr  class="bg-white text-xs">
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">Balance</td>
-                        <td class="bg-yellow-300 py-2 px-4 border border-gray-800 text-right">
-                             <input type="text" class="w-full bg-transparent px-2 text-right"
-                                placeholder="0" disabled
-                                v-model.number="summaryReport.balance">
-                        </td>
-                    </tr>
-                    <tr  class="bg-white text-xs">
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4"></td>
-                        <td class="py-2 px-4" colspan="2">
-                            <button v-if="edit" class="flex items-center w-full mt-5 py-2 px-4 text-white bg-indigo-600
-                                        rounded-full justify-center focus:outline-none hover:bg-indigo-700"
-                                        @click="updateReport"> 
-                                Update 
-                            </button>
-                             <button v-else class="flex items-center w-full mt-5 py-2 px-4 text-white bg-indigo-600
-                                        rounded-full justify-center focus:outline-none hover:bg-indigo-700"
-                                        @click="createReport"> 
-                                Submit 
-                            </button>
-                        </td>
-                    </tr> -->
                 </tbody>
             </table>
+            <div class="flex mt-5" v-if="formIsValid">
+                <button class="py-2 px-2 text-white rounded flex-1" @click="createSummaryReport"
+                    :class="success? 'bg-green-600' : 'bg-blue-600'" >
+                    <span v-if="saving" >Creating Report</span>
+                    <span v-else >Create Report</span>
+                </button>
+            </div>
         </div>
   </div>
 </template>
@@ -278,19 +202,18 @@ export default {
                 sales_total: 0,
                 commission_id: 0,
                 commission: 0,
-                gst_total: 0,
-                total: 0,
-                return: 0,
-                duvet_deduction: 0,
-                balance: 0
+
             },
+            saving: false,
+            success: false,
             errors: null,
             noResults: false,
             selectedReport: null,
             tourGuides: [],
             tourAgents: [],
             commissions: [],
-            postUrl: '',
+            reportable: '',
+            reportable_id: '',
             selectedTourAgent: '',
             selectedTourGuide: '',
             selectedCommission: ''
@@ -303,6 +226,13 @@ export default {
          'summaryReport.duvet_deduction': function(newvalue, oldValue){
             this.summaryReport.balance = (this.summaryReport.total - (newvalue + this.summaryReport.return)).toFixed(2);
         }  
+    },
+
+    computed: {
+        formIsValid: function(){
+
+            return (this.selectedTourGuide || this.selectedTourAgent) && this.summaryReport.commission_id && this.summaryReport.summary_items.length > 0
+        }
     },
     methods: { 
 
@@ -505,25 +435,58 @@ export default {
         },
 
         tourAgentSelected: function(){
-            console.log(this.selectedTourAgent);
+            this.reportable_id = this.selectedTourAgent;
         },
 
         tourGuideSelected: function(){
-            console.log(this.selectedTourGuide);
+            this.reportable_id = this.selectedTourGuide;
         },
         commissionSelected: function(){
-            console.log(this.selectedCommission);
+            console.log(this.summaryReport.commission_id);
         },
         selectReport: function(report){
             if(report === 'TOUR_GUIDE'){
                 this.selectedCommission = '';
                 this.selectedTourAgent = '';
+
+                this.reportable = 'GUIDE';
+
             }
 
             if(report === 'TOUR_AGENT' ){
                 this.selectedCommission = '';
                 this.selectedTourGuide = '';
+
+                this.reportable = 'AGENT';
+
             }
+        },
+
+        createSummaryReport: async function(){
+            try {
+
+                this.saving = true;
+                    
+                const url = this.backend + '/api/summaries?reportable=' + this.reportable + '&id=' + this.reportable_id
+
+                const data = {
+                    ...this.summaryReport,
+                    api_token: this.user.api_token
+                }
+
+                console.log(data);
+
+                const response = await axios.post(url, data);
+                this.saving = false;
+                this.success = true;
+                this.errors = null;
+
+            } catch (error) {
+                
+                console.error(error);
+            }
+
+
         }
     },
 

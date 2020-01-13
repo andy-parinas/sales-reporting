@@ -4398,82 +4398,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'SummaryReportForm',
   props: ['user', 'backend', 'edit', 'summary', 'items'],
@@ -4491,20 +4415,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         tc_count: 0,
         sales_total: 0,
         commission_id: 0,
-        commission: 0,
-        gst_total: 0,
-        total: 0,
-        "return": 0,
-        duvet_deduction: 0,
-        balance: 0
+        commission: 0
       },
+      saving: false,
+      success: false,
       errors: null,
       noResults: false,
       selectedReport: null,
       tourGuides: [],
       tourAgents: [],
       commissions: [],
-      postUrl: '',
+      reportable: '',
+      reportable_id: '',
       selectedTourAgent: '',
       selectedTourGuide: '',
       selectedCommission: ''
@@ -4516,6 +4438,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     'summaryReport.duvet_deduction': function summaryReportDuvet_deduction(newvalue, oldValue) {
       this.summaryReport.balance = (this.summaryReport.total - (newvalue + this.summaryReport["return"])).toFixed(2);
+    }
+  },
+  computed: {
+    formIsValid: function formIsValid() {
+      return (this.selectedTourGuide || this.selectedTourAgent) && this.summaryReport.commission_id && this.summaryReport.summary_items.length > 0;
     }
   },
   methods: {
@@ -4840,25 +4767,73 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return loadCommissions;
     }(),
     tourAgentSelected: function tourAgentSelected() {
-      console.log(this.selectedTourAgent);
+      this.reportable_id = this.selectedTourAgent;
     },
     tourGuideSelected: function tourGuideSelected() {
-      console.log(this.selectedTourGuide);
+      this.reportable_id = this.selectedTourGuide;
     },
     commissionSelected: function commissionSelected() {
-      console.log(this.selectedCommission);
+      console.log(this.summaryReport.commission_id);
     },
     selectReport: function selectReport(report) {
       if (report === 'TOUR_GUIDE') {
         this.selectedCommission = '';
         this.selectedTourAgent = '';
+        this.reportable = 'GUIDE';
       }
 
       if (report === 'TOUR_AGENT') {
         this.selectedCommission = '';
         this.selectedTourGuide = '';
+        this.reportable = 'AGENT';
       }
-    }
+    },
+    createSummaryReport: function () {
+      var _createSummaryReport = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7() {
+        var url, data, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                _context7.prev = 0;
+                this.saving = true;
+                url = this.backend + '/api/summaries?reportable=' + this.reportable + '&id=' + this.reportable_id;
+                data = _objectSpread({}, this.summaryReport, {
+                  api_token: this.user.api_token
+                });
+                console.log(data);
+                _context7.next = 7;
+                return axios.post(url, data);
+
+              case 7:
+                response = _context7.sent;
+                this.saving = false;
+                this.success = true;
+                this.errors = null;
+                _context7.next = 16;
+                break;
+
+              case 13:
+                _context7.prev = 13;
+                _context7.t0 = _context7["catch"](0);
+                console.error(_context7.t0);
+
+              case 16:
+              case "end":
+                return _context7.stop();
+            }
+          }
+        }, _callee7, this, [[0, 13]]);
+      }));
+
+      function createSummaryReport() {
+        return _createSummaryReport.apply(this, arguments);
+      }
+
+      return createSummaryReport;
+    }()
   },
   mounted: function mounted() {
     var _this2 = this;
@@ -31813,7 +31788,7 @@ var render = function() {
                                 value: commission.id
                               }
                             },
-                            [_vm._v(_vm._s(commission.name))]
+                            [_vm._v(_vm._s(commission.name) + " ")]
                           )
                         })
                       ],
@@ -32129,19 +32104,31 @@ var render = function() {
                     {
                       staticClass: "py-2 px-4 border border-gray-800 text-right"
                     },
-                    [
-                      _vm._v(
-                        " " +
-                          _vm._s(_vm.summaryReport.agent_commissions_total) +
-                          " "
-                      )
-                    ]
+                    [_vm._v(" " + _vm._s(_vm.summaryReport.commission) + " ")]
                   )
                 ])
               ],
               2
             )
-          ])
+          ]),
+          _vm._v(" "),
+          _vm.formIsValid
+            ? _c("div", { staticClass: "flex mt-5" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "py-2 px-2 text-white rounded flex-1",
+                    class: _vm.success ? "bg-green-600" : "bg-blue-600",
+                    on: { click: _vm.createSummaryReport }
+                  },
+                  [
+                    _vm.saving
+                      ? _c("span", [_vm._v("Creating Report")])
+                      : _c("span", [_vm._v("Create Report")])
+                  ]
+                )
+              ])
+            : _vm._e()
         ])
   ])
 }

@@ -15,14 +15,16 @@ class SummaryReport extends Model
         'children_count_total',
         'tc_count',
         'sales_total',
-        'agent_commissions_total',
-        'gst_total',
-        'total',
-        'return',
-        'duvet_deduction',
-        'balance',
+        // 'agent_commissions_total',
+        // 'gst_total',
+        // 'total',
+        // 'return',
+        // 'duvet_deduction',
+        // 'balance',
         'reportable_id',
-        'reportable_type'
+        'reportable_type',
+        'commission',
+        'commission_id'
     ];
 
 

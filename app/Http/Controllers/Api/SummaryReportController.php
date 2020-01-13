@@ -71,6 +71,7 @@ class SummaryReportController extends Controller
             return response(['error' => 'Agent or Guide not found'], Response::HTTP_NOT_FOUND);
         }
 
+        // $summary = $reportable->reports()->create($data);
 
 
         DB::beginTransaction();
@@ -122,12 +123,14 @@ class SummaryReportController extends Controller
             'children_count_total'=> 'required',
             'tc_count'=> 'required',
             'sales_total'=> 'required',
-            'agent_commissions_total'=> 'required',
-            'gst_total'=> 'required',
-            'total'=> 'required',
-            'return'=> '',
-            'duvet_deduction'=> '',
-            'balance'=> 'required'
+            'commission' => 'required',
+            'commission_id' => 'required'
+            // 'agent_commissions_total'=> 'required',
+            // 'gst_total'=> 'required',
+            // 'total'=> 'required',
+            // 'return'=> '',
+            // 'duvet_deduction'=> '',
+            // 'balance'=> 'required'
         ]);
     }
 
