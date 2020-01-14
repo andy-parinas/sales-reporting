@@ -4,6 +4,7 @@
 
 use App\Commission;
 use App\SummaryReport;
+use App\TourAgent;
 use Faker\Generator as Faker;
 
 $factory->define(SummaryReport::class, function (Faker $faker) {
@@ -17,7 +18,9 @@ $factory->define(SummaryReport::class, function (Faker $faker) {
         'tc_count' => $faker->numberBetween(0, 10),
         'sales_total' => $faker->randomFloat(2),
         'commission_id' => factory(Commission::class),
-        'commission' => $faker->randomFloat(2)
+        'commission' => $faker->randomFloat(2),
+        'reportable_id' => factory(TourAgent::class),
+        'reportable_type' => TourAgent::class
         // 'agent_commissions_total' => $faker->randomFloat(2),
         // 'gst_total' => $faker->randomFloat(2),
         // 'total' => $faker->randomFloat(2),

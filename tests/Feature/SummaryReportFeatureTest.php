@@ -136,25 +136,25 @@ class SummaryReportFeatureTest extends TestCase
 
 
         $summary = factory(SummaryReport::class)->create();
-        factory(SummaryReportItem::class, 5)->create(['summary_report_id' => $summary->id]);
+        factory(SummaryReportItem::class, 5)->create(['summary_report_id' => $summary->id, 'commission' => 10000]);
 
 
 
         $updateData = [
             'title' => 'Update',
-            'report_number' => 'Update',
-            'from_date' => '2019-10-01',
-            'to_date' => '2019-10-01',
-            'adult_count_total' => 10,
-            'children_count_total' => 10,
-            'tc_count' => 10,
-            'sales_total' => 10,
-            'agent_commissions_total' => 10,
-            'gst_total' => 10,
-            'total' => 10,
-            'return' => 10,
-            'duvet_deduction' => 10,
-            'balance' => 10
+            // 'report_number' => 'Update',
+            // 'from_date' => '2019-10-01',
+            // 'to_date' => '2019-10-01',
+            // 'adult_count_total' => 10,
+            // 'children_count_total' => 10,
+            // 'tc_count' => 10,
+            // 'sales_total' => 10,
+            // 'agent_commissions_total' => 10,
+            // 'gst_total' => 10,
+            // 'total' => 10,
+            // 'return' => 10,
+            // 'duvet_deduction' => 10,
+            // 'balance' => 10
         ];
 
         

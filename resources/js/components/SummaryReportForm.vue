@@ -1,57 +1,21 @@
 <template>
   <div>
 
-        <!-- IF Form is on Edit Mode -->
-        <div v-if="edit"  class="mx-auto w-288">
-            <div class="border border-gray-700 flex-1 mt-10 mb-5 w-168">
-                <div class="flex">
-                    <div class="border-b border-r border-gray-700 w-48 text-center  bg-gray-200">
-                        <div  class="text-sm font-semibold text-gray-800 uppercase py-1" for="agent">Title</div>
-                    </div>
-                    <div  class="flex-1 border-b border-gray-700 py-1 pl-10 text-sm text-gray-800" >
-                        <input class="w-full focus:outline-none py-1  pl-1 text-gray-800 text-sm bg-transparent"
-                                type="text" id="date" placeholder="Product Name" 
-                                v-model="summaryReport.title">
-                    </div>
-                </div>
-                <div class="flex  bg-gray-200">
-                    <div class="border-b border-r border-gray-700 w-48 text-center">
-                        <div  class="text-sm font-semibold text-gray-800 uppercase py-1" for="agent">Report Number </div>
-                    </div>
-                    <div  class="flex-1 border-b border-gray-700 py-1 pl-10 text-sm text-gray-800 " >
-                        {{ summaryReport.report_number}}
-                    </div>
-                </div>
-                <div class="flex  bg-gray-200">
-                    <div class="border-r border-gray-700 w-48 text-center">
-                        <div  class="text-sm font-semibold text-gray-800 uppercase py-1" for="pax">From / To</div>
-                    </div>
-                    <div  class="flex-1 border-gray-700 flex items-center">
-                        <div class="flex-1 py-1 pl-10 border-r border-gray-700 focus:outline-none  text-gray-800 text-sm">
-                            {{ summaryReport.from_date}}
-                        </div>
-                        <div class="flex-1 py-1 pl-10 focus:outline-none  text-gray-800 text-sm">
-                            {{ summaryReport.to_date }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-
-        <!-- IF Form is on Create Mode -->
-        <div v-else class="mx-auto w-288">
+        <div class="mx-auto w-288">
             <div class="mt-10">            
                 <div class="flex items-center">
                     <div class="mr-5">
                         <h1>Generate Report For</h1>
                     </div>
                     <div class="mr-5">
-                        <input type="radio" name="selection" value="TOUR_AGENT" v-model="selectedReport" @click="selectReport('TOUR_AGENT')">
+                        <input type="radio" name="selection" value="TOUR_AGENT" :disabled="edit"
+                            v-model="selectedReport" @click="selectReport('TOUR_AGENT')">
                         <label > Tour Agent </label>
                     </div>
                     <div>
-                        <input type="radio" name="selection" value="TOUR_GUIDE" v-model="selectedReport" @click="selectReport('TOUR_GUIDE')" >
+                        <input type="radio" name="selection" value="TOUR_GUIDE" :disabled="edit"
+                            v-model="selectedReport" @click="selectReport('TOUR_GUIDE')" >
                         <label > Tour Guide </label>
                     </div>
                 </div>
@@ -60,7 +24,7 @@
                 <div class="mt-10 flex items-center">
                     <div   v-if="selectedReport === 'TOUR_AGENT'" class="flex items-center flex-1 mr-5">
                         <label class="w-32 mr-2" for="agent">Tour Agent</label>
-                        <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800" 
+                        <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800" :disabled="edit"
                                 type="text" id="agent" placeholder="Tour Agent Name" @change="tourAgentSelected" v-model="selectedTourAgent" >
 
                             <option disabled value="" > --- Select Tour Agent ---</option>
@@ -70,7 +34,7 @@
                     </div>
                     <div  v-if="selectedReport === 'TOUR_GUIDE'" class="flex items-center flex-1  mr-5">
                         <label class="mr-2 w-32" for="guide">Tour Guides</label>
-                        <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800"   
+                        <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800" :disabled="edit"  
                                 type="text" id="guide" placeholder="Guide Name" @change="tourGuideSelected" v-model="selectedTourGuide" >
                             <option disabled value="" > --- Select Tour Guide ---</option>
                             <option v-for="guide in tourGuides" :key="guide.id"
@@ -79,7 +43,7 @@
                     </div>
                      <div  v-if="selectedReport" class="flex items-center flex-1">
                         <label class="mr-2 w-32" for="commission">Commissions</label>
-                        <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800" 
+                        <select class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800" :disabled="edit"
                                 type="text" id="commission" placeholder="Commission" @change="commissionSelected" v-model="summaryReport.commission_id" >
 
                             <option disabled value="" > --- Select Commission ---</option>
@@ -95,18 +59,18 @@
                     <div  class="flex items-center mt-5">
                         <div class="flex items-center flex-1 mr-5">
                             <label class="w-32 mr-2" for="agent">From Date</label>
-                            <input class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800 uppercase"  
+                            <input class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800 uppercase"  :disabled="edit"
                                         type="date" id="date" 
                                         placeholder="Tour Date" v-model="summaryReport.from_date">
                         </div>
                         <div class="flex items-center flex-1">
                             <label class="w-32 mr-2" for="agent">To Date</label>
-                            <input class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800 uppercase" 
+                            <input class="w-full py-1 pl-10 focus:outline-none text-gray-800 text-sm border border-gray-800 uppercase" :disabled="edit"
                                         type="date" id="date" 
                                         placeholder="Tour Date" v-model="summaryReport.to_date" >
                         </div>
                     </div>
-                    <div class="flex mt-5">
+                    <div v-if="!edit" class="flex mt-5">
                         <button class="bg-blue-600 py-2 px-2 text-white rounded flex-1" @click="getSalesReport" >Generate Report</button>
                     </div>
                     <div v-if="noResults" class="mt-2 mb-3  flex items-center justify-center">
@@ -124,7 +88,7 @@
 
 
             
-            <div v-if="!edit" class="border border-gray-700 mt-10 mb-5 " :class="errors && errors.title ? 'bg-red-200' : 'bg-green-200'"> 
+            <div class="border border-gray-700 mt-10 mb-5 " :class="errors && errors.title ? 'bg-red-200' : 'bg-green-200'"> 
                 <div class="flex">
                     <div class="border-r py-1  border-gray-700 w-32 text-center">
                         <label  class="text-sm font-semibold text-gray-800 uppercase" for="agent">Report Title</label>
@@ -173,7 +137,13 @@
                 </tbody>
             </table>
             <div class="flex mt-5" v-if="formIsValid">
-                <button class="py-2 px-2 text-white rounded flex-1" @click="createSummaryReport"
+                <button v-if="edit" class="py-2 px-2 text-white rounded flex-1" @click="updateReport"
+                    :class="success? 'bg-green-600' : 'bg-blue-600'" >
+                    <span v-if="saving" >Updating Report</span>
+                    <span v-else-if="success" >Report Successfully Updated</span>
+                    <span v-else >Update Report</span>
+                </button>
+                <button v-else class="py-2 px-2 text-white rounded flex-1" @click="createSummaryReport"
                     :class="success? 'bg-green-600' : 'bg-blue-600'" >
                     <span v-if="saving" >Creating Report</span>
                     <span v-else-if="success" >Report Successfully Created</span>
@@ -369,6 +339,8 @@ export default {
             
             try {
 
+                 this.saving = true;
+
                  const data = {
                     ...this.summaryReport,
                     api_token: this.user.api_token
@@ -377,6 +349,10 @@ export default {
                 const url = this.backend + '/api/summaries/' + this.summary.id;
 
                 const response = await axios.patch(url, data);
+
+                this.saving = false;
+                this.success = true;
+                this.errors = null;
 
                 window.location.href = '/summaries/' + response.data.id;
 
@@ -505,13 +481,36 @@ export default {
 
         if(this.edit){
 
-            this.items.forEach(item => {
-                this.summary_items.push(item.sales_report);
-            });
-
             this.summaryReport = {
                 ...this.summary
             }
+
+            console.log(this.summaryReport);
+
+            if(this.summaryReport.reportable_type === 'App\\TourAgent'){
+                this.selectedReport = 'TOUR_AGENT';
+                this.selectedTourAgent = this.summaryReport.reportable_id;
+            }
+
+            if(this.summaryReport.reportable_type === 'App\\TourGuide'){
+                this.selectedReport = 'TOUR_GUIDE';
+                this.selectedTourGuide = this.summaryReport.reportable_id;
+            }
+
+            const summaryItems = [];
+
+            this.items.forEach(item => {
+                const summaryItem = {
+                    commission: item.commission,
+                    ...item.sales_report
+                }
+                // this.summaryReport.summary_items.push(summaryItem);
+                summaryItems.push(summaryItem);
+            });
+
+            this.$set(this.summaryReport, 'summary_items', summaryItems);
+
+      
 
         }
     }

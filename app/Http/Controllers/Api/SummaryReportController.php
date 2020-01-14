@@ -116,15 +116,17 @@ class SummaryReportController extends Controller
     {
         return request()->validate([
             'title' => 'required',
-            'report_number'=> 'required',
-            'from_date'=> 'required',
-            'to_date'=> 'required',
-            'adult_count_total'=> 'required',
-            'children_count_total'=> 'required',
-            'tc_count'=> 'required',
-            'sales_total'=> 'required',
-            'commission' => 'required',
-            'commission_id' => 'required'
+            'report_number'=> 'required|sometimes',
+            'from_date'=> 'required|sometimes',
+            'to_date'=> 'required|sometimes',
+            'adult_count_total'=> 'required|sometimes',
+            'children_count_total'=> 'required|sometimes',
+            'tc_count'=> 'required|sometimes',
+            'sales_total'=> 'required|sometimes',
+            'commission' => 'required|sometimes',
+            'commission_id' => 'required|sometimes',
+            'reportable_id' => 'required|sometimes',
+            'reportable_type' => 'required|sometimes'
             // 'agent_commissions_total'=> 'required',
             // 'gst_total'=> 'required',
             // 'total'=> 'required',
