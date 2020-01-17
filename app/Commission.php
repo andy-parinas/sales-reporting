@@ -16,4 +16,9 @@ class Commission extends Model
         return $this->hasMany(TourCommission::class);
     }
 
+    public function summaries()
+    {
+        return $this->hasMany(SummaryReport::class);
+    }
+
 }

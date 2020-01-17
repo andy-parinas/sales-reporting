@@ -44,6 +44,7 @@ Route::post('/guides', 'Api\TourGuideController@store');
 Route::delete('/guides/{guide}', 'Api\TourGuideController@destroy')->name('guides.api.destroy');
 Route::patch('/guides/{guide}', 'Api\TourGuideController@update')->name('guides.api.update');
 
+
 Route::get('/deductions', 'Api\DeductionController@index');
 
 Route::get('/users', 'Api\UserController@index');

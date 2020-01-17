@@ -27,7 +27,8 @@ class SalesReportListResource extends JsonResource
             'adult_count' => $this->adult_count,
             'children_count' => $this->children_count,
             'grp_code' => $this->grp_code,
-            'tour_date' => $this->tour_date
+            'tour_date' => $this->tour_date,
+            'sales_commissions' => $this->salesCommissions
         ];
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\SalesReport;
 use App\SummaryReport;
+use App\SummaryReportItem;
 use Illuminate\Http\Request;
 
 class SummaryReportController extends Controller
@@ -52,10 +54,12 @@ class SummaryReportController extends Controller
      */
     public function show(SummaryReport $summary)
     {
-
+        $selected_commission = $summary->selectedCommission;
         $items = $summary->summaryReportItems;
         
-        return view('summaries.show', compact('summary', 'items'));
+        // dd(compact('summary', 'items', 'selected_commission'));
+
+        return view('summaries.show', compact('summary', 'items', 'selected_commission'));
 
     }
 
@@ -69,6 +73,11 @@ class SummaryReportController extends Controller
     {
         $items = $summary->summaryReportItems;
         // $items = "none";
+
+        // $items = SummaryReportItem::with('salesReport')->where('summary_report_id', '=', $summary->id)->get();
+
+        // dd(compact('summary', 'items'));
+        // dd($items[0]->salesReport);
 
         return view('summaries.edit', compact('summary', 'items'));
     }

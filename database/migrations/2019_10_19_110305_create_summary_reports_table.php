@@ -23,12 +23,10 @@ class CreateSummaryReportsTable extends Migration
             $table->integer('children_count_total');
             $table->integer('tc_count');
             $table->float('sales_total');
-            $table->float('agent_commissions_total');
-            $table->float('gst_total');
-            $table->float('total');
-            $table->float('return')->default(0);
-            $table->float('duvet_deduction')->default(0);
-            $table->float('balance');
+            $table->unsignedBigInteger('commission_id');
+            $table->float('commission');
+            $table->unsignedBigInteger('reportable_id');
+            $table->string('reportable_type');
             $table->timestamps();
         });
     }

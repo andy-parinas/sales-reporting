@@ -8,7 +8,8 @@ class SummaryReportItem extends Model
 {
     protected $fillable = [
         'summary_report_id',
-        'sales_report_id'
+        'sales_report_id',
+        'commission'
     ];
 
     protected $with = ['salesReport'];

@@ -13,4 +13,10 @@ class TourGuide extends Model
         'phone'
     ];
 
+
+    public function reports()
+    {
+        return $this->morphMany(SummaryReport::class, 'reportable');
+    }
+
 }

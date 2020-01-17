@@ -6,7 +6,7 @@
             <h1 class="text-4xl font-bold uppercase text-gray-800" >Create Summary Report</h1>
         </div>
         <div  class="px-4 py-2">
-            <a href="#" 
+            <a href="{{ route('summaries.index')}}"  
                 class="uppercase text-sm font-semibold bg-blue-700 py-2 px-4 rounded text-white mr-2 hover:bg-blue-600">Cancel</a>
         </div>
     </div>
