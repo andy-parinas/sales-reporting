@@ -4962,6 +4962,38 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -4981,54 +5013,199 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       summaries: [],
       meta: null,
       withError: false,
-      sortDir: '',
-      sortCol: ''
+      sortDir: 'desc',
+      sortCol: 'from_date',
+      search: ''
     };
   },
   methods: {
-    sort: function sort(column) {}
+    sort: function () {
+      var _sort = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(column) {
+        var url, response, meta;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                this.sortCol = column;
+
+                if (this.sortDir === 'asc') {
+                  this.sortDir = 'desc';
+                } else {
+                  this.sortDir = 'asc';
+                }
+
+                url = this.backend + '/api/summaries?api_token=' + this.user.api_token + '&sort=' + this.sortCol + '&direction=' + this.sortDir + '&search=' + this.search;
+                _context.next = 6;
+                return axios.get(url);
+
+              case 6:
+                response = _context.sent;
+                this.summaries = response.data.data;
+                meta = {
+                  current_page: response.data.current_page,
+                  last_page: response.data.last_page
+                };
+                this.meta = meta;
+                _context.next = 15;
+                break;
+
+              case 12:
+                _context.prev = 12;
+                _context.t0 = _context["catch"](0);
+                console.log(_context.t0);
+
+              case 15:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[0, 12]]);
+      }));
+
+      function sort(_x) {
+        return _sort.apply(this, arguments);
+      }
+
+      return sort;
+    }(),
+    searchSummary: function () {
+      var _searchSummary = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var url, response, meta;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                url = this.backend + '/api/summaries?api_token=' + this.user.api_token + '&search=' + this.search;
+                _context2.next = 4;
+                return axios.get(url);
+
+              case 4:
+                response = _context2.sent;
+                this.summaries = response.data.data;
+                meta = {
+                  current_page: response.data.current_page,
+                  last_page: response.data.last_page
+                };
+                this.meta = meta;
+                _context2.next = 13;
+                break;
+
+              case 10:
+                _context2.prev = 10;
+                _context2.t0 = _context2["catch"](0);
+                console.log(_context2.t0);
+
+              case 13:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 10]]);
+      }));
+
+      function searchSummary() {
+        return _searchSummary.apply(this, arguments);
+      }
+
+      return searchSummary;
+    }(),
+    changePage: function () {
+      var _changePage = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(page) {
+        var url, response, meta;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                url = this.backend + '/api/summaries?api_token=' + this.user.api_token + '&page=' + page + '&sort=' + this.sortCol + '&direction=' + this.sortDir + '&search=' + this.search;
+                _context3.next = 4;
+                return axios.get(url);
+
+              case 4:
+                response = _context3.sent;
+                this.summaries = response.data.data;
+                meta = {
+                  current_page: response.data.current_page,
+                  last_page: response.data.last_page
+                };
+                this.meta = meta;
+                _context3.next = 13;
+                break;
+
+              case 10:
+                _context3.prev = 10;
+                _context3.t0 = _context3["catch"](0);
+                console.log(_context3.t0);
+
+              case 13:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[0, 10]]);
+      }));
+
+      function changePage(_x2) {
+        return _changePage.apply(this, arguments);
+      }
+
+      return changePage;
+    }()
   },
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-      var url, response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+      var url, response, meta;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context.prev = _context.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
-              _context.prev = 0;
+              _context4.prev = 0;
               url = this.backend + '/api/summaries?api_token=' + this.user.api_token;
-              _context.next = 4;
+              _context4.next = 4;
               return axios.get(url);
 
             case 4:
-              response = _context.sent;
+              response = _context4.sent;
+              meta = {
+                current_page: response.data.current_page,
+                last_page: response.data.last_page
+              };
+              this.meta = meta;
               this.summaries = response.data.data;
               this.loading = false;
               this.withError = false;
               console.log(response);
-              _context.next = 16;
+              _context4.next = 18;
               break;
 
-            case 11:
-              _context.prev = 11;
-              _context.t0 = _context["catch"](0);
+            case 13:
+              _context4.prev = 13;
+              _context4.t0 = _context4["catch"](0);
               this.withError = true;
               this.loading = false;
 
-              if (_context.t0.response && _context.t0.response.data && _context.t0.response.data.errors) {
-                console.log(_context.t0.response);
+              if (_context4.t0.response && _context4.t0.response.data && _context4.t0.response.data.errors) {
+                console.log(_context4.t0.response);
               } else {
-                console.log(_context.t0);
+                console.log(_context4.t0);
               }
 
-            case 16:
+            case 18:
             case "end":
-              return _context.stop();
+              return _context4.stop();
           }
         }
-      }, _callee, this, [[0, 11]]);
+      }, _callee4, this, [[0, 13]]);
     }));
 
     function mounted() {
@@ -32103,6 +32280,77 @@ var render = function() {
           [_vm._m(0)]
         )
       : _c("div", { staticClass: "my-10 px-5 w-288 mx-auto" }, [
+          _c(
+            "form",
+            {
+              attrs: { method: "POST" },
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.searchSummary($event)
+                }
+              }
+            },
+            [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "flex items-center border border-gray-700 rounded"
+                },
+                [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "pl-2 font-bold text-gray-800 mr-2",
+                      attrs: { for: "search" }
+                    },
+                    [_vm._v("Find")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.search,
+                        expression: "search"
+                      }
+                    ],
+                    staticClass: "py-2 px-4 flex-1 focus:outline-none",
+                    attrs: {
+                      id: "search",
+                      type: "text",
+                      placeholder: "Summary Report Title"
+                    },
+                    domProps: { value: _vm.search },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.search = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "border border-blue-700 bg-blue-700 py-2 px-4 text-white"
+                    },
+                    [
+                      _vm._v(
+                        "\n                        Search\n                    "
+                      )
+                    ]
+                  )
+                ]
+              )
+            ]
+          ),
+          _vm._v(" "),
           _c("table", { staticClass: "w-full mt-5" }, [
             _c("thead", [
               _c(
@@ -32155,7 +32403,7 @@ var render = function() {
                             _vm.sortDir == "desc" ? "items-start" : "items-end",
                           on: {
                             click: function($event) {
-                              return _vm.sort("report_number")
+                              return _vm.sort("selectedCommission")
                             }
                           }
                         },
@@ -32164,10 +32412,10 @@ var render = function() {
                             _vm._v("Commission")
                           ]),
                           _vm._v(" "),
-                          _vm.sortCol === "report_number" &&
+                          _vm.sortCol === "selected_commission" &&
                           _vm.sortDir === "asc"
                             ? _c("sort-up")
-                            : _vm.sortCol === "report_number" &&
+                            : _vm.sortCol === "selected_commission" &&
                               _vm.sortDir === "desc"
                             ? _c("sort-down")
                             : _vm._e()
@@ -32257,7 +32505,7 @@ var render = function() {
                             _vm.sortDir == "desc" ? "items-start" : "items-end",
                           on: {
                             click: function($event) {
-                              return _vm.sort("total")
+                              return _vm.sort("total_sales")
                             }
                           }
                         },
@@ -32266,9 +32514,10 @@ var render = function() {
                             _vm._v("Sales Total")
                           ]),
                           _vm._v(" "),
-                          _vm.sortCol === "total" && _vm.sortDir === "asc"
+                          _vm.sortCol === "total_sales" && _vm.sortDir === "asc"
                             ? _c("sort-up")
-                            : _vm.sortCol === "total" && _vm.sortDir === "desc"
+                            : _vm.sortCol === "total_sales" &&
+                              _vm.sortDir === "desc"
                             ? _c("sort-down")
                             : _vm._e()
                         ],
@@ -32293,7 +32542,7 @@ var render = function() {
                             _vm.sortDir == "desc" ? "items-start" : "items-end",
                           on: {
                             click: function($event) {
-                              return _vm.sort("balance")
+                              return _vm.sort("commission")
                             }
                           }
                         },
@@ -32302,9 +32551,9 @@ var render = function() {
                             _vm._v("Commission Total")
                           ]),
                           _vm._v(" "),
-                          _vm.sortCol === "balance" && _vm.sortDir === "asc"
+                          _vm.sortCol === "commission" && _vm.sortDir === "asc"
                             ? _c("sort-up")
-                            : _vm.sortCol === "balance" &&
+                            : _vm.sortCol === "commission" &&
                               _vm.sortDir === "desc"
                             ? _c("sort-down")
                             : _vm._e()
@@ -32323,7 +32572,7 @@ var render = function() {
                 return _c(
                   "tr",
                   {
-                    key: summary.id,
+                    key: summary.title,
                     staticClass: "bg-white even:bg-gray-100 text-sm"
                   },
                   [
@@ -32393,7 +32642,77 @@ var render = function() {
               }),
               0
             )
-          ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "mt-2" },
+            [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "py-1 px-2 mr-1 text-sm font-semibold rounded-sm boder border-gray-500 bg-gray-400 focus:outline-none",
+                  class: _vm.meta.current_page === 1 ? "disabled" : "",
+                  attrs: {
+                    disabled: _vm.meta.current_page === 1 ? true : false
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.changePage(1)
+                    }
+                  }
+                },
+                [_vm._v("\n                First\n            ")]
+              ),
+              _vm._v(" "),
+              _vm._l(_vm.meta.last_page, function(n) {
+                return _c(
+                  "button",
+                  {
+                    key: n,
+                    staticClass:
+                      "py-1 px-2 mr-1 text-sm font-semibold rounded-sm boder border-gray-500 bg-gray-400 focus:outline-none",
+                    class: _vm.meta.current_page === n ? "disabled" : "",
+                    attrs: {
+                      disabled: _vm.meta.current_page === n ? true : false
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.changePage(n)
+                      }
+                    }
+                  },
+                  [_vm._v("\n                " + _vm._s(n) + "\n            ")]
+                )
+              }),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "py-1 px-2 mr-1 text-sm font-semibold rounded-sm boder border-gray-500 bg-gray-400 focus:outline-none",
+                  class:
+                    _vm.meta.current_page === _vm.meta.last_page
+                      ? "disabled"
+                      : "",
+                  attrs: {
+                    disabled:
+                      _vm.meta.current_page === _vm.meta.last_page
+                        ? true
+                        : false
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.changePage(_vm.meta.last_page)
+                    }
+                  }
+                },
+                [_vm._v("\n                Last\n            ")]
+              )
+            ],
+            2
+          )
         ])
   ])
 }

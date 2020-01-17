@@ -27,13 +27,13 @@ class SummaryReportController extends Controller
             $query = DB::table('summary_reports')->join('commissions', 'summary_reports.commission_id', '=', 'commissions.id')->select('*');
 
             if($request->has('search')){
-                $query->where('report_number', 'like', '%' . $request['search'] . '%');
+                $query->where('title', 'like', '%' . $request['search'] . '%');
             }
 
             if($request->has('sort') && $request->has('direction')){
                 $query->orderBy($request['sort'], $request['direction']);
             }else{
-                $query->orderBy('report_number', 'desc');
+                $query->orderBy('from_date', 'desc');
             }
 
             return $query->paginate(10);
@@ -43,7 +43,7 @@ class SummaryReportController extends Controller
         }else {
 
             return DB::table('summary_reports')->join('commissions', 'summary_reports.commission_id', '=', 'commissions.id')->select('*')
-                ->orderBy('report_number', 'desc')
+                ->orderBy('from_date', 'desc')
                 ->paginate(10);
         }
 
